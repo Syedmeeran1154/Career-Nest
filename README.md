@@ -36,7 +36,7 @@ html2pdf.js for PDF export
 bash
 Copy
 Edit
-git clone https://github.com/yourusername/careernest.git
+[git clone https://github.com/yourusername/careernest.git](https://github.com/Syedmeeran1154/Career-Nest.git)
 2. Open the project folder
 
 bash
