@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Career Nest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --shadow: 0 10px 30px rgba(16,24,40,0.07);
+      --radius: 14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:var(--bg);color:#0f172a;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+    .app{display:flex;min-height:100vh}
+    .sidebar{width:220px;padding:26px;background:linear-gradient(180deg,#6a11cb,#2575fc);color:white;display:flex;flex-direction:column;justify-content:space-between;border-top-right-radius:20px;border-bottom-right-radius:20px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:20px}
+    .title{font-weight:800;font-family:'Poppins',sans-serif;font-size: large}
+    .nav{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+    .nav a{color:white;text-decoration:none;padding:8px;border-radius:8px;font-weight:600;transition:background .15s,transform .12s;display:flex;align-items:center;gap:8px}
+    .nav a:hover{background:rgba(255,255,255,0.08);transform:translateX(4px)}
+    .nav a.active{background:rgba(255,255,255,0.12)}
+    .sidebar .small{font-size:12px;opacity:0.9;margin-top:12px}
+    .exportBtn{background:rgba(255,255,255,0.15);color:white;padding:10px;border-radius:8px;border:none;cursor:pointer;margin-top:12px}
+    .main{flex:1;padding:26px;overflow:auto}
+    .page{max-width:1100px;margin:0 auto}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+    .hidden{display:none}
+    .hero{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+    .hero h1{font-size:26px;color:#4c1d95;margin:0;font-family:'Poppins',sans-serif}
+    .lead{color:var(--muted);margin-top:6px}
+    .home-actions{display:flex;gap:10px;margin-top:12px}
+    .stats-grid{display:flex;gap:18px;margin-bottom:18px}
+    .stat{padding:26px;border-radius:14px;color:white;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:220px}
+    .stat .num{font-size:36px;font-weight:800;line-height:1}
+    .stat .lbl{opacity:.95;margin-top:8px;font-weight:600}
+    .stat.purple{background:linear-gradient(135deg,#7c3aed,#5b21b6)}
+    .stat.blue{background:linear-gradient(135deg,#06b6d4,#2563eb)}
+    .stat.orange{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+    .dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+    .list{list-style:none;padding:0;margin:0}
+    .list li{background:#f8fafc;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid #f1f5f9}
+    .skills-grid{display:flex;flex-direction:column;gap:10px}
+    .skill-pill{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:#fbfbff;border:1px solid #f1f5f9}
+    .skill-name{font-weight:700}
+    .progress{height:10px;background:#eef2ff;border-radius:8px;overflow:hidden;margin-left:12px;flex:1;border:1px solid rgba(99,102,241,0.12)}
+    .progress > div{height:100%;background:linear-gradient(90deg,#7c3aed,#2563eb)}
+    .card-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+    .card-item{background:linear-gradient(180deg,#fff,#fafafa);border-radius:10px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;min-height:80px}
+    .card-item .meta{font-size:13px;color:var(--muted)}
+    .card-item .actions{margin-top:auto;display:flex;gap:8px}
+    .form{display:flex;flex-direction:column;gap:10px}
+    input, textarea, select{padding:10px;border-radius:8px;border:1px solid #e6edf8;background:linear-gradient(180deg,#fff,#fbfdff);outline:none;font-size:14px}
+    textarea{min-height:80px;resize:vertical}
+    .form .row{display:flex;align-items:center;gap:10px}
+    .form-row{display:flex;gap:10px;align-items:center}
+   .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+.btn.primary{background:linear-gradient(90deg,#7c3aed,#2563eb);color:white}
+.btn.export{background:rgba(255,255,255,0.15);color:white;width:100%;margin-bottom:8px}
+    .resume-preview{background:#ffffff;padding:16px;border-radius:10px;border:1px solid #f1f5f9;min-height:220px}
+    .muted{color:var(--muted);font-size:13px}
+    @media (max-width:1000px){
+      .dash-grid{grid-template-columns:1fr}
+      .stats-grid{flex-direction:column}
+      .sidebar{display:none}
+      .main{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div>
+        <div class="brand">
+          <div class="logo">📁</div>
+          <div class="title">Career Nest</div>
+        </div>
+        <div class="nav">
+        </br>
+         </br>
+          <a href="#home" class="nav-link active" data-target="home">🏠 Home</a>
+          <a href="#profile" class="nav-link" data-target="profile">👤 Profile</a>
+          <a href="#skills" class="nav-link" data-target="skills">🛠 Skills</a>
+          <a href="#projects" class="nav-link" data-target="projects">📂 Projects</a>
+          <a href="#certificates" class="nav-link" data-target="certificates">🏅 Certificates</a>
+          <a href="#education" class="nav-link" data-target="education">🎓 Education</a>
+          <a href="#resume" class="nav-link" data-target="resume">📄 Resume</a>
+        </div>
+      </div>
+      <div>
+        <button id="exportBtn" class="exportBtn">⬇ Export Resume</button>
+        <div class="small muted" style="margin-top:10px">Data saved locally in your browser</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="home" class="page">
+        <div class="hero">
+          <div style="flex:1">
+             </br>
+            <h1>Build your professional story</h1>
+            <p class="lead">Add projects, skills, certificates and education. Export a clean resume ready to share.</p>
+            <div class="home-actions" style="margin-top:12px">
+              <button class="btn primary" onclick="navigate('profile')">Get Started</button>
+              <button class="btn" id="loadSample">Load Demo</button>
+            </div>
+          </div>
+          <div class="card snapshot" id="snapshot" style="width:260px">
+            <h4 style="margin-top:0">Your Snapshot</h4>
+            <p><strong>Name:</strong> <span id="snapName">—</span></p>
+            <p><strong>Top Skill:</strong> <span id="snapSkill">—</span></p>
+            <p><strong>Projects:</strong> <span id="snapProjCount">0</span></p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat purple card">
+            <div class="num" id="projectCount">0</div>
+            <div class="lbl">Projects</div>
+          </div>
+          <div class="stat blue card">
+            <div class="num" id="skillCount">0</div>
+            <div class="lbl">Skills</div>
+          </div>
+          <div class="stat orange card">
+            <div class="num" id="certCount">0</div>
+            <div class="lbl">Certificates</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card">
+            <h3>📂 Recent Projects</h3>
+            <ul id="projectList" class="list"></ul>
+          </div>
+          <div class="card">
+            <h3>🛠 Top Skills</h3>
+            <div id="skillsContainer" class="skills-grid"></div>
+          </div>
+          <div class="card">
+            <h3>🏅 Certificates</h3>
+            <div id="certContainer" class="cert-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="profile" class="page hidden">
+        <div class="card">
+          <h2>Profile</h2>
+          <form id="profileForm" class="form">
+            <input id="name" placeholder="Full name" />
+            <input id="email" placeholder="Email" />
+            <textarea id="bio" placeholder="Short bio (one line)"></textarea>
+            <div class="form-row">
+              <button class="btn primary" type="submit">Save Profile</button>
+              <button class="btn" id="clearProfile" type="button">Clear</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="skills" class="page hidden">
+        <div class="card">
+          <h2>Skills</h2>
+          <form id="skillsForm" class="form">
+            <input id="skillName" placeholder="Skill name (e.g., JavaScript)" required />
+            <div class="row">
+              <label>Level: <input id="skillLevel" type="range" min="0" max="100" value="75" /></label>
+              <span id="skillLevelVal">75%</span>
+            </div>
+            <div class="form-row">
+              <button class="btn primary" type="submit">Add Skill</button>
+              <button class="btn" id="clearSkills" type="button">Clear All</button>
+            </div>
+          </form>
+          <div id="skillsList" class="card-list"></div>
+        </div>
+      </section>
+
+      <section id="projects" class="page hidden">
+        <div class="card">
+          <h2>Projects</h2>
+          <form id="projectsForm" class="form">
+            <input id="projectTitle" placeholder="Project title" required />
+            <input id="projectLink" placeholder="Project link (optional)" />
+            <textarea id="projectDesc" placeholder="Short description"></textarea>
+            <div class="form-row">
+              <button class="btn primary" type="submit">Add Project</button>
+              <button class="btn" id="clearProjects" type="button">Clear All</button>
+            </div>
+          </form>
+          <div id="projectsList" class="card-list"></div>
+        </div>
+      </section>
+
+      <section id="certificates" class="page hidden">
+        <div class="card">
+          <h2>Certificates</h2>
+          <form id="certForm" class="form">
+            <input id="certName" placeholder="Certificate title" required />
+            <input id="certIssuer" placeholder="Issuer (e.g., Coursera, Udemy)" />
+            <input id="certLink" placeholder="Link (optional)" />
+            <div class="form-row">
+              <button class="btn primary" type="submit">Add Certificate</button>
+              <button class="btn" id="clearCerts" type="button">Clear All</button>
+            </div>
+          </form>
+          <div id="certsList" class="card-list"></div>
+        </div>
+      </section>
+
+      <section id="education" class="page hidden">
+        <div class="card">
+          <h2>Education</h2>
+          <form id="eduForm" class="form">
+            <input id="eduInstitute" placeholder="Institute" required />
+            <input id="eduDegree" placeholder="Degree (e.g., B.Sc Computer Science)" required />
+            <input id="eduYear" placeholder="Year or range (e.g., 2020-2024)" />
+            <div class="form-row">
+              <button class="btn primary" type="submit">Add Education</button>
+            </div>
+          </form>
+          <div id="eduList" class="card-list"></div>
+        </div>
+      </section>
+
+      <section id="resume" class="page hidden">
+        <div class="card">
+          <h2>Resume Preview</h2>
+          <div id="resumePreview" class="resume-preview"></div>
+          <div style="margin-top:12px">
+            <button id="downloadResume" class="btn primary">Download Resume as PDF</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    (function(){
+      const KEY_PROFILE='mc_profile_v3', KEY_PROJECTS='mc_projects_v3', KEY_SKILLS='mc_skills_v3', KEY_CERTS='mc_certs_v3', KEY_EDU='mc_edu_v3';
+      const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+      const load = (k,f)=>{try{return JSON.parse(localStorage.getItem(k))||f}catch{return f}};
+      const save = (k,v)=>localStorage.setItem(k,JSON.stringify(v));
+      let profile=load(KEY_PROFILE,{name:'',email:'',bio:''}), projects=load(KEY_PROJECTS,[]), skills=load(KEY_SKILLS,[]), certs=load(KEY_CERTS,[]), edu=load(KEY_EDU,[]);
+      const navLinks = $$('.nav a'), pages = $$('.page'), exportBtn=$('#exportBtn'), downloadResume=$('#downloadResume'), loadSampleBtn=$('#loadSample');
+      const projectCount=$('#projectCount'), skillCount=$('#skillCount'), certCount=$('#certCount'), projectList=$('#projectList'), skillsContainer=$('#skillsContainer'), certContainer=$('#certContainer');
+      const projectsList=$('#projectsList'), skillsList=$('#skillsList'), certsList=$('#certsList'), eduList=$('#eduList'), resumePreview=$('#resumePreview');
+      const snapName=$('#snapName'), snapSkill=$('#snapSkill'), snapProjCount=$('#snapProjCount');
+
+      navLinks.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();navLinks.forEach(x=>x.classList.remove('active'));a.classList.add('active');showPage(a.dataset.target);history.replaceState(null,'','#'+a.dataset.target)}));
+      function showPage(id){pages.forEach(p=>p.classList.add('hidden'));const el=document.getElementById(id); if(el) el.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'});}
+      function renderDashboard(){ projectCount.textContent=projects.length; skillCount.textContent=skills.length; certCount.textContent=certs.length; snapName.textContent=profile.name||'—'; snapProjCount.textContent=projects.length; snapSkill.textContent=(skills[0]&&skills[0].name)||'—'; projectList.innerHTML=''; projects.slice(-5).reverse().forEach(p=>{const li=document.createElement('li');li.textContent=p.title;projectList.appendChild(li)}); skillsContainer.innerHTML=''; skills.slice(0,6).forEach(s=>{const pill=document.createElement('div');pill.className='skill-pill';const name=document.createElement('div');name.className='skill-name';name.textContent=s.name;const progressWrap=document.createElement('div');progressWrap.style.display='flex';progressWrap.style.alignItems='center';progressWrap.style.gap='8px';const progress=document.createElement('div');progress.className='progress';const inner=document.createElement('div');inner.style.width=(s.level||70)+'%';progress.appendChild(inner);progressWrap.appendChild(progress);pill.appendChild(name);pill.appendChild(progressWrap);skillsContainer.appendChild(pill)}); certContainer.innerHTML=''; certs.slice(0,6).forEach(c=>{const d=document.createElement('div');d.className='card-item';d.style.padding='10px';d.textContent=c.title||c;certContainer.appendChild(d)});}
+      function renderLists(){ projectsList.innerHTML=''; projects.slice().reverse().forEach((p,idx)=>{const node=document.createElement('div');node.className='card-item';node.innerHTML=`<div><strong>${p.title}</strong><div class="meta">${p.desc||''}</div><div class="meta">${p.link||''}</div></div>`;const actions=document.createElement('div');actions.className='actions';const del=document.createElement('button');del.className='btn';del.textContent='Delete';del.onclick=()=>{if(!confirm('Delete project?')) return; projects.splice(projects.length-1-idx,1); save(KEY_PROJECTS,projects); renderAll();};actions.appendChild(del);node.appendChild(actions);projectsList.appendChild(node)}); skillsList.innerHTML=''; skills.slice().reverse().forEach((s,idx)=>{const node=document.createElement('div');node.className='card-item';node.innerHTML=`<div><strong>${s.name}</strong><div class="meta">Level: ${s.level||0}%</div></div>`;const actions=document.createElement('div');actions.className='actions';const del=document.createElement('button');del.className='btn';del.textContent='Delete';del.onclick=()=>{if(!confirm('Delete skill?')) return; skills.splice(skills.length-1-idx,1); save(KEY_SKILLS,skills); renderAll();};actions.appendChild(del);node.appendChild(actions);skillsList.appendChild(node)}); certsList.innerHTML=''; certs.slice().reverse().forEach((c,idx)=>{const node=document.createElement('div');node.className='card-item';node.innerHTML=`<div><strong>${c.title||c}</strong><div class="meta">${c.issuer||''}</div><div class="meta"><a href="${c.link||'#'}" target="_blank">${c.link||''}</a></div></div>`;const actions=document.createElement('div');actions.className='actions';const del=document.createElement('button');del.className='btn';del.textContent='Delete';del.onclick=()=>{if(!confirm('Delete certificate?')) return; certs.splice(certs.length-1-idx,1); save(KEY_CERTS,certs); renderAll();};actions.appendChild(del);node.appendChild(actions);certsList.appendChild(node)}); eduList.innerHTML=''; edu.slice().reverse().forEach(e=>{const node=document.createElement('div');node.className='card-item';node.innerHTML=`<div><strong>${e.institute}</strong><div class="meta">${e.degree||''} — ${e.year||''}</div></div>`; eduList.appendChild(node)});}
+      function renderResumePreview(){ resumePreview.innerHTML=`<div style="padding:10px;font-family:Inter,Arial,sans-serif;color:#0f172a;"><h2 style="margin-top:0">${profile.name||'Your Name'}</h2><p style="margin:4px 0">${profile.email||''}</p><p style="margin:6px 0;color:#374151">${profile.bio||''}</p><hr /><h3>Projects</h3>${projects.length?projects.map(p=>`<div style="margin-bottom:6px;"><strong>${p.title}</strong><div class="muted">${p.desc||''}</div><div class="muted">${p.link||''}</div></div>`).join(''):'<p class="muted">No projects yet</p>'}<h3>Skills</h3>${skills.length?skills.map(s=>`<div>${s.name} — ${s.level||0}%</div>`).join(''):'<p class="muted">No skills yet</p>'}<h3>Certificates</h3>${certs.length?certs.map(c=>`<div>${c.title} — ${c.issuer||''}</div>`).join(''):'<p class="muted">No certificates yet</p>'}<h3>Education</h3>${edu.length?edu.map(e=>`<div>${e.institute} — ${e.degree||''} — ${e.year||''}</div>`).join(''):'<p class="muted">No education yet</p>'}</div>`; }
+      function renderAll(){ renderDashboard(); renderLists(); renderResumePreview(); }
+      $('#name').value = profile.name||''; $('#email').value = profile.email||''; $('#bio').value = profile.bio||'';
+      $('#profileForm').addEventListener('submit',e=>{e.preventDefault(); profile.name=$('#name').value.trim(); profile.email=$('#email').value.trim(); profile.bio=$('#bio').value.trim(); save(KEY_PROFILE,profile); renderAll(); alert('Profile saved'); });
+      $('#clearProfile').addEventListener('click',()=>{ if(!confirm('Clear profile?')) return; profile={name:'',email:'',bio:''}; save(KEY_PROFILE,profile); $('#name').value=''; $('#email').value=''; $('#bio').value=''; renderAll(); });
+      $('#skillLevelVal').textContent = $('#skillLevel').value + '%'; $('#skillLevel').addEventListener('input',()=> $('#skillLevelVal').textContent = $('#skillLevel').value + '%');
+      $('#skillsForm').addEventListener('submit',e=>{ e.preventDefault(); const name=$('#skillName').value.trim(); const level=parseInt($('#skillLevel').value||0); if(!name) return alert('Enter skill name'); skills.push({name,level}); save(KEY_SKILLS,skills); $('#skillName').value=''; renderAll(); });
+      $('#clearSkills').addEventListener('click',()=>{ if(!confirm('Clear all skills?')) return; skills=[]; save(KEY_SKILLS,skills); renderAll(); });
+      $('#projectsForm').addEventListener('submit',e=>{ e.preventDefault(); const title=$('#projectTitle').value.trim(); const link=$('#projectLink').value.trim(); const desc=$('#projectDesc').value.trim(); if(!title) return alert('Enter project title'); projects.push({title,link,desc}); save(KEY_PROJECTS,projects); $('#projectTitle').value=''; $('#projectLink').value=''; $('#projectDesc').value=''; renderAll(); });
+      $('#clearProjects').addEventListener('click',()=>{ if(!confirm('Clear all projects?')) return; projects=[]; save(KEY_PROJECTS,projects); renderAll(); });
+      $('#certForm').addEventListener('submit',e=>{ e.preventDefault(); const title=$('#certName').value.trim(); const issuer=$('#certIssuer').value.trim(); const link=$('#certLink').value.trim(); if(!title) return alert('Enter certificate title'); certs.push({title,issuer,link}); save(KEY_CERTS,certs); $('#certName').value=''; $('#certIssuer').value=''; $('#certLink').value=''; renderAll(); });
+      $('#clearCerts').addEventListener('click',()=>{ if(!confirm('Clear all certificates?')) return; certs=[]; save(KEY_CERTS,certs); renderAll(); });
+      $('#eduForm').addEventListener('submit',e=>{ e.preventDefault(); const institute=$('#eduInstitute').value.trim(); const degree=$('#eduDegree').value.trim(); const year=$('#eduYear').value.trim(); if(!institute) return alert('Enter institute name'); edu.push({institute,degree,year}); save(KEY_EDU,edu); $('#eduInstitute').value=''; $('#eduDegree').value=''; $('#eduYear').value=''; renderAll(); });
+      exportBtn.addEventListener('click',()=>{ renderResumePreview(); const opt={margin:0.3, filename:`${(profile.name||'resume').replace(/\s+/g,'_')}.pdf`, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} }; html2pdf().from(resumePreview).set(opt).save(); });
+      downloadResume.addEventListener('click',()=> exportBtn.click());
+      loadSampleBtn.addEventListener('click',()=>{ if(!confirm('Load demo data? This will overwrite local data.')) return; profile={name:'Syed Example',email:'syed@example.com',bio:'CS student passionate about AI & web.'}; projects=[{title:'AI Chatbot',link:'',desc:'Chatbot using Flask & OpenAI.'},{title:'Portfolio Site',link:'',desc:'Responsive personal site.'}]; skills=[{name:'Python',level:90},{name:'React',level:75},{name:'SQL',level:60}]; certs=[{title:'Python Mastery',issuer:'Coursera',link:''},{title:'Frontend Dev',issuer:'Udemy',link:''}]; edu=[{institute:'ABC University',degree:'B.Sc Computer Science',year:'2020-2024'}]; save(KEY_PROFILE,profile); save(KEY_PROJECTS,projects); save(KEY_SKILLS,skills); save(KEY_CERTS,certs); save(KEY_EDU,edu); renderAll(); });
+      window.navigate = name=>{ const link = navLinks.find(l=> l.dataset.target===name); if(link) link.click(); };
+      function openFromHash(){ const hash = location.hash.replace('#','')||'home'; const link = navLinks.find(l=> l.dataset.target===hash); if(link) link.click(); else showPage('home'); }
+      window.addEventListener('hashchange', openFromHash);
+      renderAll();
+      openFromHash();
+    })();
+  </script>
+</body>
+</html>
