@@ -3,7 +3,8 @@ Your personal hub for skills, projects, certifications, and achievements.
 
 CareerNest is a simple, colorful, and interactive web app designed for students, freshers, and professionals to keep track of their career journey in one place.
 
-✨ Features
+# Features
+
 📊 Interactive Dashboard – View your total skills, projects, and certifications at a glance
 
 🛠 Skills Management – Add, update, and track your skillset
@@ -29,7 +30,7 @@ LocalStorage API
 
 html2pdf.js for PDF export
 
-🚀 Getting Started
+# Getting Started
 1. Clone the repository
 
 bash
@@ -45,8 +46,5 @@ cd careernest
 3. Run the app
 Simply open index.html in your browser — no installation required.
 
-📸 Screenshots
-(Add your dashboard and form screenshots here)
-
-📜 License
+# License
 This project is licensed under the MIT License — feel free to use, modify, and share.
