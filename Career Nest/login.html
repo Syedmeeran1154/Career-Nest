@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Nest - Login & Signup</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Inter and Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase configuration and global variables (Canvas-provided)
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Initialize Firebase
+        let app;
+        let auth;
+        let db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            document.getElementById('message-box').textContent = "Firebase initialization failed. Check your configuration.";
+            document.getElementById('message-box').classList.remove('hidden', 'bg-green-100', 'text-green-800', 'border-green-300');
+            document.getElementById('message-box').classList.add('bg-red-100', 'text-red-800', 'border-red-300', 'block');
+        }
+
+        // Get DOM elements for different sections
+        const authContainer = document.getElementById('auth-container');
+        
+        // Function to display messages to the user
+        const displayMessage = (message, isError = false) => {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden');
+            if (isError) {
+                messageBox.classList.remove('bg-green-100', 'text-green-800', 'border-green-300');
+                messageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+            } else {
+                messageBox.classList.remove('bg-red-100', 'text-red-800', 'border-red-300');
+                messageBox.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+            }
+        };
+        
+        // Function to clear messages when switching tabs
+        const clearMessage = () => {
+            const messageBox = document.getElementById('message-box');
+            messageBox.classList.add('hidden');
+        };
+
+        // Handle initial authentication with custom token
+        const authenticate = async () => {
+            if (!auth) return;
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase auth error:", error);
+                displayMessage("Authentication failed: " + error.message, true);
+            }
+        };
+
+        // Listen for auth state changes
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in, redirect to dashboard
+                    window.location.href = 'index.html';
+                } else {
+                    // No user is signed in, show auth forms
+                    console.log("No user is signed in.");
+                }
+            });
+        }
+
+        // Login function
+        const handleLogin = async (e) => {
+            e.preventDefault();
+            if (!auth) return;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // The onAuthStateChanged listener will handle the UI update and redirection
+            } catch (error) {
+                console.error("Login failed:", error);
+                displayMessage("Login failed: " + error.message, true);
+            }
+        };
+
+        // Signup function
+        const handleSignup = async (e) => {
+            e.preventDefault();
+            if (!auth) return;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                displayMessage("Passwords do not match.", true);
+                return;
+            }
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                // The onAuthStateChanged listener will handle the UI update and redirection
+            } catch (error) {
+                console.error("Signup failed:", error);
+                // Provide more user-friendly error messages based on Firebase error codes
+                let errorMessage = "Signup failed. Please try again.";
+                if (error.code === 'auth/weak-password') {
+                    errorMessage = "Password is too weak. It must be at least 6 characters.";
+                } else if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "The email address is already in use by another account.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "The email address is not valid.";
+                } else {
+                    errorMessage = "Signup failed: " + error.message;
+                }
+                displayMessage(errorMessage, true);
+            }
+        };
+
+        // Add event listeners to the forms
+        window.onload = () => {
+            if (document.getElementById('login-form')) {
+                document.getElementById('login-form').addEventListener('submit', handleLogin);
+            }
+            if (document.getElementById('signup-form')) {
+                document.getElementById('signup-form').addEventListener('submit', handleSignup);
+            }
+            
+            // Initial authentication call
+            authenticate();
+        };
+
+        // Tab switching logic
+        const loginTab = document.getElementById('login-tab');
+        const signupTab = document.getElementById('signup-tab');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+
+        loginTab.addEventListener('click', () => {
+            clearMessage();
+            loginTab.classList.add('border-indigo-500', 'text-indigo-600');
+            loginTab.classList.remove('text-gray-500', 'hover:text-gray-700');
+            signupTab.classList.remove('border-indigo-500', 'text-indigo-600');
+            signupTab.classList.add('text-gray-500', 'hover:text-gray-700');
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        });
+
+        signupTab.addEventListener('click', () => {
+            clearMessage();
+            signupTab.classList.add('border-indigo-500', 'text-indigo-600');
+            signupTab.classList.remove('text-gray-500', 'hover:text-gray-700');
+            loginTab.classList.remove('border-indigo-500', 'text-indigo-600');
+            loginTab.classList.add('text-gray-500', 'hover:text-gray-700');
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Soft background */
+            line-height: 1.6;
+        }
+        .brand-title {
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-primary {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.9s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <!-- Authentication Container (Login/Signup Forms) -->
+    <main id="auth-container" class="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden fade-in">
+        <div class="p-8">
+            <h1 class="text-4xl font-extrabold brand-title text-center text-gray-800 mb-2">Career Nest</h1>
+            <p class="text-center text-gray-500 mb-8">Your professional journey starts here.</p>
+            
+            <!-- Message Box -->
+            <div id="message-box" class="hidden py-3 px-4 mb-4 text-sm rounded-md text-center border-2"></div>
+
+            <!-- Tab Controls -->
+            <div class="flex border-b border-gray-200 mb-8">
+                <button id="login-tab" class="flex-1 py-3 text-center text-lg font-semibold border-b-4 border-indigo-500 text-indigo-600 transition-colors duration-300">Login</button>
+                <button id="signup-tab" class="flex-1 py-3 text-center text-lg font-semibold text-gray-500 hover:text-gray-700 transition-colors duration-300">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-700">Email address</label>
+                    <input id="login-email" type="email" placeholder="you@example.com" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="login-password" type="password" placeholder="Enter your password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Login
+                    </button>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="space-y-6 hidden">
+                <div>
+                    <label for="signup-email" class="block text-sm font-medium text-gray-700">Email address</label>
+                    <input id="signup-email" type="email" placeholder="you@example.com" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="signup-password" type="password" placeholder="Create a password" required minlength="6" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm password</label>
+                    <input id="confirm-password" type="password" placeholder="Re-enter your password" required minlength="6" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <button type="submit" class="btn-primary w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Sign Up
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
