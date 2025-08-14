@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Career Nest</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand-color: #6366f1; /* Tailwind indigo-500 */
+      --brand-dark: #4338ca; /* Tailwind indigo-700 */
+    }
+    body{
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    .brand-title{
+      font-family: 'Poppins', sans-serif;
+    }
+    .sidebar-bg{
+      background: linear-gradient(180deg, #4338ca, #6366f1);
+    }
+    .resume-h{
+      border-bottom: 2px solid var(--brand-color);
+    }
+    .skill-progress-bar div{
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
+    .resume-photo-upload {
+      border: 2px dashed #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease-in-out;
+    }
+    .resume-photo-upload:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .resume-photo-preview {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid var(--brand-color);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    /* Print styles for PDF export */
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      .app {
+        display: block !important;
+      }
+      .sidebar, .main > *:not(.resume-page) {
+        display: none !important;
+      }
+      .resume-preview {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .resume-page {
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-slate-800">
+  <div class="app flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar-bg w-64 p-6 text-white flex flex-col justify-between rounded-r-2xl shadow-xl">
+      <div>
+        <div class="brand flex items-center gap-2">
+          <div class="logo w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-2xl">
+            📁
+          </div>
+          <div class="brand-title text-xl font-bold">Career Nest</div>
+        </div>
+        <nav class="mt-8 flex flex-col space-y-2">
+        </br>
+          <a href="#home" class="nav-link active flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="home">
+            <span class="text-lg">🏠</span> Home
+          </a>
+          <a href="#profile" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="profile">
+            <span class="text-lg">👤</span> Profile
+          </a>
+          <a href="#skills" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="skills">
+            <span class="text-lg">🛠️</span> Skills
+          </a>
+          <a href="#projects" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="projects">
+            <span class="text-lg">📂</span> Projects
+          </a>
+          <a href="#internships" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="internships">
+            <span class="text-lg">📝</span> Internships
+          </a>
+          <a href="#certificates" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="certificates">
+            <span class="text-lg">🏅</span> Certificates
+          </a>
+          <a href="#education" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="education">
+            <span class="text-lg">🎓</span> Education
+          </a>
+          <a href="#social" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="social">
+            <span class="text-lg">🔗</span> Social Media
+          </a>
+          <a href="#resume" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="resume">
+            <span class="text-lg">📄</span> Resume
+          </a>
+        </nav>
+      </div>
+      <div>
+        <button id="exportBtn" class="w-full bg-white/10 text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/20 transition-colors duration-200">
+          ⬇ Export Resume
+        </button>
+        <p class="text-xs text-white/70 mt-2">Data saved locally in your browser</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main flex-1 p-8 overflow-auto custom-scroll">
+      <div class="page max-w-5xl mx-auto">
+        <!-- Home Section -->
+        <section id="home">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-8">
+            <div class="flex-1">
+              <h1 class="text-4xl font-extrabold brand-title text-indigo-700">Build Your Professional Story</h1>
+              <p class="text-lg text-slate-500 mt-2">Add projects, skills, internships, certificates, and education. Export a clean resume ready to share.</p>
+              <div class="flex gap-3 mt-4">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-indigo-700 transition-colors" onclick="navigate('profile')">
+                  Get Started
+                </button>
+                <button id="loadSample" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                  Load Demo
+                </button>
+              </div>
+            </div>
+            <div id="snapshot" class="bg-white p-6 rounded-xl shadow-lg w-full lg:w-72 flex items-center gap-4">
+              <img id="snapPhoto" class="w-16 h-16 rounded-full object-cover hidden" alt="Profile Photo">
+              <div class="flex-1">
+                <h4 class="text-lg font-bold text-gray-700 mb-2">Your Snapshot</h4>
+                <p class="text-sm"><strong class="font-semibold">Name:</strong> <span id="snapName" class="text-slate-500">—</span></p>
+                <p class="text-sm"><strong class="font-semibold">Top Skill:</strong> <span id="snapSkill" class="text-slate-500">—</span></p>
+                <p class="text-sm"><strong class="font-semibold">Projects:</strong> <span id="snapProjCount" class="text-slate-500">0</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-indigo-500 to-indigo-700">
+              <div id="projectCount" class="text-4xl font-extrabold">0</div>
+              <div class="mt-2 text-sm font-semibold">Projects</div>
+            </div>
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-sky-500 to-blue-600">
+              <div id="skillCount" class="text-4xl font-extrabold">0</div>
+              <div class="mt-2 text-sm font-semibold">Skills</div>
+            </div>
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-emerald-500 to-green-600">
+              <div id="certCount" class="text-4xl font-extrabold">0</div>
+              <div class="mt-2 text-sm font-semibold">Certificates</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg font-bold">📂 Recent Projects</h3>
+              <ul id="projectList" class="mt-4 space-y-2 text-sm"></ul>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg font-bold">🛠️ Top Skills</h3>
+              <div id="skillsContainer" class="mt-4 flex flex-col gap-2"></div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg font-bold">🏅 Certificates</h3>
+              <div id="certContainer" class="mt-4 grid grid-cols-1 gap-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- All other sections -->
+        <section id="profile" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Profile</h2>
+            <form id="profileForm" class="flex flex-col gap-4">
+              <label for="photoUpload" class="resume-photo-upload">
+                <input type="file" id="photoUpload" accept="image/*" class="hidden">
+                <div class="flex flex-col items-center justify-center">
+                  <img id="photoPreview" class="resume-photo-preview mb-2 hidden" alt="Profile Photo Preview">
+                  <span id="photoPlaceholder" class="text-gray-400">Click to add a profile photo</span>
+                </div>
+              </label>
+              <input id="name" type="text" placeholder="Full name" class="input" />
+              <input id="email" type="email" placeholder="Email" class="input" />
+              <input id="phone" type="tel" placeholder="Phone number" class="input" />
+              <textarea id="bio" placeholder="Short bio (one line)" class="input"></textarea>
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Save Profile</button>
+                <button id="clearProfile" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section id="skills" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Skills</h2>
+            <form id="skillsForm" class="flex flex-col gap-4 mb-6">
+              <input id="skillName" type="text" placeholder="Skill name (e.g., JavaScript)" class="input" required />
+              <div class="flex items-center gap-4">
+                <label class="text-sm text-slate-500">Level: <input id="skillLevel" type="range" min="0" max="100" value="75" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" /></label>
+                <span id="skillLevelVal" class="w-12 text-sm font-semibold">75%</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Add Skill</button>
+                <button id="clearSkills" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear All</button>
+              </div>
+            </form>
+            <div id="skillsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <section id="projects" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Projects</h2>
+            <form id="projectsForm" class="flex flex-col gap-4 mb-6">
+              <input id="projectTitle" type="text" placeholder="Project title" class="input" required />
+              <input id="projectLink" type="url" placeholder="Project link (optional)" class="input" />
+              <textarea id="projectDesc" placeholder="Short description" class="input"></textarea>
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Add Project</button>
+                <button id="clearProjects" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear All</button>
+              </div>
+            </form>
+            <div id="projectsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <section id="internships" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Internships</h2>
+            <form id="internForm" class="flex flex-col gap-4 mb-6">
+              <input id="internCompany" type="text" placeholder="Company" class="input" required />
+              <input id="internRole" type="text" placeholder="Role (e.g., SDE Intern)" class="input" required />
+              <input id="internDuration" type="text" placeholder="Duration (e.g., Jan 2024 – Jun 2024)" class="input" />
+              <textarea id="internDesc" placeholder="Short description / achievements" class="input"></textarea>
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Add Internship</button>
+                <button id="clearInterns" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear All</button>
+              </div>
+            </form>
+            <div id="internsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <section id="certificates" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Certificates</h2>
+            <form id="certForm" class="flex flex-col gap-4 mb-6">
+              <input id="certName" type="text" placeholder="Certificate title" class="input" required />
+              <input id="certIssuer" type="text" placeholder="Issuer (e.g., Coursera, Udemy)" class="input" />
+              <input id="certLink" type="url" placeholder="Link (optional)" class="input" />
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Add Certificate</button>
+                <button id="clearCerts" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear All</button>
+              </div>
+            </form>
+            <div id="certsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <section id="education" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Education</h2>
+            <form id="eduForm" class="flex flex-col gap-4 mb-6">
+              <input id="eduInstitute" type="text" placeholder="Institute" class="input" required />
+              <input id="eduDegree" type="text" placeholder="Degree (e.g., B.Sc Computer Science)" class="input" required />
+              <input id="eduYear" type="text" placeholder="Year or range (e.g., 2020-2024)" class="input" />
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Add Education</button>
+                <button id="clearEdu" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear All</button>
+              </div>
+            </form>
+            <div id="eduList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <section id="social" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">Social Media</h2>
+            <form id="socialForm" class="flex flex-col gap-4 mb-6">
+              <input id="socialPlatform" type="text" placeholder="Platform (e.g., LinkedIn)" class="input" required />
+              <input id="socialLink" type="url" placeholder="Profile URL" class="input" required />
+              <div class="flex gap-2">
+                <button class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">Add Link</button>
+                <button id="clearSocial" type="button" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">Clear All</button>
+              </div>
+            </form>
+            <div id="socialList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Resume Section -->
+        <section id="resume" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+              <h2 class="text-2xl font-bold">Resume Preview</h2>
+              <div class="flex gap-3">
+                <button id="customizeBtn" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                  Customize
+                </button>
+                <button id="downloadResume" class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                  Download as PDF
+                </button>
+              </div>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">Drag and drop sections to reorder your resume!</p>
+            <div id="resumePreview" class="resume-preview bg-gray-100 p-4 rounded-xl shadow-inner min-h-[30rem] overflow-hidden"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Customize modal -->
+  <div id="customizeBackdrop" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-[1000] hidden">
+    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl">
+      <h3 class="text-xl font-bold mb-4">Customize Resume</h3>
+      
+      <div class="mb-4">
+        <h4 class="text-lg font-semibold mb-2">Select Sections</h4>
+        <div class="flex flex-wrap gap-2">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="profile" checked> Profile
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="skills" checked> Skills
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="projects" checked> Projects
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="internships" checked> Internships
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="certificates" checked> Certificates
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="education" checked> Education
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="social" checked> Social Media
+          </label>
+        </div>
+      </div>
+      
+      <div class="mt-6 mb-4">
+        <h4 class="text-lg font-semibold mb-2">Template</h4>
+        <div class="flex flex-wrap gap-2">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="radio" name="template" value="classic" checked class="accent-indigo-600"> Classic
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="radio" name="template" value="modern" class="accent-indigo-600"> Modern
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold mb-2">Theme Color</h4>
+        <div class="flex flex-wrap gap-2">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="radio" name="theme" value="#6366f1|#4338ca" checked class="accent-indigo-600"> Indigo
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="radio" name="theme" value="#0ea5e9|#0369a1" class="accent-sky-600"> Sky Blue
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="radio" name="theme" value="#22c55e|#16a34a" class="accent-green-600"> Green
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer">
+            <input type="radio" name="theme" value="#ef4444|#b91c1c" class="accent-red-600"> Red
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button id="closeCustomize" class="btn bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+          Cancel
+        </button>
+        <button id="applyCustomize" class="btn primary bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+  <script>
+    (function(){
+      // Renamed keys for new version
+      const KEY_PROFILE='mc_profile_v6', KEY_PROJECTS='mc_projects_v5', KEY_SKILLS='mc_skills_v5', KEY_CERTS='mc_certs_v5', KEY_EDU='mc_edu_v5', KEY_INTERNS='mc_interns_v2', KEY_SOCIAL='mc_social_v2', KEY_PREF='mc_prefs_v4'; // Key updated for new preferences
+      const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+      const load = (k, f) => { try { return JSON.parse(localStorage.getItem(k)) || f; } catch { return f; } };
+      const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+      const navigate = (id) => {
+        $$('.nav-link').forEach(x => x.classList.remove('bg-white/10'));
+        $(`.nav-link[data-target="${id}"]`).classList.add('bg-white/10');
+        showPage(id);
+        history.replaceState(null, '', '#' + id);
+      };
+      
+      const defaultSections = {profile:true, skills:true, projects:true, internships:true, certificates:true, education:true, social:true};
+      const defaultOrder = ['profile', 'skills', 'projects', 'internships', 'certificates', 'education', 'social'];
+
+      let profile = load(KEY_PROFILE, {name:'', email:'', phone:'', bio:'', photo:''});
+      let projects = load(KEY_PROJECTS, []);
+      let skills = load(KEY_SKILLS, []);
+      let certs = load(KEY_CERTS, []);
+      let edu = load(KEY_EDU, []);
+      let interns = load(KEY_INTERNS, []);
+      let social = load(KEY_SOCIAL, []);
+      // Updated default preferences to include a template
+      let prefs = load(KEY_PREF, {
+        sections: defaultSections,
+        order: defaultOrder,
+        theme: ['#6366f1', '#4338ca'],
+        template: 'classic' // New default template
+      });
+      // Ensure all sections are present in prefs.sections and prefs.order
+      defaultOrder.forEach(sec => {
+        if (prefs.sections[sec] === undefined) prefs.sections[sec] = true;
+      });
+      if (prefs.order.length !== defaultOrder.length) prefs.order = defaultOrder;
+
+      const navLinks = $$('.nav-link'), pages = $$('section'), exportBtn = $('#exportBtn'), downloadResume = $('#downloadResume'), loadSampleBtn = $('#loadSample');
+      const projectCount = $('#projectCount'), skillCount = $('#skillCount'), certCount = $('#certCount');
+      const projectList = $('#projectList'), skillsContainer = $('#skillsContainer'), certContainer = $('#certContainer');
+      const projectsList = $('#projectsList'), skillsList = $('#skillsList'), certsList = $('#certsList'), eduList = $('#eduList'), internsList = $('#internsList'), socialList = $('#socialList'), resumePreview = $('#resumePreview');
+      const snapName = $('#snapName'), snapSkill = $('#snapSkill'), snapProjCount = $('#snapProjCount');
+      const customizeBtn = $('#customizeBtn'), customizeBackdrop = $('#customizeBackdrop');
+      const applyCustomize = $('#applyCustomize'), closeCustomize = $('#closeCustomize');
+
+      // Nav
+      navLinks.forEach(a => a.addEventListener('click', e => { e.preventDefault(); navigate(a.dataset.target); }));
+      function showPage(id) { pages.forEach(p => p.classList.add('hidden')); const el = $(`#${id}`); if (el) el.classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+      // Dashboard + Snapshot
+      function renderDashboard() {
+        projectCount.textContent = projects.length;
+        skillCount.textContent = skills.length;
+        certCount.textContent = certs.length;
+        snapName.textContent = profile.name || '—';
+        snapProjCount.textContent = projects.length;
+        snapSkill.textContent = (skills[0] && skills[0].name) || '—';
+        
+        // Update snapshot photo
+        const snapPhoto = $('#snapPhoto');
+        if (profile.photo) {
+          snapPhoto.src = profile.photo;
+          snapPhoto.classList.remove('hidden');
+        } else {
+          snapPhoto.classList.add('hidden');
+        }
+        
+        projectList.innerHTML = '';
+        projects.slice(-5).reverse().forEach(p => { const li = document.createElement('li'); li.className='border-b last:border-0 border-gray-100 py-2'; li.textContent = p.title; projectList.appendChild(li); });
+        
+        skillsContainer.innerHTML = '';
+        skills.slice(0, 6).forEach(s => {
+          const pill = document.createElement('div'); pill.className = 'flex items-center p-3 rounded-xl bg-gray-50 shadow-sm';
+          const name = document.createElement('div'); name.className = 'font-semibold flex-1'; name.textContent = s.name;
+          const progress = document.createElement('div'); progress.className = 'skill-progress-bar h-2 bg-gray-200 rounded-full w-24 ml-4';
+          const inner = document.createElement('div'); inner.style.width = (s.level || 70) + '%'; inner.className='h-full rounded-full'; progress.appendChild(inner);
+          pill.appendChild(name); pill.appendChild(progress); skillsContainer.appendChild(pill);
+        });
+        
+        certContainer.innerHTML = '';
+        certs.slice(0, 6).forEach(c => {
+          const d = document.createElement('div'); d.className = 'p-3 bg-gray-50 rounded-lg shadow-sm';
+          d.innerHTML = `<div><strong class="text-sm">${c.title || c}</strong><p class="text-xs text-slate-500">${c.issuer || ''}</p></div>`;
+          certContainer.appendChild(d);
+        });
+      }
+
+      // Lists with delete buttons
+      function renderLists() {
+        const itemClasses = 'bg-white p-4 rounded-lg shadow-sm flex flex-col gap-2 relative';
+        const deleteButton = (cb) => `<button type="button" class="absolute top-2 right-2 text-sm text-red-500 hover:text-red-700 transition-colors" onclick="${cb}">Delete</button>`;
+
+        // Projects
+        projectsList.innerHTML = '';
+        projects.slice().reverse().forEach((p, idx) => {
+          const node = document.createElement('div'); node.className = itemClasses;
+          node.innerHTML = `<div><strong>${p.title}</strong><p class="text-sm text-slate-500">${p.desc || ''}</p>${p.link ? `<a href="${p.link}" target="_blank" class="text-sm text-blue-500 hover:underline">${p.link}</a>` : ''}</div>${deleteButton(`handleDelete('projects', ${projects.length - 1 - idx})`)}`;
+          projectsList.appendChild(node);
+        });
+        // Skills
+        skillsList.innerHTML = '';
+        skills.slice().reverse().forEach((s, idx) => {
+          const node = document.createElement('div'); node.className = itemClasses;
+          node.innerHTML = `<div><strong>${s.name}</strong><p class="text-sm text-slate-500">Level: ${s.level || 0}%</p></div>${deleteButton(`handleDelete('skills', ${skills.length - 1 - idx})`)}`;
+          skillsList.appendChild(node);
+        });
+        // Certificates
+        certsList.innerHTML = '';
+        certs.slice().reverse().forEach((c, idx) => {
+          const node = document.createElement('div'); node.className = itemClasses;
+          node.innerHTML = `<div><strong>${c.title}</strong><p class="text-sm text-slate-500">${c.issuer || ''}</p>${c.link ? `<a href="${c.link}" target="_blank" class="text-sm text-blue-500 hover:underline">${c.link}</a>` : ''}</div>${deleteButton(`handleDelete('certs', ${certs.length - 1 - idx})`)}`;
+          certsList.appendChild(node);
+        });
+        // Education
+        eduList.innerHTML = '';
+        edu.slice().reverse().forEach((e, idx) => {
+          const node = document.createElement('div'); node.className = itemClasses;
+          node.innerHTML = `<div><strong>${e.institute}</strong><p class="text-sm text-slate-500">${e.degree || ''} — ${e.year || ''}</p></div>${deleteButton(`handleDelete('edu', ${edu.length - 1 - idx})`)}`;
+          eduList.appendChild(node);
+        });
+        // Internships
+        internsList.innerHTML = '';
+        interns.slice().reverse().forEach((it, idx) => {
+          const node = document.createElement('div'); node.className = itemClasses;
+          node.innerHTML = `<div><strong>${it.company}</strong><p class="text-sm text-slate-500">${it.role || ''} (${it.duration || ''})</p><p class="text-sm text-slate-500">${it.desc || ''}</p></div>${deleteButton(`handleDelete('interns', ${interns.length - 1 - idx})`)}`;
+          internsList.appendChild(node);
+        });
+        // Social
+        socialList.innerHTML = '';
+        social.slice().reverse().forEach((s, idx) => {
+          const node = document.createElement('div'); node.className = itemClasses;
+          node.innerHTML = `<div><strong>${s.platform}</strong><p class="text-sm"><a href="${s.link}" target="_blank" class="text-blue-500 hover:underline">${s.link}</a></p></div>${deleteButton(`handleDelete('social', ${social.length - 1 - idx})`)}`;
+          socialList.appendChild(node);
+        });
+      }
+
+      function handleDelete(section, index) {
+        if (!confirm('Are you sure you want to delete this item?')) return;
+        switch (section) {
+          case 'projects': projects.splice(index, 1); save(KEY_PROJECTS, projects); break;
+          case 'skills': skills.splice(index, 1); save(KEY_SKILLS, skills); break;
+          case 'certs': certs.splice(index, 1); save(KEY_CERTS, certs); break;
+          case 'edu': edu.splice(index, 1); save(KEY_EDU, edu); break;
+          case 'interns': interns.splice(index, 1); save(KEY_INTERNS, interns); break;
+          case 'social': social.splice(index, 1); save(KEY_SOCIAL, social); break;
+        }
+        renderAll();
+      }
+      window.handleDelete = handleDelete;
+
+      // Resume preview — now supports multiple templates
+      function resumeHTML(selectedSections, order, theme, template) {
+        const include = sec => selectedSections[sec];
+        const [accent1, accent2] = theme;
+        document.documentElement.style.setProperty('--brand-color', accent1);
+        document.documentElement.style.setProperty('--brand-dark', accent2);
+
+        const photoHtml = profile.photo ? `<div class="w-24 h-24 flex-shrink-0"><img src="${profile.photo}" alt="Profile Photo" class="w-full h-full object-cover rounded-full shadow-lg border-4 border-white/20"></div>` : '';
+
+        // Map of all sections for easy access
+        const sectionMap = {
+          profile: `<section data-id="profile" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                      <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Profile</h3>
+                      <div class="resume-item text-sm text-gray-700">${profile.bio || 'Add a short professional summary here.'}</div>
+                    </section>`,
+          skills: `<section data-id="skills" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                    <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Skills</h3>
+                    <div class="flex flex-wrap gap-2">${skills.length ? skills.map(s => `<span class='resume-pill text-xs font-semibold px-2 py-1 bg-gray-100 rounded-full border border-gray-200'>${s.name} • ${s.level || 0}%</span>`).join('') : '<div class="text-sm text-gray-500">No skills yet</div>'}</div>
+                  </section>`,
+          social: `<section data-id="social" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                    <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Social Media</h3>
+                    <div>${social.length ? social.map(s => `<div class='resume-item text-sm'><a href="${s.link}" target="_blank" class="text-blue-500 hover:underline">${s.platform}</a></div>`).join('') : '<div class="text-sm text-gray-500">No social links yet</div>'}</div>
+                  </section>`,
+          certificates: `<section data-id="certificates" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                          <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Certificates</h3>
+                          <div>${certs.length ? certs.map(c => `<div class='resume-item mb-2'><strong class="text-sm">${c.title}</strong><span class='text-xs text-gray-500'>${c.issuer ? ` • ${c.issuer}` : ''}</span></div>`).join('') : '<div class="text-sm text-gray-500">No certificates yet</div>'}</div>
+                        </section>`,
+          projects: `<section data-id="projects" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                      <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Projects</h3>
+                      ${projects.length ? projects.map(p => `<div class='resume-item mb-3'><div class='text-base font-semibold'>${p.title}</div><div class='text-sm text-gray-600 mb-1'>${p.link ? `<a href="${p.link}" target="_blank" class="text-blue-500 hover:underline">${p.link}</a>` : ''}</div><p class="text-sm text-gray-700">${p.desc || ''}</p></div>`).join('') : '<div class="text-sm text-gray-500">No projects yet</div>'}
+                    </section>`,
+          internships: `<section data-id="internships" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                          <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Internships</h3>
+                          ${interns.length ? interns.map(it => `<div class='resume-item mb-3'><div class='text-base font-semibold'>${it.company} — ${it.role || ''}</div><div class='text-sm text-gray-600 mb-1'>${it.duration || ''}</div><p class="text-sm text-gray-700">${it.desc || ''}</p></div>`).join('') : '<div class="text-sm text-gray-500">No internships yet</div>'}
+                        </section>`,
+          education: `<section data-id="education" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                        <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Education</h3>
+                        ${edu.length ? edu.map(e => `<div class='resume-item mb-2'><strong class="text-base">${e.institute}</strong><p class="text-sm text-gray-600">${e.degree || ''} — ${e.year || ''}</p></div>`).join('') : '<div class="text-sm text-gray-500">No education yet</div>'}
+                      </section>`,
+        };
+
+        const filteredSections = order.filter(sec => include(sec)).map(sec => sectionMap[sec]).join('');
+
+        if (template === 'modern') {
+          // New Modern Template: Single column, clean, with a simple header
+          return `
+          <div class="resume-page p-8 bg-white rounded-xl shadow-lg">
+            <header class="pb-6 mb-6 border-b border-gray-300">
+              <h1 class="text-4xl font-extrabold brand-title text-indigo-800">${profile.name || 'Your Name'}</h1>
+              <p class="text-lg text-slate-600 mt-1">${profile.bio || ''}</p>
+              <div class="text-sm text-slate-600 mt-2 flex flex-wrap gap-4">
+                ${profile.email ? `<p class="flex items-center gap-1"><span>✉️</span> ${profile.email}</p>` : ''}
+                ${profile.phone ? `<p class="flex items-center gap-1"><span>📞</span> ${profile.phone}</p>` : ''}
+                ${social.length ? social.map(s => `<a href="${s.link}" target="_blank" class="flex items-center gap-1 text-blue-500 hover:underline">🔗 ${s.platform}</a>`).join('') : ''}
+              </div>
+            </header>
+            <div id="sortable-resume" class="space-y-6">
+              ${filteredSections}
+            </div>
+          </div>
+          `;
+        }
+        
+        // Default Classic Template: Two-column layout
+        return `
+        <div class="resume-page p-6 bg-white rounded-xl shadow-lg">
+          <header class="flex flex-col md:flex-row md:items-start justify-between pb-4 mb-6 gap-4 border-b-4 border-indigo-600">
+            <div class="flex-1">
+              <h1 class="text-4xl font-extrabold brand-title text-indigo-800">${profile.name || 'Your Name'}</h1>
+              <p class="text-lg text-slate-600 mt-1">${profile.bio || ''}</p>
+              <div class="text-sm text-slate-600 mt-4">
+                ${profile.email ? `<p class="mb-1">✉️ ${profile.email}</p>` : ''}
+                ${profile.phone ? `<p>📞 ${profile.phone}</p>` : ''}
+              </div>
+            </div>
+            ${photoHtml}
+          </header>
+          <div id="sortable-resume" class="space-y-4">
+            ${filteredSections}
+          </div>
+        </div>
+        `;
+      }
+
+      function renderResumePreview() {
+        // Pass the selected template to the resume rendering function
+        resumePreview.innerHTML = resumeHTML(prefs.sections, prefs.order, prefs.theme, prefs.template);
+        // Initialize Sortable.js for drag and drop
+        const sortable = new Sortable($('#sortable-resume'), {
+          animation: 150,
+          onEnd: function(evt) {
+            const oldIndex = evt.oldIndex;
+            const newIndex = evt.newIndex;
+            const item = prefs.order.splice(oldIndex, 1)[0];
+            prefs.order.splice(newIndex, 0, item);
+            save(KEY_PREF, prefs);
+            renderResumePreview();
+          }
+        });
+      }
+
+      function renderAll() {
+        renderDashboard();
+        renderLists();
+        renderResumePreview();
+      }
+
+      // Prefill forms
+      $('#name').value = profile.name || ''; $('#email').value = profile.email || ''; $('#phone').value = profile.phone || ''; $('#bio').value = profile.bio || '';
+      if (profile.photo) {
+        $('#photoPreview').src = profile.photo;
+        $('#photoPreview').classList.remove('hidden');
+        $('#photoPlaceholder').classList.add('hidden');
+      } else {
+        $('#photoPreview').classList.add('hidden');
+        $('#photoPlaceholder').classList.remove('hidden');
+      }
+      
+      // Load sample data function
+      loadSampleBtn.addEventListener('click', () => {
+          const sampleData = {
+              profile: { name: "Jane Doe", email: "jane.doe@example.com", phone: "+1 123-456-7890", bio: "Enthusiastic developer with a passion for building scalable web applications.", photo: "" },
+              skills: [{ name: "JavaScript", level: 90 }, { name: "React", level: 85 }, { name: "Node.js", level: 80 }, { name: "HTML/CSS", level: 95 }],
+              projects: [{ title: "E-commerce Platform", link: "https://example.com/project1", desc: "Built a full-stack e-commerce site with a secure payment gateway." }, { title: "Task Management App", link: "", desc: "A responsive web application for managing daily tasks and team collaboration." }],
+              internships: [{ company: "Tech Solutions Inc.", role: "Software Developer Intern", duration: "Jun 2023 – Aug 2023", desc: "Developed and maintained features for the company's flagship product."}],
+              certificates: [{ title: "React Development", issuer: "Coursera", link: "https://coursera.org/cert/12345" }, { title: "Machine Learning Fundamentals", issuer: "Udemy", link: "" }],
+              education: [{ institute: "State University", degree: "B.Sc. Computer Science", year: "2019-2023" }],
+              social: [{ platform: "LinkedIn", link: "https://linkedin.com/in/janedoe" }, { platform: "GitHub", link: "https://github.com/janedoe" }, { platform: "LeetCode", link: "https://leetcode.com/janedoe" }]
+          };
+          profile = sampleData.profile; skills = sampleData.skills; projects = sampleData.projects; interns = sampleData.internships; certs = sampleData.certificates; edu = sampleData.education; social = sampleData.social;
+          save(KEY_PROFILE, profile); save(KEY_SKILLS, skills); save(KEY_PROJECTS, projects); save(KEY_INTERNS, interns); save(KEY_CERTS, certs); save(KEY_EDU, edu); save(KEY_SOCIAL, social);
+          renderAll();
+          alert('Demo data loaded!');
+          navigate('home');
+      });
+
+      // Profile handlers
+      $('#profileForm').addEventListener('submit',e=>{e.preventDefault(); profile.name=$('#name').value.trim(); profile.email=$('#email').value.trim(); profile.phone=$('#phone').value.trim(); profile.bio=$('#bio').value.trim(); save(KEY_PROFILE,profile); renderAll(); alert('Profile saved'); });
+      $('#clearProfile').addEventListener('click',()=>{ if(!confirm('Clear profile?')) return; profile={name:'',email:'',phone:'',bio:'',photo:''}; save(KEY_PROFILE,profile); $('#name').value=''; $('#email').value=''; $('#phone').value=''; $('#bio').value=''; $('#photoPreview').classList.add('hidden'); $('#photoPlaceholder').classList.remove('hidden'); renderAll(); });
+      $('#photoUpload').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            profile.photo = event.target.result;
+            save(KEY_PROFILE, profile);
+            $('#photoPreview').src = profile.photo;
+            $('#photoPreview').classList.remove('hidden');
+            $('#photoPlaceholder').classList.add('hidden');
+            renderAll();
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+
+      // Skills handlers
+      $('#skillLevelVal').textContent = $('#skillLevel').value + '%';
+      $('#skillLevel').addEventListener('input',()=> $('#skillLevelVal').textContent = $('#skillLevel').value + '%');
+      $('#skillsForm').addEventListener('submit',e=>{ e.preventDefault(); const name=$('#skillName').value.trim(); const level=parseInt($('#skillLevel').value||0); if(!name) return alert('Enter skill name'); skills.unshift({name,level}); save(KEY_SKILLS,skills); $('#skillName').value=''; renderAll(); });
+      $('#clearSkills').addEventListener('click',()=>{ if(!confirm('Clear all skills?')) return; skills=[]; save(KEY_SKILLS,skills); renderAll(); });
+
+      // Projects handlers
+      $('#projectsForm').addEventListener('submit',e=>{ e.preventDefault(); const title=$('#projectTitle').value.trim(); const link=$('#projectLink').value.trim(); const desc=$('#projectDesc').value.trim(); if(!title) return alert('Enter project title'); projects.unshift({title,link,desc}); save(KEY_PROJECTS,projects); $('#projectTitle').value=''; $('#projectLink').value=''; $('#projectDesc').value=''; renderAll(); });
+      $('#clearProjects').addEventListener('click',()=>{ if(!confirm('Clear all projects?')) return; projects=[]; save(KEY_PROJECTS,projects); renderAll(); });
+
+      // Certificates handlers
+      $('#certForm').addEventListener('submit',e=>{ e.preventDefault(); const title=$('#certName').value.trim(); const issuer=$('#certIssuer').value.trim(); const link=$('#certLink').value.trim(); if(!title) return alert('Enter certificate title'); certs.unshift({title,issuer,link}); save(KEY_CERTS,certs); $('#certName').value=''; $('#certIssuer').value=''; $('#certLink').value=''; renderAll(); });
+      $('#clearCerts').addEventListener('click',()=>{ if(!confirm('Clear all certificates?')) return; certs=[]; save(KEY_CERTS,certs); renderAll(); });
+
+      // Education handlers (with clear all)
+      $('#eduForm').addEventListener('submit',e=>{ e.preventDefault(); const institute=$('#eduInstitute').value.trim(); const degree=$('#eduDegree').value.trim(); const year=$('#eduYear').value.trim(); if(!institute) return alert('Enter institute name'); edu.unshift({institute,degree,year}); save(KEY_EDU,edu); $('#eduInstitute').value=''; $('#eduDegree').value=''; $('#eduYear').value=''; renderAll(); });
+      $('#clearEdu').addEventListener('click',()=>{ if(!confirm('Clear all education entries?')) return; edu=[]; save(KEY_EDU,edu); renderAll(); });
+
+      // Internships handlers
+      $('#internForm').addEventListener('submit',e=>{ e.preventDefault(); const company=$('#internCompany').value.trim(); const role=$('#internRole').value.trim(); const duration=$('#internDuration').value.trim(); const desc=$('#internDesc').value.trim(); if(!company||!role) return alert('Enter company & role'); interns.unshift({company,role,duration,desc}); save(KEY_INTERNS,interns); $('#internCompany').value=''; $('#internRole').value=''; $('#internDuration').value=''; $('#internDesc').value=''; renderAll(); });
+      $('#clearInterns').addEventListener('click',()=>{ if(!confirm('Clear all internships?')) return; interns=[]; save(KEY_INTERNS,interns); renderAll(); });
+
+      // Social handlers
+      $('#socialForm').addEventListener('submit',e=>{ e.preventDefault(); const platform=$('#socialPlatform').value.trim(); const link=$('#socialLink').value.trim(); if(!platform||!link) return alert('Enter platform and link'); social.unshift({platform,link}); save(KEY_SOCIAL,social); $('#socialPlatform').value=''; $('#socialLink').value=''; renderAll(); });
+      $('#clearSocial').addEventListener('click',()=>{ if(!confirm('Clear all social links?')) return; social=[]; save(KEY_SOCIAL,social); renderAll(); });
+      
+      // Export (from sidebar) and Download (Resume page) — both use same path
+      function doExport(){
+        renderResumePreview();
+        const opt={margin:0.3, filename:`${(profile.name||'resume').replace(/\s+/g,'_')}.pdf`, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} };
+        const content = $('#resumePreview').querySelector('.resume-page');
+        html2pdf().from(content).set(opt).save();
+      }
+      exportBtn.addEventListener('click', doExport);
+      downloadResume.addEventListener('click', doExport);
+      
+      // Customize Modal
+      customizeBtn.addEventListener('click', () => {
+        customizeBackdrop.style.display = 'flex';
+        $$('.rs-cb').forEach(cb => cb.checked = prefs.sections[cb.dataset.section]);
+        $$('input[name="theme"]').forEach(radio => radio.checked = radio.value === prefs.theme.join('|'));
+        // Set the correct template radio button
+        $$('input[name="template"]').forEach(radio => radio.checked = radio.value === prefs.template);
+      });
+      closeCustomize.addEventListener('click', () => customizeBackdrop.style.display = 'none');
+      applyCustomize.addEventListener('click', () => {
+        $$('.rs-cb').forEach(cb => prefs.sections[cb.dataset.section] = cb.checked);
+        const selectedTheme = $('input[name="theme"]:checked').value.split('|');
+        prefs.theme = selectedTheme;
+        // Get the selected template
+        prefs.template = $('input[name="template"]:checked').value;
+        save(KEY_PREF, prefs);
+        renderAll();
+        customizeBackdrop.style.display = 'none';
+      });
+
+      renderAll();
+      if (window.location.hash) { showPage(window.location.hash.substring(1)); $$('.nav-link').forEach(a => a.classList.remove('bg-white/10')); $(`.nav-link[data-target="${window.location.hash.substring(1)}"]`)?.classList.add('bg-white/10'); }
+      else { navigate('home'); }
+
+    })();
+  </script>
+</body>
+</html>
+
