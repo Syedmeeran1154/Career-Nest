@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+   <link rel="icon" type="image/png" sizes="32x32" href="images\career-icon-png-7.jpg">
+  <title>Career Nest - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{
+      --brand-color: #6366f1;
+      --brand-dark: #4338ca;
+    }
+    body{
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    .brand-title{
+      font-family: 'Poppins', sans-serif;
+    }
+    .sidebar-bg{
+      background: linear-gradient(180deg, #4338ca, #6366f1);
+    }
+    .resume-h{
+      border-bottom: 2px solid var(--brand-color);
+    }
+    .skill-progress-bar div{
+      background: linear-gradient(90deg, #6366f1, #3b82f6);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
+    .resume-photo-upload {
+      border: 2px dashed #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease-in-out;
+    }
+    .resume-photo-upload:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .resume-photo-preview {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid var(--brand-color);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+    .input {
+      @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all;
+    }
+    .btn {
+      @apply font-semibold py-2 px-4 rounded-lg transition-all duration-200;
+    }
+    .btn.primary {
+      @apply bg-indigo-600 text-white hover:bg-indigo-700;
+    }
+
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      .app {
+        display: block !important;
+      }
+      .sidebar, .main > *:not(.resume-page) {
+        display: none !important;
+      }
+      .resume-preview {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .resume-page {
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-slate-800">
+  <div class="app flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="sidebar-bg w-64 p-6 text-white flex flex-col justify-between rounded-r-2xl shadow-xl">
+      <div>
+        <div class="brand flex items-center gap-2">
+          <div class="logo w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-2xl">
+            📁
+          </div>
+          <div class="brand-title text-xl font-bold">Career Nest</div>
+        </div>
+        
+        <!-- User Info -->
+        <div class="mt-6 p-4 bg-white/10 rounded-lg">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <i class="fas fa-user text-sm"></i>
+            </div>
+            <div>
+              <div id="userNameDisplay" class="font-semibold text-sm"></div>
+              <div class="text-xs opacity-75">Welcome back!</div>
+            </div>
+          </div>
+        </div>
+        
+        <nav class="mt-8 flex flex-col space-y-2">
+          <a href="#home" class="nav-link active flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="home">
+            <span class="text-lg">🏠</span> Home
+          </a>
+          <a href="#profile" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="profile">
+            <span class="text-lg">👤</span> Profile
+          </a>
+          <a href="#skills" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="skills">
+            <span class="text-lg">🛠️</span> Skills
+          </a>
+          <a href="#projects" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="projects">
+            <span class="text-lg">📂</span> Projects
+          </a>
+          <a href="#internships" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="internships">
+            <span class="text-lg">📝</span> Internships
+          </a>
+          <a href="#certificates" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="certificates">
+            <span class="text-lg">🏅</span> Certificates
+          </a>
+          <a href="#education" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="education">
+            <span class="text-lg">🎓</span> Education
+          </a>
+          <a href="#social" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="social">
+            <span class="text-lg">🔗</span> Social Media
+          </a>
+          <a href="#resume" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="resume">
+            <span class="text-lg">📄</span> Resume
+          </a>
+        </nav>
+      </div>
+      <div>
+        <button id="exportBtn" class="w-full bg-white/10 text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/20 transition-colors duration-200 mb-2">
+          <i class="fas fa-download mr-2"></i>Export Resume
+        </button>
+        <button id="logoutBtn" class="w-full bg-red-500/20 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-500/30 transition-colors duration-200">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </button>
+        <p class="text-xs text-white/70 mt-2">Data synced to your account</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main flex-1 p-8 overflow-auto custom-scroll">
+      <div class="page max-w-5xl mx-auto">
+        <!-- Home Section -->
+        <section id="home">
+          <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-8">
+            <div class="flex-1">
+              <h1 class="text-4xl font-extrabold brand-title text-indigo-700">Welcome to Your Professional Hub</h1>
+              <p class="text-lg text-slate-500 mt-2">Track your journey, showcase your skills, and export professional resumes.</p>
+              <div class="flex gap-3 mt-4">
+                <button class="btn primary" onclick="navigate('profile')">
+                  <i class="fas fa-user mr-2"></i>Update Profile
+                </button>
+                <button id="loadSample" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-magic mr-2"></i>Load Demo Data
+                </button>
+              </div>
+            </div>
+            <div id="snapshot" class="bg-white p-6 rounded-xl shadow-lg w-full lg:w-72 flex items-center gap-4">
+              <img id="snapPhoto" class="w-16 h-16 rounded-full object-cover hidden" alt="Profile Photo">
+              <div class="flex-1">
+                <h4 class="text-lg font-bold text-gray-700 mb-2">Your Snapshot</h4>
+                <p class="text-sm"><strong class="font-semibold">Name:</strong> <span id="snapName" class="text-slate-500">—</span></p>
+                <p class="text-sm"><strong class="font-semibold">Top Skill:</strong> <span id="snapSkill" class="text-slate-500">—</span></p>
+                <p class="text-sm"><strong class="font-semibold">Projects:</strong> <span id="snapProjCount" class="text-slate-500">0</span></p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-indigo-500 to-indigo-700">
+              <div id="projectCount" class="text-4xl font-extrabold">0</div>
+              <div class="mt-2 text-sm font-semibold">Projects</div>
+            </div>
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-sky-500 to-blue-600">
+              <div id="skillCount" class="text-4xl font-extrabold">0</div>
+              <div class="mt-2 text-sm font-semibold">Skills</div>
+            </div>
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-emerald-500 to-green-600">
+              <div id="certCount" class="text-4xl font-extrabold">0</div>
+              <div class="mt-2 text-sm font-semibold">Certificates</div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg font-bold flex items-center gap-2">
+                <i class="fas fa-folder-open text-indigo-600"></i>Recent Projects
+              </h3>
+              <ul id="projectList" class="mt-4 space-y-2 text-sm"></ul>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg font-bold flex items-center gap-2">
+                <i class="fas fa-tools text-sky-600"></i>Top Skills
+              </h3>
+              <div id="skillsContainer" class="mt-4 flex flex-col gap-2"></div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg font-bold flex items-center gap-2">
+                <i class="fas fa-certificate text-emerald-600"></i>Certificates
+              </h3>
+              <div id="certContainer" class="mt-4 grid grid-cols-1 gap-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-user text-indigo-600"></i>Profile Information
+            </h2>
+            <form id="profileForm" class="flex flex-col gap-4">
+              <label for="photoUpload" class="resume-photo-upload">
+                <input type="file" id="photoUpload" accept="image/*" class="hidden">
+                <div class="flex flex-col items-center justify-center">
+                  <img id="photoPreview" class="resume-photo-preview mb-2 hidden" alt="Profile Photo Preview">
+                  <span id="photoPlaceholder" class="text-gray-400">
+                    <i class="fas fa-camera text-2xl mb-2"></i><br>
+                    Click to add a profile photo
+                  </span>
+                </div>
+              </label>
+              <input id="name" type="text" placeholder="Full name" class="input" />
+              <input id="email" type="email" placeholder="Email" class="input" />
+              <input id="phone" type="tel" placeholder="Phone number" class="input" />
+              <textarea id="bio" placeholder="Professional summary (2-3 lines)" class="input h-24 resize-none"></textarea>
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-save mr-2"></i>Save Profile
+                </button>
+                <button id="clearProfile" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-tools text-indigo-600"></i>Skills & Expertise
+            </h2>
+            <form id="skillsForm" class="flex flex-col gap-4 mb-6">
+              <input id="skillName" type="text" placeholder="Skill name (e.g., JavaScript, Python)" class="input" required />
+              <div class="flex items-center gap-4">
+                <label class="text-sm text-slate-500 flex-1">
+                  Proficiency Level: 
+                  <input id="skillLevel" type="range" min="0" max="100" value="75" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2" />
+                </label>
+                <span id="skillLevelVal" class="w-12 text-sm font-semibold bg-indigo-100 px-2 py-1 rounded">75%</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-plus mr-2"></i>Add Skill
+                </button>
+                <button id="clearSkills" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear All
+                </button>
+              </div>
+            </form>
+            <div id="skillsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-folder-open text-indigo-600"></i>Projects Portfolio
+            </h2>
+            <form id="projectsForm" class="flex flex-col gap-4 mb-6">
+              <input id="projectTitle" type="text" placeholder="Project title" class="input" required />
+              <input id="projectLink" type="url" placeholder="Project link (GitHub, live demo, etc.)" class="input" />
+              <textarea id="projectDesc" placeholder="Brief description of the project and technologies used" class="input h-20 resize-none"></textarea>
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-plus mr-2"></i>Add Project
+                </button>
+                <button id="clearProjects" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear All
+                </button>
+              </div>
+            </form>
+            <div id="projectsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Internships Section -->
+        <section id="internships" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-briefcase text-indigo-600"></i>Work Experience & Internships
+            </h2>
+            <form id="internForm" class="flex flex-col gap-4 mb-6">
+              <input id="internCompany" type="text" placeholder="Company name" class="input" required />
+              <input id="internRole" type="text" placeholder="Role/Position (e.g., Software Developer Intern)" class="input" required />
+              <input id="internDuration" type="text" placeholder="Duration (e.g., Jan 2024 – Jun 2024)" class="input" />
+              <textarea id="internDesc" placeholder="Key responsibilities and achievements" class="input h-20 resize-none"></textarea>
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-plus mr-2"></i>Add Experience
+                </button>
+                <button id="clearInterns" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear All
+                </button>
+              </div>
+            </form>
+            <div id="internsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Certificates Section -->
+        <section id="certificates" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-certificate text-indigo-600"></i>Certifications & Achievements
+            </h2>
+            <form id="certForm" class="flex flex-col gap-4 mb-6">
+              <input id="certName" type="text" placeholder="Certificate title" class="input" required />
+              <input id="certIssuer" type="text" placeholder="Issuing organization (e.g., Google, Microsoft, Coursera)" class="input" />
+              <input id="certLink" type="url" placeholder="Certificate link or verification URL" class="input" />
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-plus mr-2"></i>Add Certificate
+                </button>
+                <button id="clearCerts" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear All
+                </button>
+              </div>
+            </form>
+            <div id="certsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-graduation-cap text-indigo-600"></i>Education Background
+            </h2>
+            <form id="eduForm" class="flex flex-col gap-4 mb-6">
+              <input id="eduInstitute" type="text" placeholder="Institution name" class="input" required />
+              <input id="eduDegree" type="text" placeholder="Degree/Program (e.g., B.Sc Computer Science)" class="input" required />
+              <input id="eduYear" type="text" placeholder="Year or duration (e.g., 2020-2024)" class="input" />
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-plus mr-2"></i>Add Education
+                </button>
+                <button id="clearEdu" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear All
+                </button>
+              </div>
+            </form>
+            <div id="eduList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Social Media Section -->
+        <section id="social" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-share-alt text-indigo-600"></i>Social Media & Links
+            </h2>
+            <form id="socialForm" class="flex flex-col gap-4 mb-6">
+              <input id="socialPlatform" type="text" placeholder="Platform (e.g., LinkedIn, GitHub, Portfolio)" class="input" required />
+              <input id="socialLink" type="url" placeholder="Profile URL" class="input" required />
+              <div class="flex gap-2">
+                <button class="btn primary" type="submit">
+                  <i class="fas fa-plus mr-2"></i>Add Link
+                </button>
+                <button id="clearSocial" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-trash mr-2"></i>Clear All
+                </button>
+              </div>
+            </form>
+            <div id="socialList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </section>
+
+        <!-- Resume Section -->
+        <section id="resume" class="hidden">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+              <h2 class="text-2xl font-bold flex items-center gap-2">
+                <i class="fas fa-file-pdf text-indigo-600"></i>Resume Preview
+              </h2>
+              <div class="flex gap-3">
+                <button id="customizeBtn" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                  <i class="fas fa-cog mr-2"></i>Customize
+                </button>
+                <button id="downloadResume" class="btn primary">
+                  <i class="fas fa-download mr-2"></i>Download PDF
+                </button>
+              </div>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">
+              <i class="fas fa-info-circle mr-1"></i>
+              Drag and drop sections to reorder your resume!
+            </p>
+            <div id="resumePreview" class="resume-preview bg-gray-100 p-4 rounded-xl shadow-inner min-h-[30rem] overflow-hidden"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Customize Modal -->
+  <div id="customizeBackdrop" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-[1000] hidden">
+    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl">
+      <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i class="fas fa-palette text-indigo-600"></i>Customize Resume
+      </h3>
+      
+      <div class="mb-4">
+        <h4 class="text-lg font-semibold mb-2">Select Sections</h4>
+        <div class="flex flex-wrap gap-2">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="profile" checked> Profile
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="skills" checked> Skills
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="projects" checked> Projects
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="internships" checked> Internships
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="certificates" checked> Certificates
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="education" checked> Education
+          </label>
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="checkbox" class="rs-cb accent-indigo-600" data-section="social" checked> Social Media
+          </label>
+        </div>
+      </div>
+      
+      <div class="mt-6 mb-4">
+        <h4 class="text-lg font-semibold mb-2">Template Style</h4>
+        <div class="flex flex-wrap gap-2">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="radio" name="template" value="classic" checked class="accent-indigo-600"> Classic
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="radio" name="template" value="modern" class="accent-indigo-600"> Modern
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold mb-2">Color Theme</h4>
+        <div class="flex flex-wrap gap-2">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="radio" name="theme" value="#6366f1|#4338ca" checked class="accent-indigo-600"> 
+            <span class="w-4 h-4 bg-indigo-500 rounded-full"></span> Indigo
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="radio" name="theme" value="#0ea5e9|#0369a1" class="accent-sky-600"> 
+            <span class="w-4 h-4 bg-sky-500 rounded-full"></span> Sky Blue
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="radio" name="theme" value="#22c55e|#16a34a" class="accent-green-600"> 
+            <span class="w-4 h-4 bg-green-500 rounded-full"></span> Green
+          </label>
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+            <input type="radio" name="theme" value="#ef4444|#b91c1c" class="accent-red-600"> 
+            <span class="w-4 h-4 bg-red-500 rounded-full"></span> Red
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button id="closeCustomize" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+          Cancel
+        </button>
+        <button id="applyCustomize" class="btn primary">
+          Apply Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
