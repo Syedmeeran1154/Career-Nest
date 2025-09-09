@@ -124,6 +124,15 @@
           <a href="#home" class="nav-link active flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="home">
             <span class="text-lg">🏠</span> Home
           </a>
+          <a href="#analytics" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="analytics">
+            <span class="text-lg">📊</span> Analytics
+          </a>
+          <a href="#integrations" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="integrations">
+            <span class="text-lg">🔗</span> Integrations
+          </a>
+          <a href="#achievements" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="achievements">
+            <span class="text-lg">🏆</span> Achievements
+          </a>
           <a href="#profile" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="profile">
             <span class="text-lg">👤</span> Profile
           </a>
@@ -166,16 +175,49 @@
       <div class="page max-w-5xl mx-auto">
         <!-- Home Section -->
         <section id="home">
+          <!-- Personalized Welcome -->
+          <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+              <div class="flex-1">
+                <h1 class="text-4xl font-extrabold brand-title mb-2">Welcome back, <span id="welcomeName">User</span>! 👋</h1>
+                <p class="text-lg text-indigo-100 mb-4">Here's your professional journey at a glance</p>
+                <div id="gameStatsContainer" class="mb-4"></div>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
+                <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
+                <div class="flex flex-col gap-2">
+                  <button onclick="navigate('profile')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                    <i class="fas fa-user mr-2"></i>Update Profile
+                  </button>
+                  <button onclick="navigate('projects')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Add Project
+                  </button>
+                  <button onclick="navigate('resume')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Export Resume
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Achievement Highlights -->
+          <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-trophy text-yellow-500"></i>Recent Achievements
+            </h2>
+            <div id="recentAchievements" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+          </div>
+
           <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-8">
             <div class="flex-1">
-              <h1 class="text-4xl font-extrabold brand-title text-indigo-700">Welcome to Your Professional Hub</h1>
-              <p class="text-lg text-slate-500 mt-2">Track your journey, showcase your skills, and export professional resumes.</p>
+              <h2 class="text-3xl font-extrabold brand-title text-indigo-700">Your Professional Hub</h2>
+              <p class="text-lg text-slate-500 mt-2">Track your journey, showcase your skills, and level up your career.</p>
               <div class="flex gap-3 mt-4">
-                <button class="btn primary" onclick="navigate('profile')">
-                  <i class="fas fa-user mr-2"></i>Update Profile
-                </button>
                 <button id="loadSample" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
                   <i class="fas fa-magic mr-2"></i>Load Demo Data
+                </button>
+                <button onclick="navigate('analytics')" class="btn bg-purple-600 text-white hover:bg-purple-700">
+                  <i class="fas fa-chart-line mr-2"></i>View Analytics
                 </button>
               </div>
             </div>
@@ -184,6 +226,7 @@
               <div class="flex-1">
                 <h4 class="text-lg font-bold text-gray-700 mb-2">Your Snapshot</h4>
                 <p class="text-sm"><strong class="font-semibold">Name:</strong> <span id="snapName" class="text-slate-500">—</span></p>
+                <p class="text-sm"><strong class="font-semibold">Level:</strong> <span id="snapLevel" class="text-slate-500">—</span></p>
                 <p class="text-sm"><strong class="font-semibold">Top Skill:</strong> <span id="snapSkill" class="text-slate-500">—</span></p>
                 <p class="text-sm"><strong class="font-semibold">Projects:</strong> <span id="snapProjCount" class="text-slate-500">0</span></p>
               </div>
@@ -224,6 +267,78 @@
               </h3>
               <div id="certContainer" class="mt-4 grid grid-cols-1 gap-2"></div>
             </div>
+          </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="hidden">
+          <div class="mb-8">
+            <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Career Analytics</h2>
+            <p class="text-lg text-slate-500">Visualize your skills and track your professional growth</p>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Skill Radar Chart -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-radar-chart text-indigo-600"></i>Skill Distribution
+              </h3>
+              <div id="skillRadarChart" class="flex justify-center"></div>
+              <div id="skillBreakdown" class="mt-4 space-y-2"></div>
+            </div>
+            
+            <!-- Progress Timeline -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-line text-green-600"></i>Growth Timeline
+              </h3>
+              <div id="progressTimeline" class="space-y-4"></div>
+            </div>
+          </div>
+          
+          <!-- Detailed Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h4 class="font-semibold text-gray-700 mb-3">Skill Categories</h4>
+              <div id="skillCategories" class="space-y-2"></div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h4 class="font-semibold text-gray-700 mb-3">Project Technologies</h4>
+              <div id="projectTechnologies" class="space-y-2"></div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h4 class="font-semibold text-gray-700 mb-3">Achievement Summary</h4>
+              <div id="achievementSummary" class="space-y-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Integrations Section -->
+        <section id="integrations" class="hidden">
+          <div class="mb-8">
+            <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Platform Integrations</h2>
+            <p class="text-lg text-slate-500">Connect your external profiles to automatically import achievements and data</p>
+          </div>
+          
+          <div id="integrationsContainer"></div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section id="achievements" class="hidden">
+          <div class="mb-8">
+            <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Achievements & Badges</h2>
+            <p class="text-lg text-slate-500">Track your progress and celebrate your milestones</p>
+          </div>
+          
+          <!-- Level Progress -->
+          <div id="levelProgress" class="mb-8"></div>
+          
+          <!-- Badges Grid -->
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+              <i class="fas fa-medal text-yellow-500"></i>Earned Badges
+            </h3>
+            <div id="badgesContainer"></div>
           </div>
         </section>
 
@@ -511,6 +626,10 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+  <script src="js/themeManager.js"></script>
+  <script src="js/skillMapping.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/integrations.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>
