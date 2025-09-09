@@ -2,6 +2,9 @@
 class CareerNestDashboard {
   constructor() {
     this.currentUser = null;
+    this.skillMapper = new SkillMapper();
+    this.gamification = new GamificationSystem();
+    this.themeManager = new ThemeManager();
     this.init();
   }
 
@@ -19,6 +22,10 @@ class CareerNestDashboard {
       this.initializeData();
       this.setupEventListeners();
       this.renderAll();
+      
+      // Initialize new components
+      this.integrations = new PlatformIntegrations();
+      this.updateGameData();
     } catch (error) {
       console.error('Error initializing dashboard:', error);
       localStorage.removeItem('cn_current_user');
@@ -31,6 +38,12 @@ class CareerNestDashboard {
     const userNameDisplay = document.getElementById('userNameDisplay');
     if (userNameDisplay) {
       userNameDisplay.textContent = this.currentUser.name || 'User';
+    }
+    
+    // Display welcome name
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) {
+      welcomeName.textContent = this.currentUser.name || 'User';
     }
   }
 
@@ -116,6 +129,28 @@ class CareerNestDashboard {
     this.setupFormHandlers();
     this.setupCustomizeModal();
     this.setupExportHandlers();
+    this.setupNewSectionHandlers();
+  }
+
+  setupNewSectionHandlers() {
+    // Analytics refresh
+    const analyticsRefresh = () => {
+      if (document.getElementById('analytics').classList.contains('hidden')) return;
+      this.renderAnalytics();
+    };
+    
+    // Refresh analytics when navigating to it
+    const originalNavigate = this.navigate;
+    this.navigate = (pageId) => {
+      originalNavigate.call(this, pageId);
+      if (pageId === 'analytics') {
+        setTimeout(analyticsRefresh, 100);
+      } else if (pageId === 'integrations') {
+        this.integrations.renderIntegrationsPanel('integrationsContainer', this.currentUser.id);
+      } else if (pageId === 'achievements') {
+        this.renderAchievements();
+      }
+    };
   }
 
   navigate(pageId) {
@@ -529,6 +564,55 @@ class CareerNestDashboard {
     this.renderDashboard();
     this.renderLists();
     this.renderResumePreview();
+    this.updateGameData();
+  }
+
+  updateGameData() {
+    // Calculate current XP and level
+    const currentXP = this.gamification.calculateXP(
+      this.profile, this.skills, this.projects, this.certs, 
+      this.interns, this.social, this.edu
+    );
+    
+    let gameData = this.gamification.getGameData(this.currentUser.id);
+    const oldLevel = gameData.level;
+    
+    gameData.xp = currentXP;
+    const currentLevel = this.gamification.getCurrentLevel(currentXP);
+    gameData.level = currentLevel.level;
+    
+    // Update streak
+    this.gamification.updateStreak(gameData);
+    
+    // Check for new badges
+    const newBadges = this.gamification.checkBadges(
+      this.profile, this.skills, this.projects, this.certs, 
+      this.interns, this.social, gameData
+    );
+    
+    newBadges.forEach(badgeId => {
+      if (!gameData.badges.includes(badgeId)) {
+        gameData.badges.push(badgeId);
+        this.gamification.showBadgeNotification(badgeId);
+      }
+    });
+    
+    // Check for level up
+    if (currentLevel.level > oldLevel) {
+      this.gamification.showLevelUpNotification(currentLevel);
+    }
+    
+    this.gamification.saveGameData(this.currentUser.id, gameData);
+    
+    // Render game stats in home
+    const nextLevel = this.gamification.getNextLevel(currentLevel);
+    this.gamification.renderGameStats('gameStatsContainer', gameData, currentLevel, nextLevel);
+    
+    // Update snapshot
+    document.getElementById('snapLevel').textContent = `${currentLevel.name} (${currentLevel.level})`;
+    
+    // Render recent achievements
+    this.renderRecentAchievements(gameData, newBadges);
   }
 
   renderDashboard() {
@@ -550,6 +634,9 @@ class CareerNestDashboard {
     } else {
       snapPhoto.classList.add('hidden');
     }
+
+    // Render recent achievements in home
+    this.renderRecentAchievements();
 
     // Render recent projects
     const projectList = document.getElementById('projectList');
@@ -596,6 +683,217 @@ class CareerNestDashboard {
       `;
       certContainer.appendChild(div);
     });
+  }
+
+  renderRecentAchievements(gameData, newBadges = []) {
+    const container = document.getElementById('recentAchievements');
+    if (!container) return;
+    
+    if (!gameData) {
+      gameData = this.gamification.getGameData(this.currentUser.id);
+    }
+    
+    const recentBadges = gameData.badges.slice(-3).reverse();
+    const achievements = [];
+    
+    // Add recent badges
+    recentBadges.forEach(badgeId => {
+      const badge = this.gamification.badges[badgeId];
+      if (badge) {
+        achievements.push({
+          type: 'badge',
+          icon: badge.icon,
+          title: badge.name,
+          description: badge.description,
+          isNew: newBadges.includes(badgeId)
+        });
+      }
+    });
+    
+    // Add recent milestones
+    if (this.projects.length > 0) {
+      achievements.push({
+        type: 'milestone',
+        icon: '📂',
+        title: 'Project Added',
+        description: `Latest: ${this.projects[0].title}`,
+        isNew: false
+      });
+    }
+    
+    if (achievements.length === 0) {
+      container.innerHTML = `
+        <div class="col-span-3 text-center py-8 text-gray-500">
+          <i class="fas fa-trophy text-4xl mb-4 opacity-50"></i>
+          <p>Start building your profile to earn achievements!</p>
+        </div>
+      `;
+      return;
+    }
+    
+    container.innerHTML = achievements.map(achievement => `
+      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-lg border border-indigo-200 ${achievement.isNew ? 'ring-2 ring-yellow-400 animate-pulse' : ''}">
+        <div class="flex items-center gap-3">
+          <div class="text-2xl">${achievement.icon}</div>
+          <div>
+            <h4 class="font-semibold text-gray-800">${achievement.title}</h4>
+            <p class="text-sm text-gray-600">${achievement.description}</p>
+            ${achievement.isNew ? '<span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold">NEW!</span>' : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderAnalytics() {
+    // Generate skill map
+    const skillMap = this.skillMapper.generateSkillMap(
+      this.skills, this.projects, this.certs, this.interns
+    );
+    
+    const radarData = this.skillMapper.generateRadarChartData(skillMap);
+    
+    // Render radar chart
+    this.skillMapper.renderSkillRadarChart('skillRadarChart', radarData);
+    
+    // Render skill breakdown
+    const skillBreakdown = document.getElementById('skillBreakdown');
+    if (skillBreakdown) {
+      skillBreakdown.innerHTML = radarData.map(item => `
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium">${item.category}</span>
+          <span class="text-sm text-indigo-600 font-semibold">${item.value}%</span>
+        </div>
+      `).join('');
+    }
+    
+    // Render progress timeline
+    this.renderProgressTimeline();
+    
+    // Render detailed stats
+    this.renderDetailedStats(skillMap);
+  }
+
+  renderProgressTimeline() {
+    const container = document.getElementById('progressTimeline');
+    if (!container) return;
+    
+    const events = [];
+    
+    // Add projects as timeline events
+    this.projects.forEach(project => {
+      events.push({
+        type: 'project',
+        title: project.title,
+        description: 'Project completed',
+        icon: '📂',
+        color: 'indigo'
+      });
+    });
+    
+    // Add certificates
+    this.certs.forEach(cert => {
+      events.push({
+        type: 'certificate',
+        title: cert.title,
+        description: `Certified by ${cert.issuer || 'Organization'}`,
+        icon: '🏅',
+        color: 'green'
+      });
+    });
+    
+    // Add work experience
+    this.interns.forEach(intern => {
+      events.push({
+        type: 'experience',
+        title: intern.role,
+        description: `at ${intern.company}`,
+        icon: '💼',
+        color: 'purple'
+      });
+    });
+    
+    if (events.length === 0) {
+      container.innerHTML = '<p class="text-gray-500 text-center py-8">No timeline data available yet</p>';
+      return;
+    }
+    
+    container.innerHTML = events.slice(0, 8).map((event, index) => `
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0 w-10 h-10 bg-${event.color}-100 text-${event.color}-600 rounded-full flex items-center justify-center">
+          ${event.icon}
+        </div>
+        <div class="flex-1 min-w-0">
+          <h4 class="text-sm font-semibold text-gray-800">${event.title}</h4>
+          <p class="text-xs text-gray-500">${event.description}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderDetailedStats(skillMap) {
+    // Skill categories
+    const skillCategories = document.getElementById('skillCategories');
+    if (skillCategories) {
+      const categories = Object.entries(skillMap).map(([category, data]) => `
+        <div class="flex justify-between items-center py-2">
+          <span class="text-sm">${category}</span>
+          <span class="text-sm font-semibold text-indigo-600">${data.count} skills</span>
+        </div>
+      `).join('');
+      skillCategories.innerHTML = categories || '<p class="text-gray-500 text-sm">No skill categories yet</p>';
+    }
+    
+    // Project technologies
+    const projectTech = document.getElementById('projectTechnologies');
+    if (projectTech) {
+      const technologies = new Set();
+      this.projects.forEach(project => {
+        const extractedSkills = this.skillMapper.extractSkillsFromText(project.desc + ' ' + project.title);
+        extractedSkills.forEach(skill => technologies.add(skill));
+      });
+      
+      const techArray = Array.from(technologies).slice(0, 8);
+      projectTech.innerHTML = techArray.map(tech => `
+        <div class="bg-gray-100 px-3 py-1 rounded-full text-sm">${tech}</div>
+      `).join('') || '<p class="text-gray-500 text-sm">No project technologies detected</p>';
+    }
+    
+    // Achievement summary
+    const achievementSummary = document.getElementById('achievementSummary');
+    if (achievementSummary) {
+      const gameData = this.gamification.getGameData(this.currentUser.id);
+      achievementSummary.innerHTML = `
+        <div class="flex justify-between py-1">
+          <span class="text-sm">Total XP</span>
+          <span class="font-semibold">${gameData.xp}</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-sm">Current Level</span>
+          <span class="font-semibold">${gameData.level}</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-sm">Badges Earned</span>
+          <span class="font-semibold">${gameData.badges.length}</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-sm">Day Streak</span>
+          <span class="font-semibold">${gameData.streak}</span>
+        </div>
+      `;
+    }
+  }
+
+  renderAchievements() {
+    const gameData = this.gamification.getGameData(this.currentUser.id);
+    const currentLevel = this.gamification.getCurrentLevel(gameData.xp);
+    const nextLevel = this.gamification.getNextLevel(currentLevel);
+    
+    // Render level progress
+    this.gamification.renderGameStats('levelProgress', gameData, currentLevel, nextLevel);
+    
+    // Render badges
+    this.gamification.renderBadges('badgesContainer', gameData.badges);
   }
 
   renderLists() {
@@ -961,6 +1259,7 @@ class CareerNestDashboard {
 
 // Initialize dashboard
 const dashboard = new CareerNestDashboard();
+const integrations = new PlatformIntegrations();
 
 // Make navigate function global for button clicks
 window.navigate = (pageId) => dashboard.navigate(pageId);
