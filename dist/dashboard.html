@@ -16,12 +16,14 @@
     body{
       font-family: 'Inter', sans-serif;
       background-color: #f8fafc;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     .brand-title{
       font-family: 'Poppins', sans-serif;
     }
     .sidebar-bg{
       background: linear-gradient(180deg, #4338ca, #6366f1);
+      transition: background 0.3s ease;
     }
     .resume-h{
       border-bottom: 2px solid var(--brand-color);
@@ -69,6 +71,47 @@
     .btn.primary {
       @apply bg-indigo-600 text-white hover:bg-indigo-700;
     }
+    
+    /* Enhanced animations and effects */
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .hover-lift {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .hover-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .gradient-border {
+      position: relative;
+      background: linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899);
+      border-radius: 12px;
+      padding: 2px;
+    }
+    
+    .gradient-border-inner {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); }
+    }
 
     @media print {
       body {
@@ -95,20 +138,21 @@
     }
   </style>
 </head>
-<body class="bg-gray-50 text-slate-800">
+<body class="bg-gray-50 text-slate-800 transition-all duration-300">
   <div class="app flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="sidebar-bg w-64 p-6 text-white flex flex-col justify-between rounded-r-2xl shadow-xl">
+    <aside class="sidebar-bg w-64 p-6 text-white flex flex-col justify-between rounded-r-2xl shadow-xl transition-all duration-300">
       <div>
-        <div class="brand flex items-center gap-2">
+        <div class="brand flex items-center gap-2 mb-2">
           <div class="logo w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-2xl">
             📁
           </div>
           <div class="brand-title text-xl font-bold">Career Nest</div>
         </div>
+        <p class="text-xs text-white/70 mb-6">Your Professional Journey</p>
         
         <!-- User Info -->
-        <div class="mt-6 p-4 bg-white/10 rounded-lg">
+        <div class="p-4 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all duration-200">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
               <i class="fas fa-user text-sm"></i>
@@ -121,49 +165,49 @@
         </div>
         
         <nav class="mt-8 flex flex-col space-y-2">
-          <a href="#home" class="nav-link active flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="home">
+          <a href="#home" class="nav-link active flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="home">
             <span class="text-lg">🏠</span> Home
           </a>
-          <a href="#analytics" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="analytics">
+          <a href="#analytics" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="analytics">
             <span class="text-lg">📊</span> Analytics
           </a>
-          <a href="#integrations" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="integrations">
+          <a href="#integrations" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="integrations">
             <span class="text-lg">🔗</span> Integrations
           </a>
-          <a href="#achievements" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="achievements">
+          <a href="#achievements" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="achievements">
             <span class="text-lg">🏆</span> Achievements
           </a>
-          <a href="#profile" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="profile">
+          <a href="#profile" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="profile">
             <span class="text-lg">👤</span> Profile
           </a>
-          <a href="#skills" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="skills">
+          <a href="#skills" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="skills">
             <span class="text-lg">🛠️</span> Skills
           </a>
-          <a href="#projects" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="projects">
+          <a href="#projects" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="projects">
             <span class="text-lg">📂</span> Projects
           </a>
-          <a href="#internships" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="internships">
+          <a href="#internships" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="internships">
             <span class="text-lg">📝</span> Internships
           </a>
-          <a href="#certificates" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="certificates">
+          <a href="#certificates" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="certificates">
             <span class="text-lg">🏅</span> Certificates
           </a>
-          <a href="#education" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="education">
+          <a href="#education" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="education">
             <span class="text-lg">🎓</span> Education
           </a>
-          <a href="#social" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="social">
+          <a href="#social" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="social">
             <span class="text-lg">🔗</span> Social Media
           </a>
-          <a href="#resume" class="nav-link flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition-all duration-200" data-target="resume">
+          <a href="#resume" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="resume">
             <span class="text-lg">📄</span> Resume
           </a>
         </nav>
       </div>
       <div>
-        <button id="exportBtn" class="w-full bg-white/10 text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/20 transition-colors duration-200 mb-2">
+        <button id="exportBtn" class="w-full bg-white/10 text-white font-semibold py-3 px-4 rounded-lg hover:bg-white/20 transition-all duration-200 mb-3 hover:scale-105">
           <i class="fas fa-download mr-2"></i>Export Resume
         </button>
-        <button id="logoutBtn" class="w-full bg-red-500/20 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-500/30 transition-colors duration-200">
+        <button id="logoutBtn" class="w-full bg-red-500/20 text-white font-semibold py-3 px-4 rounded-lg hover:bg-red-500/40 transition-all duration-200 hover:scale-105">
           <i class="fas fa-sign-out-alt mr-2"></i>Logout
         </button>
         <p class="text-xs text-white/70 mt-2">Data synced to your account</p>
@@ -171,28 +215,28 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="main flex-1 p-8 overflow-auto custom-scroll">
+    <main class="main flex-1 p-8 overflow-auto custom-scroll transition-all duration-300">
       <div class="page max-w-5xl mx-auto">
         <!-- Home Section -->
-        <section id="home">
+        <section id="home" class="fade-in">
           <!-- Personalized Welcome -->
-          <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8">
+          <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8 hover-lift pulse-glow">
             <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
               <div class="flex-1">
                 <h1 class="text-4xl font-extrabold brand-title mb-2">Welcome back, <span id="welcomeName">User</span>! 👋</h1>
                 <p class="text-lg text-indigo-100 mb-4">Here's your professional journey at a glance</p>
                 <div id="gameStatsContainer" class="mb-4"></div>
               </div>
-              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
+              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-all duration-200">
                 <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
                 <div class="flex flex-col gap-2">
-                  <button onclick="navigate('profile')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                  <button onclick="navigate('profile')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-105">
                     <i class="fas fa-user mr-2"></i>Update Profile
                   </button>
-                  <button onclick="navigate('projects')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                  <button onclick="navigate('projects')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-105">
                     <i class="fas fa-plus mr-2"></i>Add Project
                   </button>
-                  <button onclick="navigate('resume')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                  <button onclick="navigate('resume')" class="text-left px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-105">
                     <i class="fas fa-download mr-2"></i>Export Resume
                   </button>
                 </div>
@@ -201,7 +245,7 @@
           </div>
 
           <!-- Achievement Highlights -->
-          <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+          <div class="bg-white p-6 rounded-xl shadow-lg mb-8 hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-trophy text-yellow-500"></i>Recent Achievements
             </h2>
@@ -213,15 +257,15 @@
               <h2 class="text-3xl font-extrabold brand-title text-indigo-700">Your Professional Hub</h2>
               <p class="text-lg text-slate-500 mt-2">Track your journey, showcase your skills, and level up your career.</p>
               <div class="flex gap-3 mt-4">
-                <button id="loadSample" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="loadSample" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-magic mr-2"></i>Load Demo Data
                 </button>
-                <button onclick="navigate('analytics')" class="btn bg-purple-600 text-white hover:bg-purple-700">
+                <button onclick="navigate('analytics')" class="btn bg-purple-600 text-white hover:bg-purple-700 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-chart-line mr-2"></i>View Analytics
                 </button>
               </div>
             </div>
-            <div id="snapshot" class="bg-white p-6 rounded-xl shadow-lg w-full lg:w-72 flex items-center gap-4">
+            <div id="snapshot" class="bg-white p-6 rounded-xl shadow-lg w-full lg:w-72 flex items-center gap-4 hover-lift transition-all duration-300">
               <img id="snapPhoto" class="w-16 h-16 rounded-full object-cover hidden" alt="Profile Photo">
               <div class="flex-1">
                 <h4 class="text-lg font-bold text-gray-700 mb-2">Your Snapshot</h4>
@@ -234,34 +278,34 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-indigo-500 to-indigo-700">
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-indigo-500 to-indigo-700 hover-lift transition-all duration-300">
               <div id="projectCount" class="text-4xl font-extrabold">0</div>
               <div class="mt-2 text-sm font-semibold">Projects</div>
             </div>
-            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-sky-500 to-blue-600">
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-sky-500 to-blue-600 hover-lift transition-all duration-300">
               <div id="skillCount" class="text-4xl font-extrabold">0</div>
               <div class="mt-2 text-sm font-semibold">Skills</div>
             </div>
-            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-emerald-500 to-green-600">
+            <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-emerald-500 to-green-600 hover-lift transition-all duration-300">
               <div id="certCount" class="text-4xl font-extrabold">0</div>
               <div class="mt-2 text-sm font-semibold">Certificates</div>
             </div>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h3 class="text-lg font-bold flex items-center gap-2">
                 <i class="fas fa-folder-open text-indigo-600"></i>Recent Projects
               </h3>
               <ul id="projectList" class="mt-4 space-y-2 text-sm"></ul>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h3 class="text-lg font-bold flex items-center gap-2">
                 <i class="fas fa-tools text-sky-600"></i>Top Skills
               </h3>
               <div id="skillsContainer" class="mt-4 flex flex-col gap-2"></div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h3 class="text-lg font-bold flex items-center gap-2">
                 <i class="fas fa-certificate text-emerald-600"></i>Certificates
               </h3>
@@ -271,7 +315,7 @@
         </section>
 
         <!-- Analytics Section -->
-        <section id="analytics" class="hidden">
+        <section id="analytics" class="hidden fade-in">
           <div class="mb-8">
             <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Career Analytics</h2>
             <p class="text-lg text-slate-500">Visualize your skills and track your professional growth</p>
@@ -279,7 +323,7 @@
           
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Skill Radar Chart -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                 <i class="fas fa-radar-chart text-indigo-600"></i>Skill Distribution
               </h3>
@@ -288,7 +332,7 @@
             </div>
             
             <!-- Progress Timeline -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                 <i class="fas fa-chart-line text-green-600"></i>Growth Timeline
               </h3>
@@ -298,15 +342,15 @@
           
           <!-- Detailed Stats -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h4 class="font-semibold text-gray-700 mb-3">Skill Categories</h4>
               <div id="skillCategories" class="space-y-2"></div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h4 class="font-semibold text-gray-700 mb-3">Project Technologies</h4>
               <div id="projectTechnologies" class="space-y-2"></div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
               <h4 class="font-semibold text-gray-700 mb-3">Achievement Summary</h4>
               <div id="achievementSummary" class="space-y-2"></div>
             </div>
@@ -314,7 +358,7 @@
         </section>
 
         <!-- Integrations Section -->
-        <section id="integrations" class="hidden">
+        <section id="integrations" class="hidden fade-in">
           <div class="mb-8">
             <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Platform Integrations</h2>
             <p class="text-lg text-slate-500">Connect your external profiles to automatically import achievements and data</p>
@@ -324,7 +368,7 @@
         </section>
 
         <!-- Achievements Section -->
-        <section id="achievements" class="hidden">
+        <section id="achievements" class="hidden fade-in">
           <div class="mb-8">
             <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Achievements & Badges</h2>
             <p class="text-lg text-slate-500">Track your progress and celebrate your milestones</p>
@@ -334,7 +378,7 @@
           <div id="levelProgress" class="mb-8"></div>
           
           <!-- Badges Grid -->
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-medal text-yellow-500"></i>Earned Badges
             </h3>
@@ -343,8 +387,8 @@
         </section>
 
         <!-- Profile Section -->
-        <section id="profile" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="profile" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-user text-indigo-600"></i>Profile Information
             </h2>
@@ -364,10 +408,10 @@
               <input id="phone" type="tel" placeholder="Phone number" class="input" />
               <textarea id="bio" placeholder="Professional summary (2-3 lines)" class="input h-24 resize-none"></textarea>
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-save mr-2"></i>Save Profile
                 </button>
-                <button id="clearProfile" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearProfile" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear
                 </button>
               </div>
@@ -376,8 +420,8 @@
         </section>
 
         <!-- Skills Section -->
-        <section id="skills" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="skills" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-tools text-indigo-600"></i>Skills & Expertise
             </h2>
@@ -391,10 +435,10 @@
                 <span id="skillLevelVal" class="w-12 text-sm font-semibold bg-indigo-100 px-2 py-1 rounded">75%</span>
               </div>
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-plus mr-2"></i>Add Skill
                 </button>
-                <button id="clearSkills" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearSkills" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear All
                 </button>
               </div>
@@ -404,8 +448,8 @@
         </section>
 
         <!-- Projects Section -->
-        <section id="projects" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="projects" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-folder-open text-indigo-600"></i>Projects Portfolio
             </h2>
@@ -414,10 +458,10 @@
               <input id="projectLink" type="url" placeholder="Project link (GitHub, live demo, etc.)" class="input" />
               <textarea id="projectDesc" placeholder="Brief description of the project and technologies used" class="input h-20 resize-none"></textarea>
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-plus mr-2"></i>Add Project
                 </button>
-                <button id="clearProjects" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearProjects" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear All
                 </button>
               </div>
@@ -427,8 +471,8 @@
         </section>
 
         <!-- Internships Section -->
-        <section id="internships" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="internships" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-briefcase text-indigo-600"></i>Work Experience & Internships
             </h2>
@@ -438,10 +482,10 @@
               <input id="internDuration" type="text" placeholder="Duration (e.g., Jan 2024 – Jun 2024)" class="input" />
               <textarea id="internDesc" placeholder="Key responsibilities and achievements" class="input h-20 resize-none"></textarea>
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-plus mr-2"></i>Add Experience
                 </button>
-                <button id="clearInterns" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearInterns" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear All
                 </button>
               </div>
@@ -451,8 +495,8 @@
         </section>
 
         <!-- Certificates Section -->
-        <section id="certificates" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="certificates" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-certificate text-indigo-600"></i>Certifications & Achievements
             </h2>
@@ -461,10 +505,10 @@
               <input id="certIssuer" type="text" placeholder="Issuing organization (e.g., Google, Microsoft, Coursera)" class="input" />
               <input id="certLink" type="url" placeholder="Certificate link or verification URL" class="input" />
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-plus mr-2"></i>Add Certificate
                 </button>
-                <button id="clearCerts" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearCerts" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear All
                 </button>
               </div>
@@ -474,8 +518,8 @@
         </section>
 
         <!-- Education Section -->
-        <section id="education" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="education" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-graduation-cap text-indigo-600"></i>Education Background
             </h2>
@@ -484,10 +528,10 @@
               <input id="eduDegree" type="text" placeholder="Degree/Program (e.g., B.Sc Computer Science)" class="input" required />
               <input id="eduYear" type="text" placeholder="Year or duration (e.g., 2020-2024)" class="input" />
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-plus mr-2"></i>Add Education
                 </button>
-                <button id="clearEdu" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearEdu" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear All
                 </button>
               </div>
@@ -497,8 +541,8 @@
         </section>
 
         <!-- Social Media Section -->
-        <section id="social" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="social" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
               <i class="fas fa-share-alt text-indigo-600"></i>Social Media & Links
             </h2>
@@ -506,10 +550,10 @@
               <input id="socialPlatform" type="text" placeholder="Platform (e.g., LinkedIn, GitHub, Portfolio)" class="input" required />
               <input id="socialLink" type="url" placeholder="Profile URL" class="input" required />
               <div class="flex gap-2">
-                <button class="btn primary" type="submit">
+                <button class="btn primary hover:scale-105 transition-all duration-200" type="submit">
                   <i class="fas fa-plus mr-2"></i>Add Link
                 </button>
-                <button id="clearSocial" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="clearSocial" type="button" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-trash mr-2"></i>Clear All
                 </button>
               </div>
@@ -519,17 +563,17 @@
         </section>
 
         <!-- Resume Section -->
-        <section id="resume" class="hidden">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+        <section id="resume" class="hidden fade-in">
+          <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
               <h2 class="text-2xl font-bold flex items-center gap-2">
                 <i class="fas fa-file-pdf text-indigo-600"></i>Resume Preview
               </h2>
               <div class="flex gap-3">
-                <button id="customizeBtn" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+                <button id="customizeBtn" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
                   <i class="fas fa-cog mr-2"></i>Customize
                 </button>
-                <button id="downloadResume" class="btn primary">
+                <button id="downloadResume" class="btn primary hover:scale-105 transition-all duration-200">
                   <i class="fas fa-download mr-2"></i>Download PDF
                 </button>
               </div>
@@ -546,8 +590,8 @@
   </div>
 
   <!-- Customize Modal -->
-  <div id="customizeBackdrop" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-[1000] hidden">
-    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl">
+  <div id="customizeBackdrop" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-[1000] hidden backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl hover-lift">
       <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
         <i class="fas fa-palette text-indigo-600"></i>Customize Resume
       </h3>
@@ -555,25 +599,25 @@
       <div class="mb-4">
         <h4 class="text-lg font-semibold mb-2">Select Sections</h4>
         <div class="flex flex-wrap gap-2">
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="profile" checked> Profile
           </label>
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="skills" checked> Skills
           </label>
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="projects" checked> Projects
           </label>
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="internships" checked> Internships
           </label>
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="certificates" checked> Certificates
           </label>
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="education" checked> Education
           </label>
-          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="checkbox" class="rs-cb accent-indigo-600" data-section="social" checked> Social Media
           </label>
         </div>
@@ -582,10 +626,10 @@
       <div class="mt-6 mb-4">
         <h4 class="text-lg font-semibold mb-2">Template Style</h4>
         <div class="flex flex-wrap gap-2">
-          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="radio" name="template" value="classic" checked class="accent-indigo-600"> Classic
           </label>
-          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="radio" name="template" value="modern" class="accent-indigo-600"> Modern
           </label>
         </div>
@@ -594,19 +638,19 @@
       <div>
         <h4 class="text-lg font-semibold mb-2">Color Theme</h4>
         <div class="flex flex-wrap gap-2">
-          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="radio" name="theme" value="#6366f1|#4338ca" checked class="accent-indigo-600"> 
             <span class="w-4 h-4 bg-indigo-500 rounded-full"></span> Indigo
           </label>
-          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="radio" name="theme" value="#0ea5e9|#0369a1" class="accent-sky-600"> 
             <span class="w-4 h-4 bg-sky-500 rounded-full"></span> Sky Blue
           </label>
-          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="radio" name="theme" value="#22c55e|#16a34a" class="accent-green-600"> 
             <span class="w-4 h-4 bg-green-500 rounded-full"></span> Green
           </label>
-          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200">
+          <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
             <input type="radio" name="theme" value="#ef4444|#b91c1c" class="accent-red-600"> 
             <span class="w-4 h-4 bg-red-500 rounded-full"></span> Red
           </label>
@@ -614,10 +658,10 @@
       </div>
 
       <div class="flex justify-end gap-3 mt-6">
-        <button id="closeCustomize" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300">
+        <button id="closeCustomize" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105 transition-all duration-200">
           Cancel
         </button>
-        <button id="applyCustomize" class="btn primary">
+        <button id="applyCustomize" class="btn primary hover:scale-105 transition-all duration-200">
           Apply Changes
         </button>
       </div>

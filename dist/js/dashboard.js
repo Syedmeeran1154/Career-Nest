@@ -2,6 +2,10 @@
 class CareerNestDashboard {
   constructor() {
     this.currentUser = null;
+    this.themeManager = null;
+    this.skillMapper = null;
+    this.gamificationSystem = null;
+    this.integrations = null;
     this.init();
   }
 
@@ -15,6 +19,13 @@ class CareerNestDashboard {
 
     try {
       this.currentUser = JSON.parse(savedUser);
+      
+      // Initialize systems
+      this.themeManager = new ThemeManager();
+      this.skillMapper = new SkillMapper();
+      this.gamificationSystem = new GamificationSystem();
+      this.integrations = new PlatformIntegrations();
+      
       this.setupUserInterface();
       this.initializeData();
       this.setupEventListeners();
@@ -31,6 +42,12 @@ class CareerNestDashboard {
     const userNameDisplay = document.getElementById('userNameDisplay');
     if (userNameDisplay) {
       userNameDisplay.textContent = this.currentUser.name || 'User';
+    }
+    
+    // Display welcome name
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) {
+      welcomeName.textContent = this.currentUser.name || 'User';
     }
   }
 
@@ -121,19 +138,144 @@ class CareerNestDashboard {
   navigate(pageId) {
     // Update active nav link
     document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.remove('bg-white/10');
+      link.classList.remove('bg-white/20');
     });
-    document.querySelector(`[data-target="${pageId}"]`).classList.add('bg-white/10');
+    document.querySelector(`[data-target="${pageId}"]`).classList.add('bg-white/20');
 
     // Show page
     document.querySelectorAll('section').forEach(section => {
       section.classList.add('hidden');
     });
     document.getElementById(pageId).classList.remove('hidden');
+    
+    // Render specific page content
+    this.renderPageContent(pageId);
 
     // Update URL
     history.replaceState(null, '', '#' + pageId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  renderPageContent(pageId) {
+    switch (pageId) {
+      case 'analytics':
+        this.renderAnalytics();
+        break;
+      case 'integrations':
+        this.integrations.renderIntegrationsPanel('integrationsContainer', this.currentUser.id);
+        break;
+      case 'achievements':
+        this.renderAchievements();
+        break;
+    }
+  }
+  
+  renderAnalytics() {
+    // Generate skill map
+    const skillMap = this.skillMapper.generateSkillMap(this.skills, this.projects, this.certs, this.interns);
+    const radarData = this.skillMapper.generateRadarChartData(skillMap);
+    
+    // Render radar chart
+    this.skillMapper.renderSkillRadarChart('skillRadarChart', radarData);
+    
+    // Render skill breakdown
+    const skillBreakdown = document.getElementById('skillBreakdown');
+    if (skillBreakdown) {
+      skillBreakdown.innerHTML = radarData.map(item => `
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span class="text-sm font-medium">${item.category}</span>
+          <span class="text-sm text-indigo-600 font-semibold">${item.value}%</span>
+        </div>
+      `).join('');
+    }
+    
+    // Render progress timeline
+    this.renderProgressTimeline();
+    
+    // Render detailed stats
+    this.renderDetailedStats(skillMap);
+  }
+  
+  renderProgressTimeline() {
+    const timeline = document.getElementById('progressTimeline');
+    if (!timeline) return;
+    
+    const events = [
+      { date: 'Today', event: 'Profile Updated', type: 'profile' },
+      { date: 'This Week', event: `${this.projects.length} Projects Added`, type: 'project' },
+      { date: 'This Month', event: `${this.skills.length} Skills Mastered`, type: 'skill' },
+      { date: 'Recent', event: `${this.certs.length} Certificates Earned`, type: 'cert' }
+    ];
+    
+    timeline.innerHTML = events.map(event => `
+      <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+        <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
+        <div class="flex-1">
+          <div class="font-semibold text-sm">${event.event}</div>
+          <div class="text-xs text-gray-500">${event.date}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  renderDetailedStats(skillMap) {
+    // Skill categories
+    const skillCategories = document.getElementById('skillCategories');
+    if (skillCategories) {
+      skillCategories.innerHTML = Object.entries(skillMap).map(([category, data]) => `
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span class="text-sm">${category}</span>
+          <span class="text-sm font-semibold">${data.count} skills</span>
+        </div>
+      `).join('');
+    }
+    
+    // Project technologies
+    const projectTech = document.getElementById('projectTechnologies');
+    if (projectTech) {
+      const techs = this.projects.flatMap(p => this.skillMapper.extractSkillsFromText(p.desc + ' ' + p.title));
+      const techCount = {};
+      techs.forEach(tech => techCount[tech] = (techCount[tech] || 0) + 1);
+      
+      projectTech.innerHTML = Object.entries(techCount).slice(0, 5).map(([tech, count]) => `
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span class="text-sm">${tech}</span>
+          <span class="text-sm font-semibold">${count} projects</span>
+        </div>
+      `).join('');
+    }
+    
+    // Achievement summary
+    const achievementSummary = document.getElementById('achievementSummary');
+    if (achievementSummary) {
+      const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+      achievementSummary.innerHTML = `
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span class="text-sm">Total XP</span>
+          <span class="text-sm font-semibold">${gameData.xp}</span>
+        </div>
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span class="text-sm">Current Level</span>
+          <span class="text-sm font-semibold">${gameData.level}</span>
+        </div>
+        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span class="text-sm">Badges Earned</span>
+          <span class="text-sm font-semibold">${gameData.badges.length}</span>
+        </div>
+      `;
+    }
+  }
+  
+  renderAchievements() {
+    const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+    const currentLevel = this.gamificationSystem.getCurrentLevel(gameData.xp);
+    const nextLevel = this.gamificationSystem.getNextLevel(currentLevel);
+    
+    // Render level progress
+    this.gamificationSystem.renderGameStats('levelProgress', gameData, currentLevel, nextLevel);
+    
+    // Render badges
+    this.gamificationSystem.renderBadges('badgesContainer', gameData.badges);
   }
 
   setupFormHandlers() {
@@ -146,6 +288,7 @@ class CareerNestDashboard {
       this.profile.phone = document.getElementById('phone').value.trim();
       this.profile.bio = document.getElementById('bio').value.trim();
       this.save(this.KEY_PROFILE, this.profile);
+      this.updateGameData();
       this.renderAll();
       this.showNotification('Profile saved successfully!');
     });
@@ -159,6 +302,7 @@ class CareerNestDashboard {
           this.profile.photo = event.target.result;
           this.save(this.KEY_PROFILE, this.profile);
           this.updatePhotoPreview();
+          this.updateGameData();
           this.renderAll();
         };
         reader.readAsDataURL(file);
@@ -189,6 +333,7 @@ class CareerNestDashboard {
       document.getElementById('skillName').value = '';
       document.getElementById('skillLevel').value = '75';
       skillLevelVal.textContent = '75%';
+      this.updateGameData();
       this.renderAll();
     });
 
@@ -207,6 +352,7 @@ class CareerNestDashboard {
       this.projects.unshift({title, link, desc});
       this.save(this.KEY_PROJECTS, this.projects);
       this.clearForm('projectsForm');
+      this.updateGameData();
       this.renderAll();
     });
 
@@ -232,6 +378,7 @@ class CareerNestDashboard {
       this.interns.unshift({company, role, duration, desc});
       this.save(this.KEY_INTERNS, this.interns);
       this.clearForm('internForm');
+      this.updateGameData();
       this.renderAll();
     });
 
@@ -250,6 +397,7 @@ class CareerNestDashboard {
       this.certs.unshift({title, issuer, link});
       this.save(this.KEY_CERTS, this.certs);
       this.clearForm('certForm');
+      this.updateGameData();
       this.renderAll();
     });
 
@@ -268,6 +416,7 @@ class CareerNestDashboard {
       this.edu.unshift({institute, degree, year});
       this.save(this.KEY_EDU, this.edu);
       this.clearForm('eduForm');
+      this.updateGameData();
       this.renderAll();
     });
 
@@ -285,6 +434,7 @@ class CareerNestDashboard {
       this.social.unshift({platform, link});
       this.save(this.KEY_SOCIAL, this.social);
       this.clearForm('socialForm');
+      this.updateGameData();
       this.renderAll();
     });
 
@@ -292,6 +442,54 @@ class CareerNestDashboard {
     document.getElementById('loadSample').addEventListener('click', () => {
       this.loadSampleData();
     });
+  }
+  
+  updateGameData() {
+    // Calculate XP and update game data
+    const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+    const oldLevel = gameData.level;
+    const oldBadges = [...gameData.badges];
+    
+    // Calculate new XP
+    gameData.xp = this.gamificationSystem.calculateXP(
+      this.profile, this.skills, this.projects, this.certs, 
+      this.interns, this.social, this.edu
+    );
+    
+    // Update level
+    const currentLevel = this.gamificationSystem.getCurrentLevel(gameData.xp);
+    gameData.level = currentLevel.level;
+    
+    // Update streak
+    this.gamificationSystem.updateStreak(gameData);
+    
+    // Check for new badges
+    const newBadges = this.gamificationSystem.checkBadges(
+      this.profile, this.skills, this.projects, this.certs, 
+      this.interns, this.social, gameData
+    );
+    
+    // Add new badges
+    newBadges.forEach(badge => {
+      if (!gameData.badges.includes(badge)) {
+        gameData.badges.push(badge);
+        this.gamificationSystem.showBadgeNotification(badge);
+      }
+    });
+    
+    // Check for level up
+    if (gameData.level > oldLevel) {
+      this.gamificationSystem.showLevelUpNotification(currentLevel);
+    }
+    
+    // Save game data
+    this.gamificationSystem.saveGameData(this.currentUser.id, gameData);
+    
+    // Update snapshot level
+    const snapLevel = document.getElementById('snapLevel');
+    if (snapLevel) {
+      snapLevel.textContent = `Level ${gameData.level} (${currentLevel.name})`;
+    }
   }
 
   setupClearButtons() {
@@ -321,6 +519,7 @@ class CareerNestDashboard {
     };
     this.save(this.KEY_PROFILE, this.profile);
     this.updateFormFields();
+    this.updateGameData();
     this.renderAll();
   }
 
@@ -328,6 +527,7 @@ class CareerNestDashboard {
     if (!confirm(`Clear all ${type}?`)) return;
     this[type] = [];
     this.save(key, this[type]);
+    this.updateGameData();
     this.renderAll();
   }
 
@@ -520,6 +720,7 @@ class CareerNestDashboard {
     this.save(this.KEY_SOCIAL, this.social);
 
     this.updateFormFields();
+    this.updateGameData();
     this.renderAll();
     this.showNotification('Sample data loaded successfully!');
     this.navigate('home');
@@ -529,9 +730,42 @@ class CareerNestDashboard {
     this.renderDashboard();
     this.renderLists();
     this.renderResumePreview();
+    this.renderRecentAchievements();
+  }
+  
+  renderRecentAchievements() {
+    const container = document.getElementById('recentAchievements');
+    if (!container) return;
+    
+    const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+    const recentBadges = gameData.badges.slice(-3);
+    
+    if (recentBadges.length === 0) {
+      container.innerHTML = '<p class="text-gray-500 text-center col-span-3">Complete your profile to start earning achievements!</p>';
+      return;
+    }
+    
+    container.innerHTML = recentBadges.map(badgeId => {
+      const badge = this.gamificationSystem.badges[badgeId];
+      return `
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-4 rounded-lg border border-yellow-200 text-center hover:scale-105 transition-transform duration-200">
+          <div class="text-3xl mb-2">${badge.icon}</div>
+          <h4 class="font-semibold text-sm text-gray-800">${badge.name}</h4>
+          <p class="text-xs text-gray-600 mt-1">${badge.description}</p>
+        </div>
+      `;
+    }).join('');
   }
 
   renderDashboard() {
+    // Update game stats
+    const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+    const currentLevel = this.gamificationSystem.getCurrentLevel(gameData.xp);
+    const nextLevel = this.gamificationSystem.getNextLevel(currentLevel);
+    
+    // Render game stats in welcome section
+    this.gamificationSystem.renderGameStats('gameStatsContainer', gameData, currentLevel, nextLevel);
+    
     // Update counts
     document.getElementById('projectCount').textContent = this.projects.length;
     document.getElementById('skillCount').textContent = this.skills.length;
@@ -539,6 +773,7 @@ class CareerNestDashboard {
 
     // Update snapshot
     document.getElementById('snapName').textContent = this.profile.name || '—';
+    document.getElementById('snapLevel').textContent = `Level ${gameData.level} (${currentLevel.name})`;
     document.getElementById('snapProjCount').textContent = this.projects.length;
     document.getElementById('snapSkill').textContent = (this.skills[0] && this.skills[0].name) || '—';
 
@@ -599,7 +834,7 @@ class CareerNestDashboard {
   }
 
   renderLists() {
-    const itemClasses = 'bg-white p-4 rounded-lg shadow-sm flex flex-col gap-2 relative border border-gray-100 hover:shadow-md transition-shadow';
+    const itemClasses = 'bg-white p-4 rounded-lg shadow-sm flex flex-col gap-2 relative border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-105';
     const deleteButton = (cb) => `<button type="button" class="absolute top-2 right-2 text-sm text-red-500 hover:text-red-700 transition-colors p-1 rounded hover:bg-red-50" onclick="${cb}" title="Delete"><i class="fas fa-trash text-xs"></i></button>`;
 
     // Projects
@@ -771,6 +1006,7 @@ class CareerNestDashboard {
         this.save(this.KEY_SOCIAL, this.social);
         break;
     }
+    this.updateGameData();
     this.renderAll();
   }
 
@@ -945,7 +1181,7 @@ class CareerNestDashboard {
 
   showNotification(message, isError = false) {
     const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transform transition-all duration-300 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
     notification.innerHTML = `
       <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'} mr-2"></i>
       ${message}
@@ -953,8 +1189,16 @@ class CareerNestDashboard {
     
     document.body.appendChild(notification);
     
+    // Animate in
     setTimeout(() => {
+      notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+      notification.style.transform = 'translateX(100%)';
+      setTimeout(() => {
       notification.remove();
+      }, 300);
     }, 4000);
   }
 }

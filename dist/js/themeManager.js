@@ -79,51 +79,41 @@ class ThemeManager {
     style.id = 'theme-styles';
     style.textContent = `
       body.theme-dark {
-        background-color: #0f172a;
-        color: #f1f5f9;
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
       }
       
       .theme-dark .sidebar-bg {
-        background: linear-gradient(180deg, #1e293b, #334155);
+        background: linear-gradient(180deg, #1e293b, #334155) !important;
       }
       
       .theme-dark .bg-white {
         background-color: #1e293b !important;
-        color: #f1f5f9;
+        color: #f1f5f9 !important;
       }
       
       .theme-dark .bg-gray-50 {
         background-color: #0f172a !important;
+        color: #f1f5f9 !important;
       }
       
       .theme-dark .bg-gray-100 {
         background-color: #334155 !important;
-      }
-      
-      .theme-dark .text-gray-800 {
         color: #f1f5f9 !important;
       }
       
-      .theme-dark .text-gray-700 {
-        color: #e2e8f0 !important;
-      }
-      
-      .theme-dark .text-gray-600 {
-        color: #cbd5e1 !important;
-      }
-      
-      .theme-dark .text-gray-500 {
-        color: #94a3b8 !important;
-      }
-      
+      .theme-dark .text-gray-800,
+      .theme-dark .text-gray-700,
       .theme-dark .text-slate-800 {
         color: #f1f5f9 !important;
       }
       
+      .theme-dark .text-gray-600,
       .theme-dark .text-slate-600 {
         color: #cbd5e1 !important;
       }
       
+      .theme-dark .text-gray-500,
       .theme-dark .text-slate-500 {
         color: #94a3b8 !important;
       }
@@ -136,32 +126,47 @@ class ThemeManager {
         border-color: #64748b !important;
       }
       
+      .theme-dark .border-gray-100 {
+        border-color: #374151 !important;
+      }
+      
       .theme-dark .shadow-md {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3) !important;
       }
       
       .theme-dark .shadow-lg {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3) !important;
       }
       
-      .theme-dark .input {
-        background-color: #334155;
-        border-color: #64748b;
-        color: #f1f5f9;
+      .theme-dark .shadow-sm {
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2) !important;
       }
       
-      .theme-dark .input:focus {
-        border-color: #818cf8;
-        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
+      .theme-dark .input,
+      .theme-dark input[type="text"],
+      .theme-dark input[type="email"],
+      .theme-dark input[type="tel"],
+      .theme-dark input[type="url"],
+      .theme-dark textarea {
+        background-color: #334155 !important;
+        border-color: #64748b !important;
+        color: #f1f5f9 !important;
+      }
+      
+      .theme-dark .input:focus,
+      .theme-dark input:focus,
+      .theme-dark textarea:focus {
+        border-color: #818cf8 !important;
+        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1) !important;
       }
       
       .theme-dark .resume-preview {
-        background-color: #1e293b;
+        background-color: #1e293b !important;
       }
       
       .theme-dark .resume-page {
-        background-color: #ffffff;
-        color: #1e293b;
+        background-color: #ffffff !important;
+        color: #1e293b !important;
       }
       
       .theme-dark .hover\\:bg-gray-50:hover {
@@ -173,7 +178,37 @@ class ThemeManager {
       }
       
       .theme-dark .hover\\:shadow-md:hover {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4) !important;
+      }
+      
+      .theme-dark .glass-effect {
+        background: rgba(30, 41, 59, 0.8) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+      }
+      
+      .theme-dark .input-field {
+        background: rgba(51, 65, 85, 0.9) !important;
+        color: #f1f5f9 !important;
+      }
+      
+      .theme-dark .input-field:focus {
+        background: rgba(51, 65, 85, 1) !important;
+      }
+      
+      .theme-dark .chip {
+        background-color: #374151 !important;
+        color: #f1f5f9 !important;
+      }
+      
+      .theme-dark .chip:hover {
+        background-color: #4b5563 !important;
+      }
+      
+      .theme-dark .resume-pill {
+        background-color: #374151 !important;
+        color: #f1f5f9 !important;
+        border-color: #4b5563 !important;
       }
     `;
     
@@ -195,8 +230,8 @@ class ThemeManager {
 
     const toggle = document.createElement('button');
     toggle.id = 'themeToggle';
-    toggle.className = 'fixed top-4 right-4 z-50 bg-white/10 backdrop-blur-sm text-white p-3 rounded-full shadow-lg hover:bg-white/20 transition-all duration-200';
-    toggle.innerHTML = this.themes[this.currentTheme].icon;
+    toggle.className = 'fixed top-4 right-4 z-50 bg-white/20 backdrop-blur-sm text-white p-3 rounded-full shadow-lg hover:bg-white/30 transition-all duration-300 hover:scale-110';
+    toggle.innerHTML = `<span class="text-xl">${this.themes[this.currentTheme].icon}</span>`;
     toggle.title = `Switch to ${this.currentTheme === 'light' ? 'dark' : 'light'} theme`;
     
     toggle.addEventListener('click', () => {
@@ -209,7 +244,7 @@ class ThemeManager {
   updateThemeToggle() {
     const toggle = document.getElementById('themeToggle');
     if (toggle) {
-      toggle.innerHTML = this.themes[this.currentTheme].icon;
+      toggle.innerHTML = `<span class="text-xl">${this.themes[this.currentTheme].icon}</span>`;
       toggle.title = `Switch to ${this.currentTheme === 'light' ? 'dark' : 'light'} theme`;
     }
   }
