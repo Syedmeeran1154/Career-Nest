@@ -178,6 +178,80 @@
         .btn-red { background: linear-gradient(180deg, #ff8080, #e02b2b); }
         .btn-purple { background: linear-gradient(180deg, #d380ff, #9a2be0); }
 
+        /* Dark mode styles */
+        .theme-dark {
+          background-color: #0f172a !important;
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .bg-white {
+          background-color: #1e293b !important;
+          color: #f1f5f9 !important;
+          border-color: #334155 !important;
+        }
+        
+        .theme-dark .bg-gray-50 {
+          background-color: #334155 !important;
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .bg-gray-100 {
+          background-color: #475569 !important;
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .text-slate-800 {
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .text-slate-600 {
+          color: #cbd5e1 !important;
+        }
+        
+        .theme-dark .text-slate-500 {
+          color: #94a3b8 !important;
+        }
+        
+        .theme-dark .text-gray-700 {
+          color: #e2e8f0 !important;
+        }
+        
+        .theme-dark .text-gray-600 {
+          color: #cbd5e1 !important;
+        }
+        
+        .theme-dark .text-gray-500 {
+          color: #94a3b8 !important;
+        }
+        
+        .theme-dark .border-gray-300 {
+          border-color: #475569 !important;
+        }
+        
+        .theme-dark .border-gray-200 {
+          border-color: #334155 !important;
+        }
+        
+        .theme-dark .border-gray-100 {
+          border-color: #334155 !important;
+        }
+        
+        .theme-dark .sidebar-bg {
+          background: linear-gradient(180deg, #1e293b, #334155) !important;
+        }
+        
+        .theme-toggle-btn {
+          background: var(--theme-surface, #ffffff);
+          color: var(--theme-text, #1e293b);
+          border: 1px solid var(--theme-border, #e2e8f0);
+        }
+        
+        .theme-dark .theme-toggle-btn {
+          background: #334155 !important;
+          color: #f1f5f9 !important;
+          border-color: #475569 !important;
+        }
+
         @media print {
             body {
                 -webkit-print-color-adjust: exact;
@@ -381,7 +455,7 @@
                             <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
                                 <i class="fas fa-chart-pie text-indigo-600"></i>Skill Distribution
                             </h3>
-                            <div id="skillRadarChart" class="flex justify-center"></div>
+                            <div id="skillRadarChart" class="flex justify-center mb-4"></div>
                             <div id="skillBreakdown" class="mt-4 space-y-2"></div>
                         </div>
 
@@ -391,6 +465,29 @@
                             </h3>
                             <div id="progressTimeline" class="space-y-4"></div>
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-bar text-blue-600"></i>Skills Progress
+                            </h3>
+                            <div id="skillsBarChart" class="w-full h-64"></div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-line text-purple-600"></i>Progress Over Time
+                            </h3>
+                            <div id="progressLineChart" class="w-full h-64"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300 mb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-chart-pie text-orange-600"></i>Achievement Distribution
+                        </h3>
+                        <div id="achievementPieChart" class="w-full h-80"></div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -794,6 +891,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/themeManager.js"></script>
     <script src="js/skillMapping.js"></script>
     <script src="js/gamification.js"></script>

@@ -161,69 +161,289 @@ class SkillMapper {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const maxValue = 100;
-    const centerX = 150;
-    const centerY = 150;
-    const radius = 120;
-    const angleStep = (2 * Math.PI) / data.length;
+    // Create radar chart using Chart.js
+    const canvas = document.createElement('canvas');
+    canvas.width = 300;
+    canvas.height = 300;
+    container.innerHTML = '';
+    container.appendChild(canvas);
 
-    let svg = `
-      <svg width="300" height="300" viewBox="0 0 300 300" class="skill-radar-chart">
-        <circle cx="${centerX}" cy="${centerY}" r="${radius * 0.2}" fill="none" stroke="#e5e7eb" stroke-width="1"/>
-        <circle cx="${centerX}" cy="${centerY}" r="${radius * 0.4}" fill="none" stroke="#e5e7eb" stroke-width="1"/>
-        <circle cx="${centerX}" cy="${centerY}" r="${radius * 0.6}" fill="none" stroke="#e5e7eb" stroke-width="1"/>
-        <circle cx="${centerX}" cy="${centerY}" r="${radius * 0.8}" fill="none" stroke="#e5e7eb" stroke-width="1"/>
-        <circle cx="${centerX}" cy="${centerY}" r="${radius}" fill="none" stroke="#e5e7eb" stroke-width="1"/>
-        
-        `;
+    const ctx = canvas.getContext('2d');
+    const themeManager = window.themeManager || new ThemeManager();
+    const colors = themeManager.getChartColors();
 
-    // Add grid lines and labels
-    data.forEach((item, index) => {
-      const angle = index * angleStep - Math.PI / 2;
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
-      
-      svg += `<line x1="${centerX}" y1="${centerY}" x2="${x}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>`;
-      
-      // Labels
-      const labelX = centerX + Math.cos(angle) * (radius + 20);
-      const labelY = centerY + Math.sin(angle) * (radius + 20);
-      svg += `<text x="${labelX}" y="${labelY}" text-anchor="middle" dominant-baseline="middle" class="text-xs fill-gray-600" font-family="Inter">${item.category}</text>`;
-    });
-
-    // Data polygon
-    let pathData = '';
-    data.forEach((item, index) => {
-      const angle = index * angleStep - Math.PI / 2;
-      const value = (item.value / maxValue) * radius;
-      const x = centerX + Math.cos(angle) * value;
-      const y = centerY + Math.sin(angle) * value;
-      
-      if (index === 0) {
-        pathData += `M ${x} ${y}`;
-      } else {
-        pathData += ` L ${x} ${y}`;
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: data.map(item => item.category),
+        datasets: [{
+          label: 'Skill Level',
+          data: data.map(item => item.value),
+          backgroundColor: 'rgba(99, 102, 241, 0.2)',
+          borderColor: '#6366f1',
+          borderWidth: 2,
+          pointBackgroundColor: '#6366f1',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: colors.tooltip.background,
+            titleColor: colors.tooltip.text,
+            bodyColor: colors.tooltip.text,
+            borderColor: colors.tooltip.border,
+            borderWidth: 1,
+            callbacks: {
+              label: function(context) {
+                return `${context.label}: ${context.parsed.r}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              stepSize: 20,
+              color: colors.text,
+              backdropColor: 'transparent'
+            },
+            grid: {
+              color: colors.grid
+            },
+            pointLabels: {
+              color: colors.text,
+              font: {
+                size: 12,
+                family: 'Inter'
+              }
+            }
+          }
+        }
       }
     });
-    pathData += ' Z';
+  }
 
-    svg += `
-        <path d="${pathData}" fill="rgba(99, 102, 241, 0.2)" stroke="#6366f1" stroke-width="2"/>
-        
-        `;
+  renderBarChart(containerId, skillsData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-    // Add data points
-    data.forEach((item, index) => {
-      const angle = index * angleStep - Math.PI / 2;
-      const value = (item.value / maxValue) * radius;
-      const x = centerX + Math.cos(angle) * value;
-      const y = centerY + Math.sin(angle) * value;
-      
-      svg += `<circle cx="${x}" cy="${y}" r="4" fill="#6366f1" stroke="white" stroke-width="2"/>`;
+    const canvas = document.createElement('canvas');
+    container.innerHTML = '';
+    container.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    const themeManager = window.themeManager || new ThemeManager();
+    const colors = themeManager.getChartColors();
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: skillsData.map(skill => skill.name),
+        datasets: [{
+          label: 'Skill Level (%)',
+          data: skillsData.map(skill => skill.level),
+          backgroundColor: colors.primary[0],
+          borderColor: colors.primary[1],
+          borderWidth: 2,
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: colors.tooltip.background,
+            titleColor: colors.tooltip.text,
+            bodyColor: colors.tooltip.text,
+            borderColor: colors.tooltip.border,
+            borderWidth: 1,
+            callbacks: {
+              label: function(context) {
+                return `${context.label}: ${context.parsed.y}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: colors.text,
+              maxRotation: 45
+            },
+            grid: {
+              color: colors.grid
+            }
+          },
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: colors.text,
+              callback: function(value) {
+                return value + '%';
+              }
+            },
+            grid: {
+              color: colors.grid
+            }
+          }
+        }
+      }
     });
+  }
 
-    svg += '</svg>';
-    
-    container.innerHTML = svg;
+  renderLineChart(containerId, progressData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const canvas = document.createElement('canvas');
+    container.innerHTML = '';
+    container.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    const themeManager = window.themeManager || new ThemeManager();
+    const colors = themeManager.getChartColors();
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: progressData.labels,
+        datasets: [{
+          label: 'Skills Added',
+          data: progressData.skills,
+          borderColor: colors.primary[0],
+          backgroundColor: colors.primary[0] + '20',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: colors.primary[0],
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }, {
+          label: 'Projects Completed',
+          data: progressData.projects,
+          borderColor: colors.primary[2],
+          backgroundColor: colors.primary[2] + '20',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: colors.primary[2],
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: colors.text,
+              usePointStyle: true,
+              padding: 20
+            }
+          },
+          tooltip: {
+            backgroundColor: colors.tooltip.background,
+            titleColor: colors.tooltip.text,
+            bodyColor: colors.tooltip.text,
+            borderColor: colors.tooltip.border,
+            borderWidth: 1
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: colors.text
+            },
+            grid: {
+              color: colors.grid
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: colors.text
+            },
+            grid: {
+              color: colors.grid
+            }
+          }
+        }
+      }
+    });
+  }
+
+  renderPieChart(containerId, pieData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const canvas = document.createElement('canvas');
+    container.innerHTML = '';
+    container.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    const themeManager = window.themeManager || new ThemeManager();
+    const colors = themeManager.getChartColors();
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: pieData.map(item => item.category),
+        datasets: [{
+          data: pieData.map(item => item.value),
+          backgroundColor: colors.primary,
+          borderColor: colors.background,
+          borderWidth: 3,
+          hoverBorderWidth: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: colors.text,
+              padding: 20,
+              usePointStyle: true
+            }
+          },
+          tooltip: {
+            backgroundColor: colors.tooltip.background,
+            titleColor: colors.tooltip.text,
+            bodyColor: colors.tooltip.text,
+            borderColor: colors.tooltip.border,
+            borderWidth: 1,
+            callbacks: {
+              label: function(context) {
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                return `${context.label}: ${context.parsed} (${percentage}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
   }
 }

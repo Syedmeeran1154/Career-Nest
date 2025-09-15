@@ -24,6 +24,7 @@ class CareerNestDashboard {
       
       // Initialize systems
       this.themeManager = new ThemeManager();
+      window.themeManager = this.themeManager; // Make globally available
       this.skillMapper = new SkillMapper();
       this.gamificationSystem = new GamificationSystem();
       this.integrations = new PlatformIntegrations();
@@ -191,30 +192,39 @@ class CareerNestDashboard {
       `).join('');
     }
     
+    // Render new interactive charts
+    this.renderInteractiveCharts();
+    
     // Render progress timeline
     this.renderProgressTimeline();
     
     // Render detailed stats
     this.renderDetailedStats(skillMap);
+  }
+  
+  renderInteractiveCharts() {
+    // Skills Bar Chart
+    const topSkills = this.skills.slice(0, 8);
+    this.skillMapper.renderBarChart('skillsBarChart', topSkills);
     
-    // Render project pie chart
-    const projectTechs = this.projects.flatMap(p => this.skillMapper.extractSkillsFromText(p.desc + ' ' + p.title));
-    const techCount = {};
-    projectTechs.forEach(tech => techCount[tech] = (techCount[tech] || 0) + 1);
-    const pieData = Object.entries(techCount).map(([key, value]) => ({ category: key, value }));
-    const pieChartContainer = document.getElementById('projectPieChart');
-    if (pieChartContainer) {
-      this.skillMapper.renderPieChart('projectPieChart', pieData);
-    }
-
-    // Render certificates bar chart
-    const certsByIssuer = {};
-    this.certs.forEach(c => certsByIssuer[c.issuer] = (certsByIssuer[c.issuer] || 0) + 1);
-    const barData = Object.entries(certsByIssuer).map(([key, value]) => ({ tech: key, count: value }));
-    const barChartContainer = document.getElementById('certificateBarChart');
-    if (barChartContainer) {
-      this.skillMapper.renderBarChart('certificateBarChart', barData);
-    }
+    // Progress Line Chart - simulate progress over time
+    const progressData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      skills: [2, 5, 8, 12, 15, this.skills.length],
+      projects: [0, 1, 2, 4, 6, this.projects.length]
+    };
+    this.skillMapper.renderLineChart('progressLineChart', progressData);
+    
+    // Achievement Pie Chart
+    const achievementData = [
+      { category: 'Skills', value: this.skills.length },
+      { category: 'Projects', value: this.projects.length },
+      { category: 'Certificates', value: this.certs.length },
+      { category: 'Experience', value: this.interns.length },
+      { category: 'Education', value: this.edu.length }
+    ].filter(item => item.value > 0);
+    
+    this.skillMapper.renderPieChart('achievementPieChart', achievementData);
   }
   
   renderProgressTimeline() {
