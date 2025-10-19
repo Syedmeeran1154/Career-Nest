@@ -1,0 +1,3536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Career Nest - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{
+            --brand-color: #6366f1;
+            --brand-dark: #4338ca;
+        }
+        body{
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .brand-title{
+            font-family: 'Poppins', sans-serif;
+        }
+        .sidebar-bg{
+            background: linear-gradient(180deg, #4338ca, #6366f1);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link.active{
+            background-color: rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: white;
+            border-top-right-radius: 9999px;
+            border-bottom-right-radius: 9999px;
+        }
+        .resume-h{
+            border-bottom: 2px solid var(--brand-color);
+        }
+        .skill-progress-bar div{
+            background: linear-gradient(90deg, #6366f1, #3b82f6);
+            position: relative;
+        }
+        /* Animated stripes for progress bar */
+        .skill-progress-bar div::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 1rem 1rem;
+            animation: animate-stripes 2s linear infinite;
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+        .resume-photo-upload {
+            border: 2px dashed #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+        }
+        .resume-photo-upload:hover {
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        .resume-photo-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--brand-color);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        /* Corrected: Replaced @apply rules with raw CSS / removed the non-working utility classes */
+        .input {
+            width: 100%; 
+            padding: 0.5rem 1rem; /* px-4 py-2 */
+            border: 1px solid #d1d5db; /* border border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            outline: none; /* outline-none */
+            transition: all 0.3s ease-in-out; /* transition-all duration-300 */
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
+        }
+        .input:focus {
+            --tw-ring-color: #6366f1; /* focus:ring-indigo-500 */
+            --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+            --tw-ring-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow);
+            box-shadow: var(--tw-ring-shadow), 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            border-color: transparent; /* focus:border-transparent */
+        }
+        .btn {
+            font-weight: 600; /* font-semibold */
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.2s ease-in-out; /* transition-all duration-200 */
+        }
+        .btn.primary {
+            background-color: #4f46e5; /* bg-indigo-600 */
+            color: white; /* text-white */
+        }
+        .btn.primary:hover {
+            background-color: #4338ca; /* hover:bg-indigo-700 */
+        }
+        
+        /* Enhanced animations and effects */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); }
+        }
+        @keyframes animate-stripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 1rem 0; }
+        }
+        .section-handle {
+            cursor: grab;
+        }
+        .section-handle:active {
+            cursor: grabbing;
+        }
+
+        /* New button styles based on your image */
+        .btn-custom {
+            font-weight: 600; /* semibold */
+            padding: 0.5rem 1.5rem; /* py-2 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-custom:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        /* Gradient color classes */
+        .btn-pink { background: linear-gradient(180deg, #ff80a5, #e02b70); }
+        .btn-blue { background: linear-gradient(180deg, #80d9ff, #2b70e0); }
+        .btn-green { background: linear-gradient(180deg, #99ff99, #48c948); }
+        .btn-orange { background: linear-gradient(180deg, #ffc980, #e0702b); }
+        .btn-red { background: linear-gradient(180deg, #ff8080, #e02b2b); }
+        .btn-purple { background: linear-gradient(180deg, #d380ff, #9a2be0); }
+
+        /* Dark mode styles */
+        .theme-dark {
+          background-color: #0f172a !important;
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .bg-white {
+          background-color: #1e293b !important;
+          color: #f1f5f9 !important;
+          border-color: #334155 !important;
+        }
+        
+        .theme-dark .bg-gray-50 {
+          background-color: #334155 !important;
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .bg-gray-100 {
+          background-color: #475569 !important;
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .text-slate-800 {
+          color: #f1f5f9 !important;
+        }
+        
+        .theme-dark .text-slate-600 {
+          color: #cbd5e1 !important;
+        }
+        
+        .theme-dark .text-slate-500 {
+          color: #94a3b8 !important;
+        }
+        
+        .theme-dark .text-gray-700 {
+          color: #e2e8f0 !important;
+        }
+        
+        .theme-dark .text-gray-600 {
+          color: #cbd5e1 !important;
+        }
+        
+        .theme-dark .text-gray-500 {
+          color: #94a3b8 !important;
+        }
+        
+        .theme-dark .border-gray-300 {
+          border-color: #475569 !important;
+        }
+        
+        .theme-dark .border-gray-200 {
+          border-color: #334155 !important;
+        }
+        
+        .theme-dark .border-gray-100 {
+          border-color: #334155 !important;
+        }
+        
+        .theme-dark .sidebar-bg {
+          background: linear-gradient(180deg, #1e293b, #334155) !important;
+        }
+        
+        .theme-toggle-btn {
+          background: var(--theme-surface, #ffffff);
+          color: var(--theme-text, #1e293b);
+          border: 1px solid var(--theme-border, #e2e8f0);
+        }
+        
+        .theme-dark .theme-toggle-btn {
+          background: #334155 !important;
+          color: #f1f5f9 !important;
+          border-color: #475569 !important;
+        }
+        
+        .theme-dark .bg-indigo-50\/50 {
+          background-color: rgba(63, 72, 204, 0.5) !important;
+        }
+        
+        .theme-dark .text-indigo-700 {
+          color: #a5b4fc !important;
+        }
+
+        @media print {
+            body {
+                /* Corrected: Added standard property and removed 'color-adjust' */
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            .app {
+                display: block !important;
+            }
+            .sidebar, .main > *:not(.resume-page),
+            /* Hide Chatbot in print */
+            .fixed.bottom-6.right-6, #chatbotContainer { 
+                display: none !important;
+            }
+            .resume-preview {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .resume-page {
+                width: 100% !important;
+                min-height: auto !important;
+                padding: 0 !important;
+            }
+        }
+
+        /* --- Mobile/Responsive Overrides --- */
+        /* Sidebar on mobile */
+        @media (max-width: 1023px) {
+            .sidebar-bg {
+                transform: translateX(-100%);
+                position: absolute; /* Change to absolute to avoid breaking flow on desktop if toggle is used */
+                z-index: 50;
+            }
+            .sidebar-bg.open {
+                transform: translateX(0);
+                z-index: 100;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            }
+            .main {
+                margin-left: 0 !important; /* Remove desktop margin */
+                padding-top: 5rem; /* Add space for header/toggle */
+            }
+        }
+
+        /* Sidebar on desktop (to re-enable fixed view after mobile rules) */
+        @media (min-width: 1024px) {
+            .sidebar-bg {
+                transform: translateX(0) !important;
+                position: fixed;
+            }
+            .main {
+                margin-left: 16rem !important; /* Re-enable ml-64 */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800 transition-all duration-300">
+    <div class="app flex min-h-screen">
+        
+        <button id="menuToggle" class="lg:hidden fixed top-4 left-4 z-50 p-3 rounded-full bg-indigo-600 text-white shadow-lg transition-all duration-300 hover:scale-110">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+        <aside class="sidebar-bg w-64 p-6 text-white flex flex-col justify-between rounded-r-2xl shadow-xl transition-all duration-300 fixed top-0 left-0 h-screen overflow-y-auto z-50">
+            <div>
+                <div class="brand flex items-center gap-2 mb-2">
+                    <div class="logo w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-2xl">
+                        📁
+                    </div>
+                    <div class="brand-title text-xl font-bold">Career Nest</div>
+                </div>
+                <p class="text-xs text-white/70 mb-6">Your Professional Journey</p>
+
+                <div class="p-4 bg-white/10 rounded-lg backdrop-blur-sm hover:bg-white/20 transition-all duration-200">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                        <div>
+                            <div id="userNameDisplay" class="font-semibold text-sm"></div>
+                            <div class="text-xs opacity-75">Welcome back!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="mt-8 flex flex-col space-y-2">
+                    <a href="#home" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="home">
+                        <i class="fas fa-home text-lg"></i> Home
+                    </a>
+                    <a href="#analytics" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="analytics">
+                        <i class="fas fa-chart-line text-lg"></i> Analytics
+                    </a>
+                    <a href="#achievements" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="achievements">
+                        <i class="fas fa-medal text-lg"></i> Achievements
+                    </a>
+                    <a href="#profile" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="profile">
+                        <i class="fas fa-user-circle text-lg"></i> Profile
+                    </a>
+                    <a href="#skills" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="skills">
+                        <i class="fas fa-tools text-lg"></i> Skills
+                    </a>
+                    <a href="#projects" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="projects">
+                        <i class="fas fa-folder-open text-lg"></i> Projects
+                    </a>
+                    <a href="#internships" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="internships">
+                        <i class="fas fa-briefcase text-lg"></i> Internships
+                    </a>
+                    <a href="#certificates" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="certificates">
+                        <i class="fas fa-award text-lg"></i> Certificates
+                    </a>
+                    <a href="#education" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="education">
+                        <i class="fas fa-graduation-cap text-lg"></i> Education
+                    </a>
+                    <a href="#social" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="social">
+                        <i class="fas fa-share-alt text-lg"></i> Social Media
+                    </a>
+                    <a href="#resume" class="nav-link flex items-center gap-2 p-3 rounded-lg hover:bg-white/20 transition-all duration-200 hover:scale-105" data-target="resume">
+                        <i class="fas fa-file-alt text-lg"></i> Resume
+                    </a>
+                </nav>
+            </div>
+            <br/>
+            <div>
+                <button id="exportBtn" class="btn-custom btn-orange w-full">
+                    <i class="fas fa-download"></i>Export Resume
+                </button>
+                <button id="logoutBtn" class="btn-custom btn-red w-full mt-3">
+                    <i class="fas fa-sign-out-alt"></i>Logout
+                </button>
+                <p class="text-xs text-white/70 mt-2">Data synced to your account</p>
+            </div>
+        </aside>
+
+        <main class="main flex-1 p-8 overflow-auto custom-scroll transition-all duration-300 lg:ml-64">
+            <div class="page max-w-5xl mx-auto">
+                <section id="home" class="hidden fade-in">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8 hover-lift pulse-glow">
+                        <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+                            <div class="flex-1">
+                                <h1 class="text-4xl font-extrabold brand-title mb-2">Welcome back, <span id="welcomeName">User</span>! 👋</h1>
+                                <p class="text-lg text-indigo-100 mb-4">Here's your professional journey at a glance</p>
+                                <div id="gameStatsContainer" class="mb-4"></div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-all duration-200">
+                                <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
+                                <div class="flex flex-col gap-2">
+                                    <button onclick="navigate('profile')" class="text-left px-4 py-2 bg-white/20 rounded-full hover:bg-white/30 transition-all duration-200 hover:scale-105">
+                                        <i class="fas fa-user mr-2"></i>Update Profile
+                                    </button>
+                                    <button onclick="navigate('projects')" class="text-left px-4 py-2 bg-white/20 rounded-full hover:bg-white/30 transition-all duration-200 hover:scale-105">
+                                        <i class="fas fa-plus mr-2"></i>Add Project
+                                    </button>
+                                    <button onclick="navigate('resume')" class="text-left px-4 py-2 bg-white/20 rounded-full hover:bg-white/30 transition-all duration-200 hover:scale-105">
+                                        <i class="fas fa-download mr-2"></i>Export Resume
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg mb-8 hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-trophy text-yellow-500"></i>Recent Achievements
+                        </h2>
+                        <div id="recentAchievements" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-8">
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-extrabold brand-title text-indigo-700">Your Professional Hub</h2>
+                            <p class="text-lg text-slate-500 mt-2">Track your journey, showcase your skills, and level up your career.</p>
+                            <div class="flex gap-3 mt-4">
+                                <button id="loadSample" class="btn-custom btn-green">
+                                    <i class="fas fa-magic"></i>Load Demo Data
+                                </button>
+                                <button onclick="navigate('analytics')" class="btn-custom btn-purple">
+                                    <i class="fas fa-chart-line"></i>View Analytics
+                                </button>
+                            </div>
+                        </div>
+                        <div id="snapshot" class="bg-white p-6 rounded-xl shadow-lg w-full lg:w-72 flex items-center gap-4 hover-lift transition-all duration-300">
+                            <img id="snapPhoto" class="w-16 h-16 rounded-full object-cover hidden" alt="Profile Photo">
+                            <div class="flex-1">
+                                <h4 class="text-lg font-bold text-gray-700 mb-2">Your Snapshot</h4>
+                                <p class="text-sm"><strong class="font-semibold">Name:</strong> <span id="snapName" class="text-slate-500">—</span></p>
+                                <p class="text-sm"><strong class="font-semibold">Level:</strong> <span id="snapLevel" class="text-slate-500">—</span></p>
+                                <p class="text-sm"><strong class="font-semibold">Top Skill:</strong> <span id="snapSkill" class="text-slate-500">—</span></p>
+                                <p class="text-sm"><strong class="font-semibold">Projects:</strong> <span id="snapProjCount" class="text-slate-500">0</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-indigo-500 to-indigo-700 hover-lift transition-all duration-300">
+                            <div id="projectCount" class="text-4xl font-extrabold">0</div>
+                            <div class="mt-2 text-sm font-semibold">Projects</div>
+                        </div>
+                        <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-sky-500 to-blue-600 hover-lift transition-all duration-300">
+                            <div id="skillCount" class="text-4xl font-extrabold">0</div>
+                            <div class="mt-2 text-sm font-semibold">Skills</div>
+                        </div>
+                        <div class="p-6 rounded-xl shadow-lg text-white bg-gradient-to-br from-emerald-500 to-green-600 hover-lift transition-all duration-300">
+                            <div id="certCount" class="text-4xl font-extrabold">0</div>
+                            <div class="mt-2 text-sm font-semibold">Certificates</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <i class="fas fa-folder-open text-indigo-600"></i>Recent Projects
+                            </h3>
+                            <ul id="projectList" class="mt-4 space-y-2 text-sm"></ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <i class="fas fa-tools text-sky-600"></i>Top Skills
+                            </h3>
+                            <div id="skillsContainer" class="mt-4 flex flex-col gap-2"></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <i class="fas fa-certificate text-emerald-600"></i>Certificates
+                            </h3>
+                            <div id="certContainer" class="mt-4 grid grid-cols-1 gap-2"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="analytics" class="hidden fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Career Analytics</h2>
+                        <p class="text-lg text-slate-500">Visualize your skills and track your professional growth</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-pie text-indigo-600"></i>Skill Distribution
+                            </h3>
+                            <div id="skillRadarChart" class="flex justify-center mb-4"></div>
+                            <div id="skillBreakdown" class="mt-4 space-y-2"></div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-line text-green-600"></i>Growth Timeline
+                            </h3>
+                            <div id="progressTimeline" class="space-y-4"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-bar text-blue-600"></i>Skills Progress
+                            </h3>
+                            <div id="skillsBarChart" class="w-full h-64"></div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                <i class="fas fa-chart-line text-purple-600"></i>Progress Over Time
+                            </h3>
+                            <div id="progressLineChart" class="w-full h-64"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300 mb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-chart-pie text-orange-600"></i>Achievement Distribution
+                        </h3>
+                        <div id="achievementPieChart" class="w-full h-80"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h4 class="font-semibold text-gray-700 mb-3">Skill Categories</h4>
+                            <div id="skillCategories" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h4 class="font-semibold text-gray-700 mb-3">Project Technologies</h4>
+                            <div id="projectTechnologies" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                            <h4 class="font-semibold text-gray-700 mb-3">Achievement Summary</h4>
+                            <div id="achievementSummary" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="achievements" class="hidden fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold brand-title text-indigo-700 mb-2">Achievements & Badges</h2>
+                        <p class="text-lg text-slate-500">Track your progress and celebrate your milestones</p>
+                    </div>
+
+                    <div id="levelProgress" class="mb-8"></div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-medal text-yellow-500"></i>Earned Badges
+                        </h3>
+                        <div id="badgesContainer"></div>
+                    </div>
+                </section>
+
+                <section id="profile" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-user text-indigo-600"></i>Profile Information
+                        </h2>
+                        <form id="profileForm" class="flex flex-col gap-4">
+                            <label for="photoUpload" class="resume-photo-upload">
+                                <input type="file" id="photoUpload" accept="image/*" class="hidden">
+                                <div class="flex flex-col items-center justify-center">
+                                    <img id="photoPreview" class="resume-photo-preview mb-2 hidden" alt="Profile Photo Preview">
+                                    <span id="photoPlaceholder" class="text-gray-400">
+                                        <i class="fas fa-camera text-2xl mb-2"></i><br>
+                                        Click to add a profile photo
+                                    </span>
+                                </div>
+                            </label>
+                            <input id="name" type="text" placeholder="Full name" class="input" />
+                            <input id="email" type="email" placeholder="Email" class="input" />
+                            <input id="phone" type="tel" placeholder="Phone number" class="input" />
+                            <textarea id="bio" placeholder="Professional summary (2-3 lines)" class="input h-24 resize-none"></textarea>
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-save"></i>Save Profile
+                                </button>
+                                <button id="clearProfile" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="skills" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-tools text-indigo-600"></i>Skills & Expertise
+                        </h2>
+                        <form id="skillsForm" class="flex flex-col gap-4 mb-6">
+                            <input id="skillName" type="text" placeholder="Skill name (e.g., JavaScript, Python)" class="input" required />
+                            <div class="flex items-center gap-4">
+                                <label class="text-sm text-slate-500 flex-1">
+                                    Proficiency Level:
+                                    <input id="skillLevel" type="range" min="0" max="100" value="75" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2" />
+                                </label>
+                                <span id="skillLevelVal" class="w-12 text-sm font-semibold bg-indigo-100 px-2 py-1 rounded">75%</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-plus"></i>Add Skill
+                                </button>
+                                <button id="clearSkills" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                        <div id="skillsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+
+                <section id="projects" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-folder-open text-indigo-600"></i>Projects Portfolio
+                        </h2>
+                        <form id="projectsForm" class="flex flex-col gap-4 mb-6">
+                            <input id="projectTitle" type="text" placeholder="Project title" class="input" required />
+                            <input id="projectLink" type="url" placeholder="Project link (GitHub, live demo, etc.)" class="input" />
+                            <textarea id="projectDesc" placeholder="Brief description of the project and technologies used" class="input h-20 resize-none"></textarea>
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-plus"></i>Add Project
+                                </button>
+                                <button id="clearProjects" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                        <div id="projectsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+
+                <section id="internships" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-briefcase text-indigo-600"></i>Work Experience & Internships
+                        </h2>
+                        <form id="internForm" class="flex flex-col gap-4 mb-6">
+                            <input id="internCompany" type="text" placeholder="Company name" class="input" required />
+                            <input id="internRole" type="text" placeholder="Role/Position (e.g., Software Developer Intern)" class="input" required />
+                            <input id="internDuration" type="text" placeholder="Duration (e.g., Jan 2024 – Jun 2024)" class="input" />
+                            <textarea id="internDesc" placeholder="Key responsibilities and achievements" class="input h-20 resize-none"></textarea>
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-plus"></i>Add Experience
+                                </button>
+                                <button id="clearInterns" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                        <div id="internsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+
+                <section id="certificates" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-certificate text-indigo-600"></i>Certifications & Achievements
+                        </h2>
+                        <form id="certForm" class="flex flex-col gap-4 mb-6">
+                            <input id="certName" type="text" placeholder="Certificate title" class="input" required />
+                            <input id="certIssuer" type="text" placeholder="Issuing organization (e.g., Google, Microsoft, Coursera)" class="input" />
+                            <input id="certLink" type="url" placeholder="Certificate link or verification URL" class="input" />
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-plus"></i>Add Certificate
+                                </button>
+                                <button id="clearCerts" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                        <div id="certsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+
+                <section id="education" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-graduation-cap text-indigo-600"></i>Education Background
+                        </h2>
+                        <form id="eduForm" class="flex flex-col gap-4 mb-6">
+                            <input id="eduInstitute" type="text" placeholder="Institution name" class="input" required />
+                            <input id="eduDegree" type="text" placeholder="Degree/Program (e.g., B.Sc Computer Science)" class="input" required />
+                            <input id="eduYear" type="text" placeholder="Year or duration (e.g., 2020-2024)" class="input" />
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-plus"></i>Add Education
+                                </button>
+                                <button id="clearEdu" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                        <div id="eduList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+
+                <section id="social" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-share-alt text-indigo-600"></i>Social Media & Links
+                        </h2>
+                        
+                        <div class="mb-6 p-4 border border-indigo-200 rounded-lg bg-indigo-50/50 theme-dark:border-slate-700 theme-dark:bg-slate-700/50">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2 text-indigo-700 theme-dark:text-indigo-400">
+                                <i class="fas fa-link"></i> Your Shareable Career Nest Profile
+                            </h3>
+                            <div class="flex flex-col md:flex-row gap-2">
+                                <input id="careerNestLink" type="text" 
+                                       placeholder="Click 'Generate Link' to create your profile URL" 
+                                       class="input flex-1 bg-white theme-dark:bg-slate-800 theme-dark:text-white" 
+                                       readonly />
+                                <button id="generateLinkBtn" type="button" class="btn-custom btn-purple whitespace-nowrap">
+                                    <i class="fas fa-paper-plane"></i> Generate Link
+                                </button>
+                                <button id="copyLinkBtn" type="button" class="btn-custom btn-green hidden whitespace-nowrap">
+                                    <i class="fas fa-copy"></i> Copy Link
+                                </button>
+                            </div>
+                            <p id="linkStatus" class="text-sm text-slate-500 mt-2 theme-dark:text-slate-400">Your profile link will display here.</p>
+                        </div>
+                        <form id="socialForm" class="flex flex-col gap-4 mb-6">
+                            <input id="socialPlatform" type="text" placeholder="Platform (e.g., LinkedIn, GitHub, Portfolio)" class="input" required />
+                            <input id="socialLink" type="url" placeholder="Profile URL" class="input" required />
+                            <div class="flex gap-2">
+                                <button class="btn-custom btn-blue" type="submit">
+                                    <i class="fas fa-plus"></i>Add Link
+                                </button>
+                                <button id="clearSocial" type="button" class="btn-custom btn-red">
+                                    <i class="fas fa-trash"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                        <div id="socialList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+                </section>
+                
+                <section id="resume" class="hidden fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover-lift transition-all duration-300">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+                            <h2 class="text-2xl font-bold flex items-center gap-2">
+                                <i class="fas fa-file-pdf text-indigo-600"></i>Resume Preview
+                            </h2>
+                            <div class="flex gap-3">
+                                <button id="customizeBtn" class="btn-custom btn-blue">
+                                    <i class="fas fa-cog"></i>Customize
+                                </button>
+                                <button id="downloadResume" class="btn-custom btn-green">
+                                    <i class="fas fa-download"></i>Download PDF
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            <span class="font-semibold">Drag and drop sections to reorder your resume!</span>
+                        </p>
+                        <div id="resumePreview" class="resume-preview bg-gray-100 p-4 rounded-xl shadow-inner min-h-[30rem] overflow-hidden"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="customizeBackdrop" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-[1000] hidden backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl hover-lift">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-palette text-indigo-600"></i>Customize Resume
+            </h3>
+
+            <div class="mb-4">
+                <h4 class="text-lg font-semibold mb-2">Select Sections</h4>
+                <div class="flex flex-wrap gap-2">
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="profile" checked> Profile
+                    </label>
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="skills" checked> Skills
+                    </label>
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="projects" checked> Projects
+                    </label>
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="internships" checked> Internships
+                    </label>
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="certificates" checked> Certificates
+                    </label>
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="education" checked> Education
+                    </label>
+                    <label class="chip flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="checkbox" class="rs-cb accent-indigo-600" data-section="social" checked> Social Media
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-6 mb-4">
+                <h4 class="text-lg font-semibold mb-2">Template Style</h4>
+                <div class="flex flex-wrap gap-2">
+                    <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="radio" name="template" value="classic" checked class="accent-indigo-600"> Classic
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="radio" name="template" value="modern" class="accent-indigo-600"> Modern
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-2">Color Theme</h4>
+                <div class="flex flex-wrap gap-2">
+                    <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="radio" name="theme" value="#6366f1|#4338ca" checked class="accent-indigo-600">
+                        <span class="w-4 h-4 bg-indigo-500 rounded-full"></span> Indigo
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="radio" name="theme" value="#0ea5e9|#0369a1" class="accent-sky-600">
+                        <span class="w-4 h-4 bg-sky-500 rounded-full"></span> Sky Blue
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="radio" name="theme" value="#22c55e|#16a34a" class="accent-green-600">
+                        <span class="w-4 h-4 bg-green-500 rounded-full"></span> Green
+                    </label>
+                    <label class="flex items-center gap-2 p-2 rounded-lg bg-gray-100 text-sm cursor-pointer hover:bg-gray-200 transition-all duration-200">
+                        <input type="radio" name="theme" value="#ef4444|#b91c1c" class="accent-red-600">
+                        <span class="w-4 h-4 bg-red-500 rounded-full"></span> Red
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button id="closeCustomize" class="btn-custom btn-red">
+                    Cancel
+                </button>
+                <button id="applyCustomize" class="btn-custom btn-green">
+                    Apply Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+      // Enhanced Theme Management System with Dark Mode
+      class ThemeManager {
+        constructor() {
+          this.themes = {
+            light: {
+              primary: '#6366f1',
+              secondary: '#4338ca',
+              background: '#f8fafc',
+              surface: '#ffffff',
+              text: '#1e293b',
+              textSecondary: '#64748b',
+              border: '#e2e8f0',
+              cardBg: '#ffffff',
+              sidebarBg: 'linear-gradient(180deg, #4338ca, #6366f1)',
+              accent: '#10b981'
+            },
+            dark: {
+              primary: '#818cf8',
+              secondary: '#6366f1',
+              background: '#0f172a',
+              surface: '#1e293b',
+              text: '#f1f5f9',
+              textSecondary: '#94a3b8',
+              border: '#334155',
+              cardBg: '#1e293b',
+              sidebarBg: 'linear-gradient(180deg, #1e293b, #334155)',
+              accent: '#34d399'
+            }
+          };
+          
+          this.currentTheme = this.loadTheme();
+          this.init();
+        }
+
+        init() {
+          this.applyTheme(this.currentTheme);
+          this.createToggleButton();
+        }
+
+        loadTheme() {
+          const saved = localStorage.getItem('cn_theme');
+          return saved || 'light';
+        }
+
+        saveTheme(theme) {
+          localStorage.setItem('cn_theme', theme);
+        }
+
+        createToggleButton() {
+          // REMOVED CHECK: if (!document.querySelector('.sidebar')) return;
+          // The check has been removed to ensure the button is created on the dashboard page.
+
+          const toggleContainer = document.createElement('div');
+          // Adjusted z-index and added flex for positioning toggle and menu button
+          toggleContainer.className = 'fixed top-4 right-4 z-50 flex items-center gap-3'; 
+          toggleContainer.innerHTML = `
+            <button id="themeToggle" class="theme-toggle-btn p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110">
+              <i class="fas ${this.currentTheme === 'light' ? 'fa-moon' : 'fa-sun'} text-xl"></i>
+            </button>
+          `;
+
+          document.body.appendChild(toggleContainer);
+
+          const toggleBtn = document.getElementById('themeToggle');
+          toggleBtn.addEventListener('click', () => this.toggleTheme());
+        }
+
+        toggleTheme() {
+          this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+          this.saveTheme(this.currentTheme);
+          this.applyTheme(this.currentTheme);
+          this.updateToggleIcon();
+        }
+
+        updateToggleIcon() {
+          const icon = document.querySelector('#themeToggle i');
+          if (icon) {
+            icon.className = `fas ${this.currentTheme === 'light' ? 'fa-moon' : 'fa-sun'} text-xl`;
+          }
+        }
+
+        applyTheme(themeName) {
+          const theme = this.themes[themeName];
+          const root = document.documentElement;
+
+          // Apply CSS custom properties
+          Object.entries(theme).forEach(([key, value]) => {
+            root.style.setProperty(`--theme-${key}`, value);
+          });
+
+          // Apply theme class to body
+          document.body.className = document.body.className.replace(/theme-\w+/g, '');
+          document.body.classList.add(`theme-${themeName}`);
+
+          // Update specific elements
+          this.updateElementStyles(theme);
+        }
+
+        updateElementStyles(theme) {
+          // Update body background
+          document.body.style.backgroundColor = theme.background;
+          document.body.style.color = theme.text;
+
+          // Update sidebar
+          const sidebar = document.querySelector('.sidebar-bg');
+          if (sidebar) {
+            sidebar.style.background = theme.sidebarBg;
+          }
+
+          // Update cards
+          const cards = document.querySelectorAll('.bg-white');
+          cards.forEach(card => {
+            card.style.backgroundColor = theme.cardBg;
+            card.style.color = theme.text;
+            card.style.borderColor = theme.border;
+          });
+
+          // Update inputs
+          const inputs = document.querySelectorAll('.input');
+          inputs.forEach(input => {
+            input.style.backgroundColor = theme.surface;
+            input.style.color = theme.text;
+            input.style.borderColor = theme.border;
+          });
+
+          // Update theme toggle button
+          const toggleBtn = document.getElementById('themeToggle');
+          if (toggleBtn) {
+            toggleBtn.style.backgroundColor = theme.surface;
+            toggleBtn.style.color = theme.text;
+            toggleBtn.style.borderColor = theme.border;
+          }
+        }
+
+        getCurrentThemeColors() {
+          return this.themes[this.currentTheme];
+        }
+
+        // Method for charts to get theme-appropriate colors
+        getChartColors() {
+          const isDark = this.currentTheme === 'dark';
+          return {
+            primary: ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'],
+            background: isDark ? '#1e293b' : '#ffffff',
+            text: isDark ? '#f1f5f9' : '#1e293b',
+            grid: isDark ? '#334155' : '#e5e7eb',
+            tooltip: {
+              background: isDark ? '#334155' : '#ffffff',
+              text: isDark ? '#f1f5f9' : '#1e293b',
+              border: isDark ? '#475569' : '#d1d5db'
+            }
+          };
+        }
+      }
+
+      // Skill Mapping and Analytics
+      class SkillMapper {
+        constructor() {
+          this.skillCategories = {
+            'Programming': ['JavaScript', 'Python', 'Java', 'C++', 'TypeScript', 'Go', 'Rust', 'PHP'],
+            'Web Development': ['React', 'Vue', 'Angular', 'Node.js', 'Express', 'HTML', 'CSS', 'Tailwind'],
+            'Mobile Development': ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Xamarin'],
+            'Data Science': ['Machine Learning', 'Data Analysis', 'Statistics', 'Pandas', 'NumPy', 'TensorFlow'],
+            'DevOps': ['Docker', 'Kubernetes', 'AWS', 'Azure', 'CI/CD', 'Jenkins', 'Git'],
+            'Database': ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
+            'Design': ['UI/UX', 'Figma', 'Adobe XD', 'Photoshop', 'Illustrator'],
+            'Soft Skills': ['Leadership', 'Communication', 'Problem Solving', 'Team Work', 'Project Management']
+          };
+        }
+
+        categorizeSkill(skillName) {
+          for (const [category, skills] of Object.entries(this.skillCategories)) {
+            if (skills.some(skill => skillName.toLowerCase().includes(skill.toLowerCase()))) {
+              return category;
+            }
+          }
+          return 'Other';
+        }
+
+        generateSkillMap(skills, projects, certificates, internships) {
+          const skillMap = {};
+          
+          // Process direct skills
+          skills.forEach(skill => {
+            const category = this.categorizeSkill(skill.name);
+            if (!skillMap[category]) skillMap[category] = { total: 0, count: 0, skills: [] };
+            skillMap[category].total += skill.level;
+            skillMap[category].count += 1;
+            skillMap[category].skills.push({ name: skill.name, level: skill.level });
+          });
+
+          // Extract skills from projects
+          projects.forEach(project => {
+            const extractedSkills = this.extractSkillsFromText(project.desc + ' ' + project.title);
+            extractedSkills.forEach(skillName => {
+              const category = this.categorizeSkill(skillName);
+              if (!skillMap[category]) skillMap[category] = { total: 0, count: 0, skills: [] };
+              
+              const existingSkill = skillMap[category].skills.find(s => s.name.toLowerCase() === skillName.toLowerCase());
+              if (!existingSkill) {
+                skillMap[category].skills.push({ name: skillName, level: 60, source: 'project' });
+                skillMap[category].total += 60;
+                skillMap[category].count += 1;
+              }
+            });
+          });
+
+          // Calculate averages
+          Object.keys(skillMap).forEach(category => {
+            skillMap[category].average = Math.round(skillMap[category].total / skillMap[category].count);
+          });
+
+          return skillMap;
+        }
+
+        extractSkillsFromText(text) {
+          const allSkills = Object.values(this.skillCategories).flat();
+          const foundSkills = [];
+          
+          allSkills.forEach(skill => {
+            if (text.toLowerCase().includes(skill.toLowerCase())) {
+              foundSkills.push(skill);
+            }
+          });
+          
+          return [...new Set(foundSkills)];
+        }
+
+        generateRadarChartData(skillMap) {
+          const categories = Object.keys(skillMap);
+          const data = categories.map(category => ({
+            category,
+            value: skillMap[category].average || 0,
+            skills: skillMap[category].skills || []
+          }));
+          
+          return data.sort((a, b) => b.value - a.value);
+        }
+        
+        generatePieChartData(data) {
+          const total = data.reduce((sum, item) => sum + item.value, 0);
+          const pieData = data.map(item => ({
+            ...item,
+            percentage: total > 0 ? (item.value / total) * 100 : 0
+          }));
+          return pieData;
+        }
+        
+        // This old renderPieChart logic is removed in favor of the Chart.js version.
+        // It's left as a comment just to indicate where the old version was removed.
+        // renderPieChart(containerId, data) { ... }
+        
+        // This old renderBarChart logic is removed in favor of the Chart.js version.
+        // It's left as a comment just to indicate where the old version was removed.
+        // renderBarChart(containerId, data) { ... }
+
+        renderSkillRadarChart(containerId, data) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          // Create radar chart using Chart.js
+          const canvas = document.createElement('canvas');
+          canvas.width = 300;
+          canvas.height = 300;
+          container.innerHTML = '';
+          container.appendChild(canvas);
+
+          const ctx = canvas.getContext('2d');
+          const themeManager = window.themeManager || new ThemeManager();
+          const colors = themeManager.getChartColors();
+
+          new Chart(ctx, {
+            type: 'radar',
+            data: {
+              labels: data.map(item => item.category),
+              datasets: [{
+                label: 'Skill Level',
+                data: data.map(item => item.value),
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                borderColor: '#6366f1',
+                borderWidth: 2,
+                pointBackgroundColor: '#6366f1',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  backgroundColor: colors.tooltip.background,
+                  titleColor: colors.tooltip.text,
+                  bodyColor: colors.tooltip.text,
+                  borderColor: colors.tooltip.border,
+                  borderWidth: 1,
+                  callbacks: {
+                    label: function(context) {
+                      return `${context.label}: ${context.parsed.r}%`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                r: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    stepSize: 20,
+                    color: colors.text,
+                    backdropColor: 'transparent'
+                  },
+                  grid: {
+                    color: colors.grid
+                  },
+                  pointLabels: {
+                    color: colors.text,
+                    font: {
+                      size: 12,
+                      family: 'Inter'
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        renderBarChart(containerId, skillsData) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          const canvas = document.createElement('canvas');
+          container.innerHTML = '';
+          container.appendChild(canvas);
+
+          const ctx = canvas.getContext('2d');
+          const themeManager = window.themeManager || new ThemeManager();
+          const colors = themeManager.getChartColors();
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: skillsData.map(skill => skill.name),
+              datasets: [{
+                label: 'Skill Level (%)',
+                data: skillsData.map(skill => skill.level),
+                backgroundColor: colors.primary[0],
+                borderColor: colors.primary[1],
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  backgroundColor: colors.tooltip.background,
+                  titleColor: colors.tooltip.text,
+                  bodyColor: colors.tooltip.text,
+                  borderColor: colors.tooltip.border,
+                  borderWidth: 1,
+                  callbacks: {
+                    label: function(context) {
+                      return `${context.label}: ${context.parsed.y}%`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    color: colors.text,
+                    maxRotation: 45
+                  },
+                  grid: {
+                    color: colors.grid
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    color: colors.text,
+                    callback: function(value) {
+                      return value + '%';
+                    }
+                  },
+                  grid: {
+                    color: colors.grid
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        renderLineChart(containerId, progressData) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          const canvas = document.createElement('canvas');
+          container.innerHTML = '';
+          container.appendChild(canvas);
+
+          const ctx = canvas.getContext('2d');
+          const themeManager = window.themeManager || new ThemeManager();
+          const colors = themeManager.getChartColors();
+
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: progressData.labels,
+              datasets: [{
+                label: 'Skills Added',
+                data: progressData.skills,
+                borderColor: colors.primary[0],
+                backgroundColor: colors.primary[0] + '20',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: colors.primary[0],
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 6
+              }, {
+                label: 'Projects Completed',
+                data: progressData.projects,
+                borderColor: colors.primary[2],
+                backgroundColor: colors.primary[2] + '20',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: colors.primary[2],
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: true,
+                  labels: {
+                    color: colors.text,
+                    usePointStyle: true,
+                    padding: 20
+                  }
+                },
+                tooltip: {
+                  backgroundColor: colors.tooltip.background,
+                  titleColor: colors.tooltip.text,
+                  bodyColor: colors.tooltip.text,
+                  borderColor: colors.tooltip.border,
+                  borderWidth: 1
+                }
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    color: colors.text
+                  },
+                  grid: {
+                    color: colors.grid
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    color: colors.text
+                  },
+                  grid: {
+                    color: colors.grid
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        // The old custom SVG-based renderPieChart was replaced with a Chart.js Doughnut chart
+        renderPieChart(containerId, pieData) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          const canvas = document.createElement('canvas');
+          container.innerHTML = '';
+          container.appendChild(canvas);
+
+          const ctx = canvas.getContext('2d');
+          const themeManager = window.themeManager || new ThemeManager();
+          const colors = themeManager.getChartColors();
+
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: pieData.map(item => item.category),
+              datasets: [{
+                data: pieData.map(item => item.value),
+                backgroundColor: colors.primary,
+                borderColor: colors.background,
+                borderWidth: 3,
+                hoverBorderWidth: 5
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    color: colors.text,
+                    padding: 20,
+                    usePointStyle: true
+                  }
+                },
+                tooltip: {
+                  backgroundColor: colors.tooltip.background,
+                  titleColor: colors.tooltip.text,
+                  bodyColor: colors.tooltip.text,
+                  borderColor: colors.tooltip.border,
+                  borderWidth: 1,
+                  callbacks: {
+                    label: function(context) {
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = ((context.parsed / total) * 100).toFixed(1);
+                      return `${context.label}: ${context.parsed} (${percentage}%)`;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      // Gamification System
+      class GamificationSystem {
+        constructor() {
+          this.badges = {
+            'first_project': { name: 'First Steps', icon: '🚀', description: 'Created your first project' },
+            'project_master': { name: 'Project Master', icon: '🏆', description: 'Completed 5+ projects' },
+            'skill_collector': { name: 'Skill Collector', icon: '🎯', description: 'Added 10+ skills' },
+            'certified_pro': { name: 'Certified Pro', icon: '🏅', description: 'Earned 3+ certificates' },
+            'experience_builder': { name: 'Experience Builder', icon: '💼', description: 'Added work experience' },
+            'social_connector': { name: 'Social Connector', icon: '🔗', description: 'Connected social profiles' },
+            'profile_complete': { name: 'Profile Complete', icon: '✨', description: 'Completed your profile' },
+            'streak_warrior': { name: 'Streak Warrior', icon: '🔥', description: 'Updated profile 7 days in a row' },
+            'overachiever': { level: 10, name: 'Overachiever', icon: '⭐', description: 'Reached level 10' },
+            'resume_ready': { name: 'Resume Ready', icon: '📄', description: 'Generated your first resume' }
+          };
+
+          this.levels = [
+            { level: 1, name: 'Beginner', xpRequired: 0, color: '#94a3b8' },
+            { level: 2, name: 'Explorer', xpRequired: 100, color: '#06b6d4' },
+            { level: 3, name: 'Developer', xpRequired: 250, color: '#10b981' },
+            { level: 4, name: 'Contributor', xpRequired: 500, color: '#f59e0b' },
+            { level: 5, name: 'Expert', xpRequired: 1000, color: '#ef4444' },
+            { level: 6, name: 'Master', xpRequired: 1500, color: '#8b5cf6' },
+            { level: 7, name: 'Guru', xpRequired: 2500, color: '#ec4899' },
+            { level: 8, name: 'Legend', xpRequired: 4000, color: '#f97316' },
+            { level: 9, name: 'Champion', xpRequired: 6000, color: '#84cc16' },
+            { level: 10, name: 'Grandmaster', xpRequired: 10000, color: '#6366f1' }
+          ];
+        }
+
+        getUserKey(baseKey, userId) {
+          return `${baseKey}_${userId}`;
+        }
+
+        getGameData(userId) {
+          const key = this.getUserKey('cn_game_data', userId);
+          return JSON.parse(localStorage.getItem(key)) || {
+            xp: 0,
+            level: 1,
+            badges: [],
+            streak: 0,
+            lastUpdate: null,
+            achievements: []
+          };
+        }
+
+        saveGameData(userId, data) {
+          const key = this.getUserKey('cn_game_data', userId);
+          localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        calculateXP(profile, skills, projects, certificates, internships, social, education) {
+          let xp = 0;
+          
+          // Profile completion XP
+          if (profile.name) xp += 20;
+          if (profile.email) xp += 10;
+          if (profile.phone) xp += 10;
+          if (profile.bio) xp += 30;
+          if (profile.photo) xp += 40;
+          
+          // Skills XP
+          xp += skills.length * 15;
+          xp += skills.reduce((sum, skill) => sum + (skill.level || 0), 0) * 0.5;
+          
+          // Projects XP
+          xp += projects.length * 50;
+          xp += projects.filter(p => p.link).length * 20;
+          
+          // Certificates XP
+          xp += certificates.length * 40;
+          
+          // Experience XP
+          xp += internships.length * 60;
+          
+          // Social XP
+          xp += social.length * 25;
+          
+          // Education XP
+          xp += education.length * 35;
+          
+          return Math.round(xp);
+        }
+
+        getCurrentLevel(xp) {
+          for (let i = this.levels.length - 1; i >= 0; i--) {
+            if (xp >= this.levels[i].xpRequired) {
+              return this.levels[i];
+            }
+          }
+          return this.levels[0];
+        }
+
+        getNextLevel(currentLevel) {
+          const currentIndex = this.levels.findIndex(l => l.level === currentLevel.level);
+          return currentIndex < this.levels.length - 1 ? this.levels[currentIndex + 1] : null;
+        }
+
+        checkBadges(profile, skills, projects, certificates, internships, social, gameData) {
+          const newBadges = [];
+          
+          // Check each badge condition
+          if (projects.length >= 1 && !gameData.badges.includes('first_project')) {
+            newBadges.push('first_project');
+          }
+          
+          if (projects.length >= 5 && !gameData.badges.includes('project_master')) {
+            newBadges.push('project_master');
+          }
+          
+          if (skills.length >= 10 && !gameData.badges.includes('skill_collector')) {
+            newBadges.push('skill_collector');
+          }
+          
+          if (certificates.length >= 3 && !gameData.badges.includes('certified_pro')) {
+            newBadges.push('certified_pro');
+          }
+          
+          if (internships.length >= 1 && !gameData.badges.includes('experience_builder')) {
+            newBadges.push('experience_builder');
+          }
+          
+          if (social.length >= 2 && !gameData.badges.includes('social_connector')) {
+            newBadges.push('social_connector');
+          }
+          
+          const profileComplete = profile.name && profile.email && profile.bio && profile.photo;
+          if (profileComplete && !gameData.badges.includes('profile_complete')) {
+            newBadges.push('profile_complete');
+          }
+          
+          if (gameData.level >= 10 && !gameData.badges.includes('overachiever')) {
+            newBadges.push('overachiever');
+          }
+          
+          return newBadges;
+        }
+
+        updateStreak(gameData) {
+          const today = new Date().toDateString();
+          const lastUpdate = gameData.lastUpdate ? new Date(gameData.lastUpdate).toDateString() : null;
+          
+          if (lastUpdate === today) {
+            // Already updated today
+            return gameData.streak;
+          }
+          
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayStr = yesterday.toDateString();
+          
+          if (lastUpdate === yesterdayStr) {
+            // Continuing streak
+            gameData.streak += 1;
+          } else if (lastUpdate !== today) {
+            // Streak broken or first time
+            gameData.streak = 1;
+          }
+          
+          gameData.lastUpdate = new Date().toISOString();
+          
+          // Check streak badge
+          if (gameData.streak >= 7 && !gameData.badges.includes('streak_warrior')) {
+            gameData.badges.push('streak_warrior');
+            return { newBadge: 'streak_warrior', streak: gameData.streak };
+          }
+          
+          return gameData.streak;
+        }
+
+        renderGameStats(containerId, gameData, currentLevel, nextLevel) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          
+          const progressPercent = nextLevel ? 
+            ((gameData.xp - currentLevel.xpRequired) / (nextLevel.xpRequired - currentLevel.xpRequired)) * 100 : 100;
+          
+          container.innerHTML = `
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-2xl font-bold">${currentLevel.name}</h3>
+                  <p class="text-indigo-100">Level ${currentLevel.level}</p>
+                </div>
+                <div class="text-right">
+                  <div class="text-3xl font-bold">${gameData.xp}</div>
+                  <p class="text-indigo-100 text-sm">Total XP</p>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span>Progress to ${nextLevel ? nextLevel.name : 'Max Level'}</span>
+                  <span>${Math.round(progressPercent)}%</span>
+                </div>
+                <div class="w-full bg-white/20 rounded-full h-3">
+                  <div class="bg-white h-3 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                </div>
+                ${nextLevel ? `<p class="text-xs text-indigo-100 mt-1">${nextLevel.xpRequired - gameData.xp} XP to next level</p>` : ''}
+              </div>
+              
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🔥</span>
+                  <div>
+                    <div class="font-semibold">${gameData.streak} Day Streak</div>
+                    <div class="text-xs text-indigo-100">Keep it up!</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🏆</span>
+                  <div>
+                    <div class="font-semibold">${gameData.badges.length} Badges</div>
+                    <div class="text-xs text-indigo-100">Earned</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        renderBadges(containerId, earnedBadges) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          
+          const badgeElements = earnedBadges.map(badgeId => {
+            const badge = this.badges[badgeId];
+            return `
+              <div class="bg-white p-4 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow">
+                <div class="text-3xl mb-2">${badge.icon}</div>
+                <h4 class="font-semibold text-sm">${badge.name}</h4>
+                <p class="text-xs text-gray-500 mt-1">${badge.description}</p>
+              </div>
+            `;
+          }).join('');
+          
+          container.innerHTML = `
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              ${badgeElements || '<p class="text-gray-500 col-span-full text-center">No badges earned yet. Keep building your profile!</p>'}
+            </div>
+          `;
+        }
+
+        showLevelUpNotification(newLevel) {
+          const notification = document.createElement('div');
+          notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-8 rounded-xl shadow-2xl z-50 text-center animate-bounce';
+          notification.innerHTML = `
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-3xl font-bold mb-2">Level Up!</h2>
+            <p class="text-xl">You're now a <strong>${newLevel.name}</strong></p>
+            <p class="text-lg">Level ${newLevel.level}</p>
+          `;
+          
+          document.body.appendChild(notification);
+          
+          setTimeout(() => {
+            notification.remove();
+          }, 4000);
+        }
+
+        showBadgeNotification(badgeId) {
+          const badge = this.badges[badgeId];
+          const notification = document.createElement('div');
+          notification.className = 'fixed top-4 right-4 bg-gradient-to-r from-green-400 to-blue-500 text-white p-6 rounded-xl shadow-lg z-50 animate-pulse';
+          notification.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="text-3xl">${badge.icon}</div>
+              <div>
+                <h3 class="font-bold">Badge Earned!</h3>
+                <p class="text-sm">${badge.name}</p>
+              </div>
+            </div>
+          `;
+          
+          document.body.appendChild(notification);
+          
+          setTimeout(() => {
+            notification.remove();
+          }, 5000);
+        }
+      }
+
+      // External Platform Integrations (Class kept but not fully utilized/rendered in this iteration)
+      class PlatformIntegrations {
+        constructor() {
+          this.platforms = {
+            github: {
+              name: 'GitHub',
+              icon: 'fab fa-github',
+              color: '#333',
+              fields: ['username'],
+              description: 'Import repositories and contribution data'
+            },
+            leetcode: {
+              name: 'LeetCode',
+              icon: 'fas fa-code',
+              color: '#FFA116',
+              fields: ['username'],
+              description: 'Import solved problems and contest ratings'
+            },
+            linkedin: {
+              name: 'LinkedIn',
+              icon: 'fab fa-linkedin',
+              color: '#0077B5',
+              fields: ['profile_url'],
+              description: 'Import professional experience and connections'
+            },
+            coursera: {
+              name: 'Coursera',
+              icon: 'fas fa-graduation-cap',
+              color: '#0056D3',
+              fields: ['profile_url'],
+              description: 'Import completed courses and certificates'
+            },
+            codepen: {
+              name: 'CodePen',
+              icon: 'fab fa-codepen',
+              color: '#000',
+              fields: ['username'],
+              description: 'Import creative coding projects'
+            },
+            behance: {
+              name: 'Behance',
+              icon: 'fab fa-behance',
+              color: '#1769FF',
+              fields: ['username'],
+              description: 'Import design portfolio projects'
+            }
+          };
+        }
+
+        getUserKey(baseKey, userId) {
+          return `${baseKey}_${userId}`;
+        }
+
+        getIntegrationData(userId) {
+          const key = this.getUserKey('cn_integrations', userId);
+          return JSON.parse(localStorage.getItem(key)) || {};
+        }
+
+        saveIntegrationData(userId, data) {
+          const key = this.getUserKey('cn_integrations', userId);
+          localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        async connectPlatform(userId, platform, credentials) {
+          try {
+            const integrationData = this.getIntegrationData(userId);
+            
+            // Simulate API call (in real implementation, this would call actual APIs)
+            const mockData = await this.fetchMockData(platform, credentials);
+            
+            integrationData[platform] = {
+              ...credentials,
+              connected: true,
+              lastSync: new Date().toISOString(),
+              data: mockData
+            };
+            
+            this.saveIntegrationData(userId, integrationData);
+            return { success: true, data: mockData };
+          } catch (error) {
+            return { success: false, error: error.message };
+          }
+        }
+
+        async fetchMockData(platform, credentials) {
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          
+          switch (platform) {
+            case 'github':
+              return {
+                repositories: [
+                  { name: 'awesome-project', stars: 45, language: 'JavaScript', description: 'A really awesome project' },
+                  { name: 'react-dashboard', stars: 23, language: 'TypeScript', description: 'Modern React dashboard' },
+                  { name: 'python-scraper', stars: 12, language: 'Python', description: 'Web scraping tool' }
+                ],
+                totalRepos: 15,
+                totalStars: 80,
+                contributions: 234,
+                languages: ['JavaScript', 'TypeScript', 'Python', 'HTML', 'CSS']
+              };
+              
+            case 'leetcode':
+              return {
+                totalSolved: 156,
+                easySolved: 89,
+                mediumSolved: 52,
+                hardSolved: 15,
+                contestRating: 1456,
+                recentSubmissions: [
+                  { title: 'Two Sum', difficulty: 'Easy', status: 'Accepted' },
+                  { title: 'Binary Tree Inorder', difficulty: 'Medium', status: 'Accepted' },
+                  { title: 'Merge K Sorted Lists', difficulty: 'Hard', status: 'Accepted' }
+                ]
+              };
+              
+            case 'linkedin':
+              return {
+                connections: 342,
+                experience: [
+                  { company: 'Tech Corp', position: 'Software Engineer', duration: '2023-Present' },
+                  { company: 'StartupXYZ', position: 'Frontend Developer', duration: '2022-2023' }
+                ],
+                skills: ['JavaScript', 'React', 'Node.js', 'Python'],
+                endorsements: 28
+              };
+              
+            case 'coursera':
+              return {
+                completedCourses: 8,
+                certificates: [
+                  { title: 'Machine Learning', provider: 'Stanford University', completed: '2023' },
+                  { title: 'Full Stack Web Development', provider: 'Meta', completed: '2023' }
+                ],
+                totalHours: 120,
+                currentCourses: 2
+              };
+              
+            case 'codepen':
+              return {
+                pens: [
+                  { title: 'CSS Animation Demo', views: 1234, hearts: 45 },
+                  { title: 'JavaScript Game', views: 890, hearts: 32 },
+                  { title: 'SVG Art', views: 567, hearts: 28 }
+                ],
+                totalViews: 5432,
+                totalHearts: 156,
+                followers: 89
+              };
+              
+            case 'behance':
+              return {
+                projects: [
+                  { title: 'Brand Identity Design', views: 2345, appreciations: 67 },
+                  { title: 'Mobile App UI', views: 1890, appreciations: 45 },
+                  { title: 'Website Redesign', views: 1234, appreciations: 38 }
+                ],
+                totalViews: 8765,
+                totalAppreciations: 234,
+                followers: 156
+              };
+              
+            default:
+              return {};
+          }
+        }
+
+        renderIntegrationsPanel(containerId, userId) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          
+          const integrationData = this.getIntegrationData(userId);
+          
+          const platformCards = Object.entries(this.platforms).map(([key, platform]) => {
+            const isConnected = integrationData[key]?.connected;
+            const data = integrationData[key]?.data;
+            
+            return `
+              <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <i class="${platform.icon} text-2xl" style="color: ${platform.color}"></i>
+                    <div>
+                      <h3 class="font-semibold text-lg">${platform.name}</h3>
+                      <p class="text-sm text-gray-500">${platform.description}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    ${isConnected ? 
+                      `<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Connected</span>` :
+                      `<button onclick="integrations.showConnectModal('${key}')" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-semibold">Connect</button>`
+                    }
+                  </div>
+                </div>
+                
+                ${isConnected && data ? this.renderPlatformData(key, data) : ''}
+                
+                ${isConnected ? `
+                  <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
+                    <span class="text-xs text-gray-500">Last synced: ${new Date(integrationData[key].lastSync).toLocaleDateString()}</span>
+                    <div class="flex gap-2">
+                      <button onclick="integrations.syncPlatform('${key}')" class="text-sm text-indigo-600 hover:text-indigo-800">Sync Now</button>
+                      <button onclick="integrations.disconnectPlatform('${key}')" class="text-sm text-red-600 hover:text-red-800">Disconnect</button>
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('');
+          
+          container.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              ${platformCards}
+            </div>
+          `;
+        }
+
+        renderPlatformData(platform, data) {
+          switch (platform) {
+            case 'github':
+              return `
+                <div class="grid grid-cols-3 gap-4 text-center">
+                  <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-gray-800">${data.totalRepos}</div>
+                    <div class="text-xs text-gray-500">Repositories</div>
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-yellow-600">${data.totalStars}</div>
+                    <div class="text-xs text-gray-500">Stars</div>
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">${data.contributions}</div>
+                    <div class="text-xs text-gray-500">Contributions</div>
+                  </div>
+                </div>
+              `;
+              
+            case 'leetcode':
+              return `
+                <div class="grid grid-cols-4 gap-2 text-center">
+                  <div class="bg-gray-50 p-2 rounded">
+                    <div class="text-lg font-bold text-gray-800">${data.totalSolved}</div>
+                    <div class="text-xs text-gray-500">Total</div>
+                  </div>
+                  <div class="bg-green-50 p-2 rounded">
+                    <div class="text-lg font-bold text-green-600">${data.easySolved}</div>
+                    <div class="text-xs text-gray-500">Easy</div>
+                  </div>
+                  <div class="bg-yellow-50 p-2 rounded">
+                    <div class="text-lg font-bold text-yellow-600">${data.mediumSolved}</div>
+                    <div class="text-xs text-gray-500">Medium</div>
+                  </div>
+                  <div class="bg-red-50 p-2 rounded">
+                    <div class="text-lg font-bold text-red-600">${data.hardSolved}</div>
+                    <div class="text-xs text-gray-500">Hard</div>
+                  </div>
+                </div>
+              `;
+              
+            case 'linkedin':
+              return `
+                <div class="flex justify-between items-center">
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-blue-600">${data.connections}</div>
+                    <div class="text-xs text-gray-500">Connections</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-green-600">${data.endorsements}</div>
+                    <div class="text-xs text-gray-500">Endorsements</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-purple-600">${data.experience.length}</div>
+                    <div class="text-xs text-gray-500">Positions</div>
+                  </div>
+                </div>
+              `;
+              
+            default:
+              return '<div class="text-sm text-gray-500">Data synced successfully</div>';
+          }
+        }
+
+        showConnectModal(platform) {
+          const platformInfo = this.platforms[platform];
+          const modal = document.createElement('div');
+          modal.className = 'fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-50';
+          modal.innerHTML = `
+            <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-md">
+              <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="${platformInfo.icon}" style="color: ${platformInfo.color}"></i>
+                Connect ${platformInfo.name}
+              </h3>
+              <p class="text-gray-600 mb-4">${platformInfo.description}</p>
+              
+              <form id="connectForm" class="space-y-4">
+                ${platformInfo.fields.map(field => `
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                      ${field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </label>
+                    <input type="text" name="${field}" required 
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                  </div>
+                `).join('')}
+                
+                <div class="flex justify-end gap-3 mt-6">
+                  <button type="button" onclick="this.closest('.fixed').remove()" 
+                          class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                  <button type="submit" 
+                          class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold">
+                    Connect
+                  </button>
+                </div>
+              </form>
+            </div>
+          `;
+          
+          document.body.appendChild(modal);
+          
+          modal.querySelector('#connectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const credentials = Object.fromEntries(formData.entries());
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Connecting...';
+            submitBtn.disabled = true;
+            
+            // NOTE: dashboard is assumed to be a global instance
+            const result = await this.connectPlatform(dashboard.currentUser.id, platform, credentials); 
+            
+            if (result.success) {
+              modal.remove();
+              // Re-render the panel (needs the container element which is not in this dashboard.html)
+              // this.renderIntegrationsPanel('integrationsContainer', dashboard.currentUser.id); 
+              dashboard.showNotification(`${platformInfo.name} connected successfully!`);
+            } else {
+              dashboard.showNotification(`Failed to connect ${platformInfo.name}: ${result.error}`, true);
+              submitBtn.textContent = 'Connect';
+              submitBtn.disabled = false;
+            }
+          });
+        }
+
+        async syncPlatform(platform) {
+          const integrationData = this.getIntegrationData(dashboard.currentUser.id);
+          if (!integrationData[platform]) return;
+          
+          dashboard.showNotification('Syncing data...', false);
+          
+          try {
+            const newData = await this.fetchMockData(platform, integrationData[platform]);
+            integrationData[platform].data = newData;
+            integrationData[platform].lastSync = new Date().toISOString();
+            
+            this.saveIntegrationData(dashboard.currentUser.id, integrationData);
+            // Re-render the panel (needs the container element which is not in this dashboard.html)
+            // this.renderIntegrationsPanel('integrationsContainer', dashboard.currentUser.id); 
+            dashboard.showNotification('Data synced successfully!');
+          } catch (error) {
+            dashboard.showNotification('Sync failed. Please try again.', true);
+          }
+        }
+
+        disconnectPlatform(platform) {
+          // NOTE: dashboard is assumed to be a global instance
+          if (!confirm(`Are you sure you want to disconnect ${this.platforms[platform].name}?`)) return;
+          
+          const integrationData = this.getIntegrationData(dashboard.currentUser.id);
+          delete integrationData[platform];
+          
+          this.saveIntegrationData(dashboard.currentUser.id, integrationData);
+          // Re-render the panel (needs the container element which is not in this dashboard.html)
+          // this.renderIntegrationsPanel('integrationsContainer', dashboard.currentUser.id); 
+          dashboard.showNotification(`${this.platforms[platform].name} disconnected`);
+        }
+      }
+
+      // Dashboard functionality with user authentication (RESTORED TO LOCAL STORAGE)
+      class CareerNestDashboard {
+        constructor() {
+          this.currentUser = null;
+          this.themeManager = null;
+          this.skillMapper = null;
+          this.gamificationSystem = null;
+          this.integrations = null;
+          this.init();
+        }
+
+        init() {
+          // Check authentication
+          const savedUser = localStorage.getItem('cn_current_user');
+          if (!savedUser) {
+            console.log('No user session found, redirecting to login page.');
+            window.location.href = 'index.html';
+            return;
+          }
+
+          try {
+            console.log('User session found. Initializing dashboard...');
+            this.currentUser = JSON.parse(savedUser);
+            
+            // Initialize systems
+            this.themeManager = new ThemeManager();
+            window.themeManager = this.themeManager; // Make globally available
+            this.skillMapper = new SkillMapper();
+            this.gamificationSystem = new GamificationSystem();
+            this.integrations = new PlatformIntegrations();
+            
+            this.setupUserInterface();
+            // RESTORED: Synchronous data initialization
+            this.initializeData(); 
+            this.setupEventListeners();
+            this.renderAll();
+          } catch (error) {
+            console.error('Error initializing dashboard:', error);
+            localStorage.removeItem('cn_current_user');
+            window.location.href = 'index.html';
+          }
+        }
+
+        setupUserInterface() {
+          // Display user name in sidebar
+          const userNameDisplay = document.getElementById('userNameDisplay');
+          if (userNameDisplay) {
+            userNameDisplay.textContent = this.currentUser.name || 'User';
+          }
+          
+          // Display welcome name
+          const welcomeName = document.getElementById('welcomeName');
+          if (welcomeName) {
+            welcomeName.textContent = this.currentUser.name || 'User';
+          }
+
+          // Mobile Menu Toggle Logic
+          const sidebar = document.querySelector('.sidebar-bg');
+          const menuToggle = document.getElementById('menuToggle');
+          const navLinks = document.querySelectorAll('.nav-link');
+          
+          if(menuToggle && sidebar) {
+              menuToggle.addEventListener('click', () => {
+                  sidebar.classList.toggle('open');
+                  if(sidebar.classList.contains('open')) {
+                      menuToggle.innerHTML = '<i class="fas fa-times text-xl"></i>';
+                  } else {
+                      menuToggle.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                  }
+              });
+
+              // Close sidebar when a link is clicked (mobile only)
+              navLinks.forEach(link => {
+                  link.addEventListener('click', () => {
+                      if (window.innerWidth < 1024) {
+                          sidebar.classList.remove('open');
+                          menuToggle.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                      }
+                  });
+              });
+          }
+        }
+
+        getUserKey(baseKey) {
+          return `${baseKey}_${this.currentUser.id}`;
+        }
+
+        // RESTORED: Synchronous data loading using localStorage
+        initializeData() {
+          // Initialize user-specific data keys (using the old keys for local storage)
+          this.KEY_PROFILE = this.getUserKey('mc_profile_v6');
+          this.KEY_PROJECTS = this.getUserKey('mc_projects_v5');
+          this.KEY_SKILLS = this.getUserKey('mc_skills_v5');
+          this.KEY_CERTS = this.getUserKey('mc_certs_v5');
+          this.KEY_EDU = this.getUserKey('mc_edu_v5');
+          this.KEY_INTERNS = this.getUserKey('mc_interns_v2');
+          this.KEY_SOCIAL = this.getUserKey('mc_social_v2');
+          this.KEY_PREF = this.getUserKey('mc_prefs_v4');
+
+          // Load user data
+          this.profile = this.load(this.KEY_PROFILE, this.currentUser.profile || {
+            name: this.currentUser.name || '',
+            email: this.currentUser.email || '',
+            phone: '',
+            bio: '',
+            photo: ''
+          });
+          
+          this.projects = this.load(this.KEY_PROJECTS, []);
+          this.skills = this.load(this.KEY_SKILLS, []);
+          this.certs = this.load(this.KEY_CERTS, []);
+          this.edu = this.load(this.KEY_EDU, []);
+          this.interns = this.load(this.KEY_INTERNS, []);
+          this.social = this.load(this.KEY_SOCIAL, []);
+
+          const defaultSections = {profile:true, skills:true, projects:true, internships:true, certificates:true, education:true, social:true};
+          const defaultOrder = ['profile', 'skills', 'projects', 'internships', 'certificates', 'education', 'social'];
+          
+          this.prefs = this.load(this.KEY_PREF, {
+            sections: defaultSections,
+            order: defaultOrder,
+            theme: ['#6366f1', '#4338ca'],
+            template: 'classic'
+          });
+
+          // Ensure all sections are present
+          defaultOrder.forEach(sec => {
+            if (this.prefs.sections[sec] === undefined) this.prefs.sections[sec] = true;
+          });
+          if (this.prefs.order.length !== defaultOrder.length) this.prefs.order = defaultOrder;
+        }
+
+        load(key, fallback) {
+          try {
+            // RESTORED: Loading data from local storage
+            return JSON.parse(localStorage.getItem(key)) || fallback;
+          } catch {
+            return fallback;
+          }
+        }
+
+        save(key, value) {
+          // RESTORED: Saving data to local storage
+          localStorage.setItem(key, JSON.stringify(value));
+        }
+        
+        // NOTE: All data modification methods (setupFormHandlers, handleDelete, loadSampleData) 
+        // revert to being synchronous and call the synchronous this.save(key, value)
+        // as in the original design.
+        
+        setupEventListeners() {
+          // Navigation
+          const navLinks = document.querySelectorAll('.nav-link');
+          navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.navigate(link.dataset.target);
+            });
+          });
+
+          // Logout
+          document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+              localStorage.removeItem('cn_current_user');
+              window.location.href = 'index.html';
+            }
+          });
+
+          // Forms
+          this.setupFormHandlers();
+          this.setupCustomizeModal();
+          this.setupExportHandlers();
+        }
+
+        navigate(pageId) {
+          // Update active nav link
+          document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+          });
+          const targetLink = document.querySelector(`[data-target="${pageId}"]`);
+          if (targetLink) {
+              targetLink.classList.add('active'); // Use 'active' class as defined in dashboard.html style
+          }
+
+
+          // Show page
+          document.querySelectorAll('section').forEach(section => {
+            section.classList.add('hidden');
+          });
+          const targetSection = document.getElementById(pageId);
+          if (targetSection) {
+              targetSection.classList.remove('hidden');
+              // Render specific page content
+              this.renderPageContent(pageId);
+          }
+          
+          // Update URL
+          history.replaceState(null, '', '#' + pageId);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        renderPageContent(pageId) {
+          switch (pageId) {
+            case 'analytics':
+              this.renderAnalytics();
+              break;
+            case 'integrations':
+              // Restore integrations if that section is needed
+              // this.integrations.renderIntegrationsPanel('integrationsContainer', this.currentUser.id);
+              break;
+            case 'achievements':
+              this.renderAchievements();
+              break;
+          }
+        }
+        
+        renderAnalytics() {
+          // Generate skill map
+          const skillMap = this.skillMapper.generateSkillMap(this.skills, this.projects, this.certs, this.interns);
+          const radarData = this.skillMapper.generateRadarChartData(skillMap);
+          
+          // Render radar chart
+          this.skillMapper.renderSkillRadarChart('skillRadarChart', radarData);
+          
+          // Render skill breakdown
+          const skillBreakdown = document.getElementById('skillBreakdown');
+          if (skillBreakdown) {
+            skillBreakdown.innerHTML = radarData.map(item => `
+              <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                <span class="text-sm font-medium">${item.category}</span>
+                <span class="text-sm text-indigo-600 font-semibold">${item.value}%</span>
+              </div>
+            `).join('');
+          }
+          
+          // Render new interactive charts
+          this.renderInteractiveCharts();
+          
+          // Render progress timeline
+          this.renderProgressTimeline();
+          
+          // Render detailed stats
+          this.renderDetailedStats(skillMap);
+        }
+        
+        renderInteractiveCharts() {
+          // Skills Bar Chart
+          const topSkills = this.skills.slice(0, 8);
+          this.skillMapper.renderBarChart('skillsBarChart', topSkills);
+          
+          // Progress Line Chart - simulate progress over time
+          const progressData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            skills: [2, 5, 8, 12, 15, this.skills.length],
+            projects: [0, 1, 2, 4, 6, this.projects.length]
+          };
+          this.skillMapper.renderLineChart('progressLineChart', progressData);
+          
+          // Achievement Pie Chart
+          const achievementData = [
+            { category: 'Skills', value: this.skills.length },
+            { category: 'Projects', value: this.projects.length },
+            { category: 'Certificates', value: this.certs.length },
+            { category: 'Experience', value: this.interns.length },
+            { category: 'Education', value: this.edu.length }
+          ].filter(item => item.value > 0);
+          
+          this.skillMapper.renderPieChart('achievementPieChart', achievementData);
+        }
+        
+        renderProgressTimeline() {
+          const timeline = document.getElementById('progressTimeline');
+          if (!timeline) return;
+          
+          const events = [
+            { date: 'Today', event: 'Profile Updated', type: 'profile' },
+            { date: 'This Week', event: `${this.projects.length} Projects Added`, type: 'project' },
+            { date: 'This Month', event: `${this.skills.length} Skills Mastered`, type: 'skill' },
+            { date: 'Recent', event: `${this.certs.length} Certificates Earned`, type: 'cert' }
+          ];
+          
+          timeline.innerHTML = events.map(event => `
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm">${event.event}</div>
+                <div class="text-xs text-gray-500">${event.date}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+        
+        renderDetailedStats(skillMap) {
+          // Skill categories
+          const skillCategories = document.getElementById('skillCategories');
+          if (skillCategories) {
+            skillCategories.innerHTML = Object.entries(skillMap).map(([category, data]) => `
+              <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                <span class="text-sm">${category}</span>
+                <span class="text-sm font-semibold">${data.count} skills</span>
+              </div>
+            `).join('');
+          }
+          
+          // Project technologies
+          const projectTech = document.getElementById('projectTechnologies');
+          if (projectTech) {
+            const techs = this.projects.flatMap(p => this.skillMapper.extractSkillsFromText(p.desc + ' ' + p.title));
+            const techCount = {};
+            techs.forEach(tech => techCount[tech] = (techCount[tech] || 0) + 1);
+            
+            projectTech.innerHTML = Object.entries(techCount).slice(0, 5).map(([tech, count]) => `
+              <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                <span class="text-sm">${tech}</span>
+                <span class="text-sm font-semibold">${count} projects</span>
+              </div>
+            `).join('');
+          }
+          
+          // Achievement summary
+          const achievementSummary = document.getElementById('achievementSummary');
+          if (achievementSummary) {
+            const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+            achievementSummary.innerHTML = `
+              <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                <span class="text-sm">Total XP</span>
+                <span class="text-sm font-semibold">${gameData.xp}</span>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                <span class="text-sm">Current Level</span>
+                <span class="text-sm font-semibold">${gameData.level}</span>
+              </div>
+              <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                <span class="text-sm">Badges Earned</span>
+                <span class="text-sm font-semibold">${gameData.badges.length}</span>
+              </div>
+            `;
+          }
+        }
+        
+        renderAchievements() {
+          const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+          const currentLevel = this.gamificationSystem.getCurrentLevel(gameData.xp);
+          const nextLevel = this.gamificationSystem.getNextLevel(currentLevel);
+          
+          // Render level progress
+          this.gamificationSystem.renderGameStats('levelProgress', gameData, currentLevel, nextLevel);
+          
+          // Render badges
+          this.gamificationSystem.renderBadges('badgesContainer', gameData.badges);
+        }
+
+        setupFormHandlers() {
+          // Profile form
+          const profileForm = document.getElementById('profileForm');
+          profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.profile.name = document.getElementById('name').value.trim();
+            this.profile.email = document.getElementById('email').value.trim();
+            this.profile.phone = document.getElementById('phone').value.trim();
+            this.profile.bio = document.getElementById('bio').value.trim();
+            this.save(this.KEY_PROFILE, this.profile);
+            this.updateGameData();
+            this.renderAll();
+            this.showNotification('Profile saved successfully!');
+          });
+
+          // Photo upload
+          document.getElementById('photoUpload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                this.profile.photo = event.target.result;
+                this.save(this.KEY_PROFILE, this.profile);
+                this.updatePhotoPreview();
+                this.updateGameData();
+                this.renderAll();
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+
+          // Skills form
+          const skillsForm = document.getElementById('skillsForm');
+          const skillLevel = document.getElementById('skillLevel');
+          const skillLevelVal = document.getElementById('skillLevelVal');
+          
+          skillLevel.addEventListener('input', () => {
+            skillLevelVal.textContent = skillLevel.value + '%';
+          });
+
+          skillsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('skillName').value.trim();
+            const level = parseInt(document.getElementById('skillLevel').value || 0);
+            
+            if (!name) {
+              this.showNotification('Please enter a skill name', true);
+              return;
+            }
+            
+            this.skills.unshift({name, level});
+            this.save(this.KEY_SKILLS, this.skills);
+            document.getElementById('skillName').value = '';
+            document.getElementById('skillLevel').value = '75';
+            skillLevelVal.textContent = '75%';
+            this.updateGameData();
+            this.renderAll();
+          });
+
+          // Projects form
+          document.getElementById('projectsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('projectTitle').value.trim();
+            const link = document.getElementById('projectLink').value.trim();
+            const desc = document.getElementById('projectDesc').value.trim();
+            
+            if (!title) {
+              this.showNotification('Please enter a project title', true);
+              return;
+            }
+            
+            this.projects.unshift({title, link, desc});
+            this.save(this.KEY_PROJECTS, this.projects);
+            this.clearForm('projectsForm');
+            this.updateGameData();
+            this.renderAll();
+          });
+
+          // Similar handlers for other forms...
+          this.setupOtherFormHandlers();
+          this.setupClearButtons();
+        }
+
+        setupOtherFormHandlers() {
+          // Internships
+          document.getElementById('internForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const company = document.getElementById('internCompany').value.trim();
+            const role = document.getElementById('internRole').value.trim();
+            const duration = document.getElementById('internDuration').value.trim();
+            const desc = document.getElementById('internDesc').value.trim();
+            
+            if (!company || !role) {
+              this.showNotification('Please enter company and role', true);
+              return;
+            }
+            
+            this.interns.unshift({company, role, duration, desc});
+            this.save(this.KEY_INTERNS, this.interns);
+            this.clearForm('internForm');
+            this.updateGameData();
+            this.renderAll();
+          });
+
+          // Certificates
+          document.getElementById('certForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('certName').value.trim();
+            const issuer = document.getElementById('certIssuer').value.trim();
+            const link = document.getElementById('certLink').value.trim();
+            
+            if (!title) {
+              this.showNotification('Please enter certificate title', true);
+              return;
+            }
+            
+            this.certs.unshift({title, issuer, link});
+            this.save(this.KEY_CERTS, this.certs);
+            this.clearForm('certForm');
+            this.updateGameData();
+            this.renderAll();
+          });
+
+          // Education
+          document.getElementById('eduForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const institute = document.getElementById('eduInstitute').value.trim();
+            const degree = document.getElementById('eduDegree').value.trim();
+            const year = document.getElementById('eduYear').value.trim();
+            
+            if (!institute) {
+              this.showNotification('Please enter institution name', true);
+              return;
+            }
+            
+            this.edu.unshift({institute, degree, year});
+            this.save(this.KEY_EDU, this.edu);
+            this.clearForm('eduForm');
+            this.updateGameData();
+            this.renderAll();
+          });
+
+          // Social Media
+          document.getElementById('socialForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const platform = document.getElementById('socialPlatform').value.trim();
+            const link = document.getElementById('socialLink').value.trim();
+            
+            if (!platform || !link) {
+              this.showNotification('Please enter platform and link', true);
+              return;
+            }
+            
+            this.social.unshift({platform, link});
+            this.save(this.KEY_SOCIAL, this.social);
+            this.clearForm('socialForm');
+            this.updateGameData();
+            this.renderAll();
+          });
+
+          // Load sample data
+          document.getElementById('loadSample').addEventListener('click', () => {
+            this.loadSampleData();
+          });
+        }
+        
+        updateGameData() {
+          // Calculate XP and update game data
+          const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+          const oldLevel = gameData.level;
+          
+          // Calculate new XP
+          gameData.xp = this.gamificationSystem.calculateXP(
+            this.profile, this.skills, this.projects, this.certs, 
+            this.interns, this.social, this.edu
+          );
+          
+          // Update level
+          const currentLevel = this.gamificationSystem.getCurrentLevel(gameData.xp);
+          gameData.level = currentLevel.level;
+          
+          // Update streak
+          this.gamificationSystem.updateStreak(gameData);
+          
+          // Check for new badges
+          const newBadges = this.gamificationSystem.checkBadges(
+            this.profile, this.skills, this.projects, this.certs, 
+            this.interns, this.social, gameData
+          );
+          
+          // Add new badges
+          newBadges.forEach(badge => {
+            if (!gameData.badges.includes(badge)) {
+              gameData.badges.push(badge);
+              this.gamificationSystem.showBadgeNotification(badge);
+            }
+          });
+          
+          // Check for level up
+          if (gameData.level > oldLevel) {
+            this.gamificationSystem.showLevelUpNotification(currentLevel);
+          }
+          
+          // Save game data
+          this.gamificationSystem.saveGameData(this.currentUser.id, gameData);
+          
+          // Update snapshot level
+          const snapLevel = document.getElementById('snapLevel');
+          if (snapLevel) {
+            snapLevel.textContent = `Level ${gameData.level} (${currentLevel.name})`;
+          }
+        }
+
+        setupClearButtons() {
+          const clearButtons = [
+            { id: 'clearProfile', action: () => this.clearProfile() },
+            { id: 'clearSkills', action: () => this.clearData('skills', this.KEY_SKILLS) },
+            { id: 'clearProjects', action: () => this.clearData('projects', this.KEY_PROJECTS) },
+            { id: 'clearInterns', action: () => this.clearData('interns', this.KEY_INTERNS) },
+            { id: 'clearCerts', action: () => this.clearData('certs', this.KEY_CERTS) },
+            { id: 'clearEdu', action: () => this.clearData('edu', this.KEY_EDU) },
+            { id: 'clearSocial', action: () => this.clearData('social', this.KEY_SOCIAL) }
+          ];
+
+          clearButtons.forEach(({id, action}) => {
+            document.getElementById(id).addEventListener('click', action);
+          });
+        }
+
+        clearProfile() {
+          if (!confirm('Clear all profile data?')) return;
+          this.profile = {
+            name: this.currentUser.name || '',
+            email: this.currentUser.email || '',
+            phone: '',
+            bio: '',
+            photo: ''
+          };
+          this.save(this.KEY_PROFILE, this.profile);
+          this.updateFormFields();
+          this.updateGameData();
+          this.renderAll();
+        }
+
+        clearData(type, key) {
+          if (!confirm(`Clear all ${type}?`)) return;
+          this[type] = [];
+          this.save(key, this[type]);
+          this.updateGameData();
+          this.renderAll();
+        }
+
+        clearForm(formId) {
+          const form = document.getElementById(formId);
+          const inputs = form.querySelectorAll('input, textarea');
+          inputs.forEach(input => {
+            if (input.type !== 'submit' && input.type !== 'button') {
+              input.value = '';
+            }
+          });
+        }
+
+        updateFormFields() {
+          document.getElementById('name').value = this.profile.name || '';
+          document.getElementById('email').value = this.profile.email || '';
+          document.getElementById('phone').value = this.profile.phone || '';
+          document.getElementById('bio').value = this.profile.bio || '';
+          this.updatePhotoPreview();
+        }
+
+        updatePhotoPreview() {
+          const preview = document.getElementById('photoPreview');
+          const placeholder = document.getElementById('photoPlaceholder');
+          
+          if (this.profile.photo) {
+            preview.src = this.profile.photo;
+            preview.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+          } else {
+            preview.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+          }
+        }
+
+        setupCustomizeModal() {
+          const customizeBtn = document.getElementById('customizeBtn');
+          const customizeBackdrop = document.getElementById('customizeBackdrop');
+          const closeCustomize = document.getElementById('closeCustomize');
+          const applyCustomize = document.getElementById('applyCustomize');
+
+          if (!customizeBtn || !customizeBackdrop || !closeCustomize || !applyCustomize) return;
+
+
+          customizeBtn.addEventListener('click', () => {
+            customizeBackdrop.classList.remove('hidden');
+            this.updateCustomizeModal();
+          });
+
+          closeCustomize.addEventListener('click', () => {
+            customizeBackdrop.classList.add('hidden');
+          });
+
+          applyCustomize.addEventListener('click', () => {
+            this.applyCustomization();
+            customizeBackdrop.classList.add('hidden');
+          });
+        }
+
+        updateCustomizeModal() {
+          document.querySelectorAll('.rs-cb').forEach(cb => {
+            cb.checked = this.prefs.sections[cb.dataset.section];
+          });
+          
+          document.querySelectorAll('input[name="theme"]').forEach(radio => {
+            radio.checked = radio.value === this.prefs.theme.join('|');
+          });
+          
+          document.querySelectorAll('input[name="template"]').forEach(radio => {
+            radio.checked = radio.value === this.prefs.template;
+          });
+        }
+
+        applyCustomization() {
+          document.querySelectorAll('.rs-cb').forEach(cb => {
+            this.prefs.sections[cb.dataset.section] = cb.checked;
+          });
+          
+          const selectedTheme = document.querySelector('input[name="theme"]:checked').value.split('|');
+          this.prefs.theme = selectedTheme;
+          
+          this.prefs.template = document.querySelector('input[name="template"]:checked').value;
+          
+          this.save(this.KEY_PREF, this.prefs);
+          this.renderAll();
+        }
+
+        setupExportHandlers() {
+          const exportBtn = document.getElementById('exportBtn');
+          const downloadResume = document.getElementById('downloadResume');
+          
+          const exportFunction = () => {
+            this.renderResumePreview();
+            const opt = {
+              margin: 0.3,
+              filename: `${(this.profile.name || 'resume').replace(/\s+/g, '_')}.pdf`,
+              image: { type: 'jpeg', quality: 0.98 },
+              html2canvas: { scale: 2, useCORS: true },
+              jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            
+            const content = document.querySelector('#resumePreview .resume-page');
+            if (content) html2pdf().from(content).set(opt).save();
+          };
+
+          if(exportBtn) exportBtn.addEventListener('click', exportFunction);
+          if(downloadResume) downloadResume.addEventListener('click', exportFunction);
+        }
+
+        loadSampleData() {
+          if (!confirm('This will replace your current data with sample data. Continue?')) return;
+
+          const sampleData = {
+            profile: {
+              name: this.currentUser.name || "John Doe",
+              email: this.currentUser.email || "john.doe@example.com",
+              phone: "+1 (555) 123-4567",
+              bio: "Passionate software developer with expertise in full-stack web development and a strong foundation in modern technologies.",
+              photo: ""
+            },
+            skills: [
+              { name: "JavaScript", level: 90 },
+              { name: "React", level: 85 },
+              { name: "Node.js", level: 80 },
+              { name: "Python", level: 75 },
+              { name: "HTML/CSS", level: 95 },
+              { name: "MongoDB", level: 70 }
+            ],
+            projects: [
+              {
+                title: "E-commerce Platform",
+                link: "https://github.com/johndoe/ecommerce",
+                desc: "Full-stack e-commerce application built with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard."
+              },
+              {
+                title: "Task Management App",
+                link: "https://taskmanager-demo.com",
+                desc: "Responsive web application for team collaboration and task tracking. Built with React and Firebase, featuring real-time updates and drag-and-drop functionality."
+              },
+              {
+                title: "Weather Dashboard",
+                link: "",
+                desc: "Interactive weather application with location-based forecasts, built using vanilla JavaScript and OpenWeather API."
+              }
+            ],
+            internships: [
+              {
+                company: "Tech Solutions Inc.",
+                role: "Software Developer Intern",
+                duration: "Jun 2023 – Aug 2023",
+                desc: "Developed and maintained features for the company's flagship product. Collaborated with senior developers on code reviews and participated in agile development processes."
+              },
+              {
+                company: "StartupXYZ",
+                role: "Frontend Developer Intern",
+                duration: "Jan 2023 – May 2023",
+                desc: "Built responsive user interfaces using React and implemented modern design systems. Improved application performance by 30% through code optimization."
+              }
+            ],
+            certificates: [
+              { title: "React Developer Certification", issuer: "Meta", link: "https://coursera.org/cert/react123" },
+              { title: "AWS Cloud Practitioner", issuer: "Amazon Web Services", link: "" },
+              { title: "JavaScript Algorithms and Data Structures", issuer: "freeCodeCamp", link: "https://freecodecamp.org/cert/js456" },
+              { title: "Full Stack Web Development", issuer: "Udemy", link: "" }
+            ],
+            education: [
+              { institute: "State University", degree: "B.Sc. Computer Science", year: "2020-2024" },
+              { institute: "Community College", degree: "Associate in Computer Programming", year: "2018-2020" }
+            ],
+            social: [
+              { platform: "LinkedIn", link: "https://linkedin.com/in/johndoe" },
+              { platform: "GitHub", link: "https://github.com/johndoe" },
+              { platform: "Portfolio", link: "https://johndoe.dev" },
+              { platform: "LeetCode", link: "https://leetcode.com/johndoe" }
+            ]
+          };
+
+          this.profile = sampleData.profile;
+          this.skills = sampleData.skills;
+          this.projects = sampleData.projects;
+          this.interns = sampleData.internships;
+          this.certs = sampleData.certificates;
+          this.edu = sampleData.education;
+          this.social = sampleData.social;
+
+          // Save all data
+          this.save(this.KEY_PROFILE, this.profile);
+          this.save(this.KEY_SKILLS, this.skills);
+          this.save(this.KEY_PROJECTS, this.projects);
+          this.save(this.KEY_INTERNS, this.interns);
+          this.save(this.KEY_CERTS, this.certs);
+          this.save(this.KEY_EDU, this.edu);
+          this.save(this.KEY_SOCIAL, this.social);
+
+          this.updateFormFields();
+          this.updateGameData();
+          this.renderAll();
+          this.showNotification('Sample data loaded successfully!');
+          this.navigate('home');
+        }
+
+        renderAll() {
+          this.renderDashboard();
+          this.renderLists();
+          this.renderResumePreview();
+          this.renderRecentAchievements();
+        }
+        
+        renderRecentAchievements() {
+          const container = document.getElementById('recentAchievements');
+          if (!container) return;
+          
+          const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+          const recentBadges = gameData.badges.slice(-3);
+          
+          if (recentBadges.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center col-span-3">Complete your profile to start earning achievements!</p>';
+            return;
+          }
+          
+          container.innerHTML = recentBadges.map(badgeId => {
+            const badge = this.gamificationSystem.badges[badgeId];
+            return `
+              <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-4 rounded-lg border border-yellow-200 text-center hover:scale-105 transition-transform duration-200">
+                <div class="text-3xl mb-2">${badge.icon}</div>
+                <h4 class="font-semibold text-sm text-gray-800">${badge.name}</h4>
+                <p class="text-xs text-gray-600 mt-1">${badge.description}</p>
+              </div>
+            `;
+          }).join('');
+        }
+
+        renderDashboard() {
+          // Update game stats
+          const gameData = this.gamificationSystem.getGameData(this.currentUser.id);
+          const currentLevel = this.gamificationSystem.getCurrentLevel(gameData.xp);
+          const nextLevel = this.gamificationSystem.getNextLevel(currentLevel);
+          
+          // Render game stats in welcome section
+          this.gamificationSystem.renderGameStats('gameStatsContainer', gameData, currentLevel, nextLevel);
+          
+          // Update counts
+          document.getElementById('projectCount').textContent = this.projects.length;
+          document.getElementById('skillCount').textContent = this.skills.length;
+          document.getElementById('certCount').textContent = this.certs.length;
+
+          // Update snapshot
+          document.getElementById('snapName').textContent = this.profile.name || '—';
+          document.getElementById('snapLevel').textContent = `Level ${gameData.level} (${currentLevel.name})`;
+          document.getElementById('snapProjCount').textContent = this.projects.length;
+          document.getElementById('snapSkill').textContent = (this.skills[0] && this.skills[0].name) || '—';
+
+          // Update snapshot photo
+          const snapPhoto = document.getElementById('snapPhoto');
+          if (snapPhoto) {
+              if (this.profile.photo) {
+                snapPhoto.src = this.profile.photo;
+                snapPhoto.classList.remove('hidden');
+              } else {
+                snapPhoto.classList.add('hidden');
+              }
+          }
+
+          // Render recent projects
+          const projectList = document.getElementById('projectList');
+          if (projectList) {
+              projectList.innerHTML = '';
+              this.projects.slice(-5).reverse().forEach(p => {
+                const li = document.createElement('li');
+                li.className = 'border-b last:border-0 border-gray-100 py-2 flex items-center gap-2';
+                li.innerHTML = `
+                  <i class="fas fa-folder text-indigo-500 text-xs"></i>
+                  <span class="text-sm">${p.title}</span>
+                `;
+                projectList.appendChild(li);
+              });
+          }
+
+          // Render top skills
+          const skillsContainer = document.getElementById('skillsContainer');
+          if (skillsContainer) {
+              skillsContainer.innerHTML = '';
+              this.skills.slice(0, 6).forEach(s => {
+                const pill = document.createElement('div');
+                pill.className = 'flex items-center p-3 rounded-xl bg-gray-50 shadow-sm';
+                pill.innerHTML = `
+                  <div class="font-semibold flex-1 text-sm">${s.name}</div>
+                  <div class="skill-progress-bar h-2 bg-gray-200 rounded-full w-24 ml-4">
+                    <div style="width: ${s.level || 70}%" class="h-full rounded-full"></div>
+                  </div>
+                `;
+                skillsContainer.appendChild(pill);
+              });
+          }
+
+          // Render certificates
+          const certContainer = document.getElementById('certContainer');
+          if (certContainer) {
+              certContainer.innerHTML = '';
+              this.certs.slice(0, 6).forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-gray-50 rounded-lg shadow-sm';
+                div.innerHTML = `
+                  <div class="flex items-start gap-2">
+                    <i class="fas fa-certificate text-emerald-500 text-xs mt-1"></i>
+                    <div>
+                      <strong class="text-sm block">${c.title}</strong>
+                      <p class="text-xs text-slate-500">${c.issuer || ''}</p>
+                    </div>
+                  </div>
+                `;
+                certContainer.appendChild(div);
+              });
+          }
+        }
+
+        renderLists() {
+          const itemClasses = 'bg-white p-4 rounded-lg shadow-sm flex flex-col gap-2 relative border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-105';
+          const deleteButton = (cb) => `<button type="button" class="absolute top-2 right-2 text-sm text-red-500 hover:text-red-700 transition-colors p-1 rounded hover:bg-red-50" onclick="${cb}" title="Delete"><i class="fas fa-trash text-xs"></i></button>`;
+
+          // Projects
+          const projectsList = document.getElementById('projectsList');
+          if (projectsList) {
+              projectsList.innerHTML = '';
+              this.projects.slice().reverse().forEach((p, idx) => {
+                const node = document.createElement('div');
+                node.className = itemClasses;
+                node.innerHTML = `
+                  <div>
+                    <div class="flex items-start gap-2 mb-2">
+                      <i class="fas fa-folder-open text-indigo-500 mt-1"></i>
+                      <strong class="text-base">${p.title}</strong>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-2">${p.desc || ''}</p>
+                    ${p.link ? `<a href="${p.link}" target="_blank" class="text-sm text-blue-500 hover:underline flex items-center gap-1"><i class="fas fa-external-link-alt text-xs"></i>${p.link}</a>` : ''}
+                  </div>
+                  ${deleteButton(`dashboard.handleDelete('projects', ${this.projects.length - 1 - idx})`)}
+                `;
+                projectsList.appendChild(node);
+              });
+          }
+
+          // Skills
+          const skillsList = document.getElementById('skillsList');
+          if (skillsList) {
+              skillsList.innerHTML = '';
+              this.skills.slice().reverse().forEach((s, idx) => {
+                const node = document.createElement('div');
+                node.className = itemClasses;
+                node.innerHTML = `
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <i class="fas fa-cog text-sky-500"></i>
+                        <strong class="text-base">${s.name}</strong>
+                      </div>
+                      <span class="text-sm font-semibold text-indigo-600">${s.level || 0}%</span>
+                    </div>
+                    <div class="skill-progress-bar h-2 bg-gray-200 rounded-full">
+                      <div style="width: ${s.level || 0}%" class="h-full rounded-full"></div>
+                    </div>
+                  </div>
+                  ${deleteButton(`dashboard.handleDelete('skills', ${this.skills.length - 1 - idx})`)}
+                `;
+                skillsList.appendChild(node);
+              });
+          }
+
+          // Continue with other lists...
+          this.renderOtherLists(itemClasses, deleteButton);
+        }
+
+        renderOtherLists(itemClasses, deleteButton) {
+          // Certificates
+          const certsList = document.getElementById('certsList');
+          if (certsList) {
+              certsList.innerHTML = '';
+              this.certs.slice().reverse().forEach((c, idx) => {
+                const node = document.createElement('div');
+                node.className = itemClasses;
+                node.innerHTML = `
+                  <div>
+                    <div class="flex items-start gap-2 mb-2">
+                      <i class="fas fa-certificate text-emerald-500 mt-1"></i>
+                      <div>
+                        <strong class="text-base block">${c.title}</strong>
+                        <p class="text-sm text-slate-600">${c.issuer || ''}</p>
+                      </div>
+                    </div>
+                    ${c.link ? `<a href="${c.link}" target="_blank" class="text-sm text-blue-500 hover:underline flex items-center gap-1"><i class="fas fa-external-link-alt text-xs"></i>View Certificate</a>` : ''}
+                  </div>
+                  ${deleteButton(`dashboard.handleDelete('certs', ${this.certs.length - 1 - idx})`)}
+                `;
+                certsList.appendChild(node);
+              });
+          }
+
+          // Education
+          const eduList = document.getElementById('eduList');
+          if (eduList) {
+              eduList.innerHTML = '';
+              this.edu.slice().reverse().forEach((e, idx) => {
+                const node = document.createElement('div');
+                node.className = itemClasses;
+                node.innerHTML = `
+                  <div>
+                    <div class="flex items-start gap-2 mb-2">
+                      <i class="fas fa-graduation-cap text-purple-500 mt-1"></i>
+                      <div>
+                        <strong class="text-base block">${e.institute}</strong>
+                        <p class="text-sm text-slate-600">${e.degree || ''} — ${e.year || ''}</p>
+                      </div>
+                    </div>
+                  </div>
+                  ${deleteButton(`dashboard.handleDelete('edu', ${this.edu.length - 1 - idx})`)}
+                `;
+                eduList.appendChild(node);
+              });
+          }
+
+          // Internships
+          const internsList = document.getElementById('internsList');
+          if (internsList) {
+              internsList.innerHTML = '';
+              this.interns.slice().reverse().forEach((it, idx) => {
+                const node = document.createElement('div');
+                node.className = itemClasses;
+                node.innerHTML = `
+                  <div>
+                    <div class="flex items-start gap-2 mb-2">
+                      <i class="fas fa-briefcase text-orange-500 mt-1"></i>
+                      <div>
+                        <strong class="text-base block">${it.company}</strong>
+                        <p class="text-sm text-slate-600">${it.role || ''}</p>
+                        <p class="text-sm text-slate-500">${it.duration || ''}</p>
+                      </div>
+                    </div>
+                    <p class="text-sm text-slate-600">${it.desc || ''}</p>
+                  </div>
+                  ${deleteButton(`dashboard.handleDelete('interns', ${this.interns.length - 1 - idx})`)}
+                `;
+                internsList.appendChild(node);
+              });
+          }
+
+          // Social Media
+          const socialList = document.getElementById('socialList');
+          if (socialList) {
+              socialList.innerHTML = '';
+              this.social.slice().reverse().forEach((s, idx) => {
+                const node = document.createElement('div');
+                node.className = itemClasses;
+                node.innerHTML = `
+                  <div>
+                    <div class="flex items-start gap-2 mb-2">
+                      <i class="fas fa-link text-blue-500 mt-1"></i>
+                      <div>
+                        <strong class="text-base block">${s.platform}</strong>
+                        <a href="${s.link}" target="_blank" class="text-sm text-blue-500 hover:underline flex items-center gap-1">
+                          <i class="fas fa-external-link-alt text-xs"></i>${s.link}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  ${deleteButton(`dashboard.handleDelete('social', ${this.social.length - 1 - idx})`)}
+                `;
+                socialList.appendChild(node);
+              });
+          }
+        }
+
+        handleDelete(section, index) {
+          if (!confirm('Are you sure you want to delete this item?')) return;
+          
+          switch (section) {
+            case 'projects':
+              this.projects.splice(index, 1);
+              this.save(this.KEY_PROJECTS, this.projects);
+              break;
+            case 'skills':
+              this.skills.splice(index, 1);
+              this.save(this.KEY_SKILLS, this.skills);
+              break;
+            case 'certs':
+              this.certs.splice(index, 1);
+              this.save(this.KEY_CERTS, this.certs);
+              break;
+            case 'edu':
+              this.edu.splice(index, 1);
+              this.save(this.KEY_EDU, this.edu);
+              break;
+            case 'interns':
+              this.interns.splice(index, 1);
+              this.save(this.KEY_INTERNS, this.interns);
+              break;
+            case 'social':
+              this.social.splice(index, 1);
+              this.save(this.KEY_SOCIAL, this.social);
+              break;
+          }
+          this.updateGameData();
+          this.renderAll();
+        }
+
+        renderResumePreview() {
+          const resumePreview = document.getElementById('resumePreview');
+          if (!resumePreview) return;
+          
+          resumePreview.innerHTML = this.generateResumeHTML(
+            this.prefs.sections,
+            this.prefs.order,
+            this.prefs.theme,
+            this.prefs.template
+          );
+
+          // Initialize Sortable.js for drag and drop
+          const sortableElement = document.getElementById('sortable-resume');
+          if (sortableElement) {
+            new Sortable(sortableElement, {
+              animation: 150,
+              onEnd: (evt) => {
+                const oldIndex = evt.oldIndex;
+                const newIndex = evt.newIndex;
+                const item = this.prefs.order.splice(oldIndex, 1)[0];
+                this.prefs.order.splice(newIndex, 0, item);
+                this.save(this.KEY_PREF, this.prefs);
+                this.renderResumePreview();
+              }
+            });
+          }
+        }
+
+        generateResumeHTML(selectedSections, order, theme, template) {
+          const include = sec => selectedSections[sec];
+          const [accent1, accent2] = theme;
+          
+          // Update CSS variables
+          document.documentElement.style.setProperty('--brand-color', accent1);
+          document.documentElement.style.setProperty('--brand-dark', accent2);
+
+          const photoHtml = this.profile.photo ? 
+            `<div class="w-24 h-24 flex-shrink-0">
+              <img src="${this.profile.photo}" alt="Profile Photo" class="w-full h-full object-cover rounded-full shadow-lg border-4 border-white/20">
+            </div>` : '';
+
+          // Section templates
+          const sectionMap = {
+            profile: `<section data-id="profile" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                        <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Professional Summary</h3>
+                        <div class="resume-item text-sm text-gray-700">${this.profile.bio || 'Add a professional summary to highlight your key qualifications and career objectives.'}</div>
+                      </section>`,
+            
+            skills: `<section data-id="skills" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                      <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2"> Skills</h3>
+                      <div class="flex flex-wrap gap-2">
+                        ${this.skills.length ? 
+                          this.skills.map(s => `<span class='resume-pill text-xs font-semibold px-3 py-1 bg-gray-100 rounded-full border border-gray-200'>${s.name} (${s.level || 0}%)</span>`).join('') : 
+                          '<div class="text-sm text-gray-500">No skills added yet</div>'
+                        }
+                      </div>
+                    </section>`,
+            
+            projects: `<section data-id="projects" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                        <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Projects</h3>
+                        ${this.projects.length ? 
+                          this.projects.map(p => `
+                            <div class='resume-item mb-3'>
+                              <div class='text-base font-semibold'>${p.title}</div>
+                              ${p.link ? `<div class='text-sm text-gray-600 mb-1'><a href="${p.link}" target="_blank" class="text-blue-500 hover:underline">${p.link}</a></div>` : ''}
+                              <p class="text-sm text-gray-700">${p.desc || ''}</p>
+                            </div>
+                          `).join('') : 
+                          '<div class="text-sm text-gray-500">No projects added yet</div>'
+                        }
+                      </section>`,
+            
+            internships: `<section data-id="internships" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                          <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Work Experience</h3>
+                          ${this.interns.length ? 
+                            this.interns.map(it => `
+                              <div class='resume-item mb-3'>
+                                <div class='text-base font-semibold'>${it.company} — ${it.role || ''}</div>
+                                <div class='text-sm text-gray-600 mb-1'>${it.duration || ''}</div>
+                                <p class="text-sm text-gray-700">${it.desc || ''}</p>
+                              </div>
+                            `).join('') : 
+                            '<div class="text-sm text-gray-500">No work experience added yet</div>'
+                          }
+                        </section>`,
+            
+            certificates: `<section data-id="certificates" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                          <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Certifications</h3>
+                          <div>
+                            ${this.certs.length ? 
+                              this.certs.map(c => `
+                                <div class='resume-item mb-2'>
+                                  <strong class="text-sm">${c.title}</strong>
+                                  <span class='text-xs text-gray-500'>${c.issuer ? ` • ${c.issuer}` : ''}</span>
+                                </div>
+                              `).join('') : 
+                              '<div class="text-sm text-gray-500">No certifications added yet</div>'
+                            }
+                          </div>
+                        </section>`,
+            
+            education: `<section data-id="education" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                        <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Education</h3>
+                        ${this.edu.length ? 
+                          this.edu.map(e => `
+                            <div class='resume-item mb-2'>
+                              <strong class="text-base">${e.institute}</strong>
+                              <p class="text-sm text-gray-600">${e.degree || ''} — ${e.year || ''}</p>
+                            </div>
+                          `).join('') : 
+                          '<div class="text-sm text-gray-500">No education added yet</div>'
+                        }
+                      </section>`,
+            
+            social: `<section data-id="social" class="resume-section p-4 cursor-grab bg-white rounded-lg shadow-md mb-4">
+                      <h3 class="resume-h text-lg font-bold uppercase tracking-wide text-indigo-600 pb-2 mb-2">Links & Profiles</h3>
+                      <div>
+                        ${this.social.length ? 
+                          this.social.map(s => `
+                            <div class='resume-item text-sm mb-1'>
+                              <a href="${s.link}" target="_blank" class="text-blue-500 hover:underline">${s.platform}: ${s.link}</a>
+                            </div>
+                          `).join('') : 
+                          '<div class="text-sm text-gray-500">No social links added yet</div>'
+                        }
+                      </div>
+                    </section>`
+          };
+
+          const filteredSections = order.filter(sec => include(sec)).map(sec => sectionMap[sec]).join('');
+
+          if (template === 'modern') {
+            return `
+              <div class="resume-page p-8 bg-white rounded-xl shadow-lg">
+                <header class="pb-6 mb-6 border-b border-gray-300">
+                  <h1 class="text-4xl font-extrabold brand-title text-indigo-800">${this.profile.name || 'Your Name'}</h1>
+                  <p class="text-lg text-slate-600 mt-1">${this.profile.bio || ''}</p>
+                  <div class="text-sm text-slate-600 mt-2 flex flex-wrap gap-4">
+                    ${this.profile.email ? `<p class="flex items-center gap-1"><i class="fas fa-envelope text-indigo-600"></i> ${this.profile.email}</p>` : ''}
+                    ${this.profile.phone ? `<p class="flex items-center gap-1"><i class="fas fa-phone text-indigo-600"></i> ${this.profile.phone}</p>` : ''}
+                    ${this.social.length ? this.social.map(s => `<a href="${s.link}" target="_blank" class="flex items-center gap-1 text-blue-500 hover:underline"><i class="fas fa-link text-indigo-600"></i> ${s.platform}</a>`).join('') : ''}
+                  </div>
+                </header>
+                <div id="sortable-resume" class="space-y-6">
+                  ${filteredSections}
+                </div>
+              </div>
+            `;
+          }
+          
+          // Classic template
+          return `
+            <div class="resume-page p-6 bg-white rounded-xl shadow-lg">
+              <header class="flex flex-col md:flex-row md:items-start justify-between pb-4 mb-6 gap-4 border-b-4 border-indigo-600">
+                <div class="flex-1">
+                  <h1 class="text-4xl font-extrabold brand-title text-indigo-800">${this.profile.name || 'Your Name'}</h1>
+                  <p class="text-lg text-slate-600 mt-1">${this.profile.bio || ''}</p>
+                  <div class="text-sm text-slate-600 mt-4">
+                    ${this.profile.email ? `<p class="mb-1 flex items-center gap-2"><i class="fas fa-envelope text-indigo-600"></i> ${this.profile.email}</p>` : ''}
+                    ${this.profile.phone ? `<p class="flex items-center gap-2"><i class="fas fa-phone text-indigo-600"></i> ${this.profile.phone}</p>` : ''}
+                  </div>
+                </div>
+                ${photoHtml}
+              </header>
+              <div id="sortable-resume" class="space-y-4">
+                ${filteredSections}
+              </div>
+            </div>
+          `;
+        }
+
+        showNotification(message, isError = false) {
+          const notification = document.createElement('div');
+          notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transform transition-all duration-300 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+          notification.innerHTML = `
+            <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'} mr-2"></i>
+            ${message}
+          `;
+          
+          document.body.appendChild(notification);
+          
+          // Animate in
+          setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+          }, 100);
+          
+          setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+            notification.remove();
+            }, 300);
+          }, 4000);
+        }
+      }
+
+      // Final initialization logic
+      document.addEventListener('DOMContentLoaded', function() {
+          const navLinks = document.querySelectorAll('.nav-link');
+          const sections = document.querySelectorAll('.page section');
+
+          function navigate(targetId) {
+              sections.forEach(section => {
+                  section.classList.add('hidden');
+              });
+              const targetSection = document.getElementById(targetId);
+              if (targetSection) {
+                  targetSection.classList.remove('hidden');
+              }
+
+              navLinks.forEach(link => {
+                  link.classList.remove('active');
+              });
+              const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+              if (targetLink) {
+                  targetLink.classList.add('active');
+              }
+          }
+
+          navLinks.forEach(link => {
+              link.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  const target = link.dataset.target;
+                  navigate(target);
+              });
+          });
+
+          // Quick action navigation listeners
+          document.querySelector('button[onclick="navigate(\'analytics\')"]').addEventListener('click', (e) => {
+              e.preventDefault();
+              navigate('analytics');
+          });
+          document.querySelector('button[onclick="navigate(\'profile\')"]').addEventListener('click', (e) => {
+              e.preventDefault();
+              navigate('profile');
+          });
+          document.querySelector('button[onclick="navigate(\'projects\')"]').addEventListener('click', (e) => {
+              e.preventDefault();
+              navigate('projects');
+          });
+          document.querySelector('button[onclick="navigate(\'resume\')"]').addEventListener('click', (e) => {
+              e.preventDefault();
+              navigate('resume');
+          });
+
+
+          const initialHash = window.location.hash.substring(1);
+          if (initialHash) {
+              navigate(initialHash);
+          } else {
+              navigate('home');
+          }
+
+          window.addEventListener('hashchange', () => {
+              const hash = window.location.hash.substring(1);
+              navigate(hash);
+          });
+          
+          // --- Career Nest Link Generator Logic ---
+          const generateLinkBtn = document.getElementById('generateLinkBtn');
+          const copyLinkBtn = document.getElementById('copyLinkBtn');
+          const careerNestLinkInput = document.getElementById('careerNestLink');
+          const linkStatus = document.getElementById('linkStatus');
+
+         function generateCareerNestLink() {
+    // *** 1. PASTE YOUR ACTUAL HOSTED DOMAIN HERE (You must update this after hosting!) ***
+    // REPLACED DUMMY DOMAIN WITH YOUR NETLIFY URL
+    const HOSTED_BASE_URL = "https://careernest-pro.netlify.app"; 
+
+    const userName = (typeof dashboard !== 'undefined' && dashboard.profile.name) || 
+                                    document.getElementById('name')?.value || 
+                                    'user';
+    const safeName = userName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const userId = Math.random().toString(36).substring(2, 8); 
+
+    // The link format uses a hash to indicate a "public profile" route
+    const shareableLink = `${HOSTED_BASE_URL}/#p/${safeName}-${userId}`;
+    
+    // Update UI
+    careerNestLinkInput.value = shareableLink;
+    careerNestLinkInput.placeholder = shareableLink;
+    generateLinkBtn.classList.add('hidden');
+    copyLinkBtn.classList.remove('hidden');
+    
+    // Updated link status message to reflect the permanent URL
+    linkStatus.textContent = `Your shareable profile link is ready!`; 
+    
+    // Automatically copy the link after generation (user-friendly UX)
+    setTimeout(copyCareerNestLink, 100);
+}
+
+          function copyCareerNestLink() {
+              careerNestLinkInput.select();
+              careerNestLinkInput.setSelectionRange(0, 99999); 
+
+              navigator.clipboard.writeText(careerNestLinkInput.value).then(() => {
+                  linkStatus.textContent = 'Link copied to clipboard! Share it proudly.';
+                  copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                  
+                  setTimeout(() => {
+                      copyLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Link';
+                      linkStatus.textContent = 'Your shareable profile link is ready!';
+                  }, 2000);
+              }).catch(err => {
+                  console.error('Failed to copy text: ', err);
+                  linkStatus.textContent = 'Failed to copy link. Please copy it manually.';
+              });
+          }
+
+          if (generateLinkBtn) {
+              generateLinkBtn.addEventListener('click', generateCareerNestLink);
+          }
+
+          if (copyLinkBtn) {
+              copyLinkBtn.addEventListener('click', copyCareerNestLink);
+          }
+          // --- End Career Nest Link Generator Logic ---
+
+          // Initialize dashboard
+          const dashboard = new CareerNestDashboard();
+
+          // Make navigate function global for button clicks
+          window.navigate = (pageId) => dashboard.navigate(pageId);
+          window.dashboard = dashboard; // Make global for direct calls like handleDelete
+
+          // Initialize page based on URL hash
+          if (window.location.hash) {
+            const pageId = window.location.hash.substring(1);
+            dashboard.navigate(pageId);
+          } else {
+            dashboard.navigate('home');
+          }
+      });
+    </script>
+</body>
+</html>
