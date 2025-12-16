@@ -1,0 +1,848 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>Career Nest - Your Professional Journey</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    /* --------------------------------------
+       GLOBAL & COLOR VARIABLES (Calm & Trustworthy Palette)
+       -------------------------------------- */
+    :root {
+      /* Primary Palette */
+      --accent-1: #2563EB; /* Blue - main CTA, links */
+      --accent-2: #4F46E5; /* Indigo - headings, gradients */
+      --accent-3: #F97316; /* Coral/Orange - highlight / attention */
+      --muted-1: #0B1220; /* Charcoal - text */
+      --bg: #F8FAFF; /* Very light blue - page background */
+      
+      /* Utility / Accents */
+      --success: #059669; /* Green */
+      --card: #FFFFFF; /* White - cards / panels */
+      --muted-2: #64748B; /* Gray - secondary text */
+      
+      /* Theme Gradient */
+      --primary-gradient: linear-gradient(120deg, var(--accent-1) 0%, var(--accent-2) 100%);
+
+      --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --card-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--primary-gradient); 
+      min-height: 100vh;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-x: hidden;
+      color: white; 
+    }
+
+    /* --------------------------------------
+       HEADER FIX (STICKY TO TOP EDGE)
+       -------------------------------------- */
+    header {
+      padding: 0; 
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    header > div {
+      padding: 1rem; 
+    }
+
+    /* --------------------------------------
+       TYPOGRAPHY & BRANDING
+       -------------------------------------- */
+    .brand-title {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Chrome/Metallic Text Effect for H1 Title - WHITE FIX */
+    .hero-title-main {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.05em; 
+        line-height: 1.1;
+        
+        /* Subtle Gradient Overlay for Chrome Texture */
+        background: #ffffff;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        
+        /* Shadow for Depth */
+        
+    }
+    
+    /* --------------------------------------
+       GLASS EFFECT & BUTTONS
+       -------------------------------------- */
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.15); 
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-effect:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    /* Form Input Styles (Enhanced for pop-up contrast) */
+    .input-field {
+      background: var(--card);
+      border: 1px solid var(--muted-2);
+      transition: all 0.2s;
+      font-weight: 500;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      color: var(--muted-1); /* Dark text on white background */
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+      transform: translateY(0);
+    }
+
+    /* Primary Button Styles (Hero and Login) - Using Accent 1 & 2 */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      box-shadow: 0 10px 20px rgb(0, 0, 0);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 700;
+    }
+
+    /* Green Button for Sign Up */
+    .btn-signup {
+      background: linear-gradient(135deg, var(--success), #047857); /* Darker shade of success green */
+      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.4);
+    }
+    .btn-signup:hover {
+        filter: brightness(1.1);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgb(255, 255, 255);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgb(15, 54, 173);
+      filter: brightness(1.1);
+    }
+
+    /* Secondary (Outline) Button Styles (Used in header) */
+    .btn-secondary {
+      background: rgb(70, 40, 145);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 600;
+    }
+
+    .btn-secondary:hover {
+      background: rgb(97, 96, 155);
+      border-color: rgb(255, 255, 255);
+      transform: translateY(-2px);
+    }
+    
+    /* --------------------------------------
+       ANIMATIONS & EFFECTS
+       -------------------------------------- */
+    .fade-in {
+      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+
+    .feature-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .feature-icon {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.05) rotate(3deg);
+    }
+    
+    /* Floating Shapes */
+    .shape {
+      animation: float 6s ease-in-out infinite;
+      background: rgba(255, 255, 255, 0.15); 
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    /* --------------------------------------
+       MODAL & NOTIFICATIONS
+       -------------------------------------- */
+    .modal-backdrop {
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.6); 
+    }
+
+    .modal-content {
+      animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Pop-up specific style (Success Green accent for trust/signup) */
+      border: 3px solid var(--success);
+      box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3), 0 0 20px rgba(5, 150, 105, 0.4);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    /* --------------------------------------
+       FOOTER & RESPONSIVENESS
+       -------------------------------------- */
+    .footer-section {
+        background: rgba(0, 0, 0, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-link {
+        transition: color 0.2s;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .footer-link:hover {
+        color: white;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title-main {
+        font-size: 3.5rem;
+      }
+    }
+    
+  </style>
+</head>
+<body class="flex flex-col min-h-screen relative">
+  
+  <header class="sticky top-0 z-40 w-full glass-effect border-b-0">
+    <div class="max-w-6xl mx-auto flex justify-between items-center h-16 px-4">
+        <div class="brand flex items-center gap-3">
+            <div class="w-8 h-8 bg-white/30 rounded-lg flex items-center justify-center text-xl">
+                📁
+            </div>
+            <div class="brand-title text-xl font-bold">Career Nest</div>
+        </div>
+        <div class="flex gap-4">
+            <button onclick="showAuth('login')" class="py-2 px-6 rounded-full text-white font-semibold btn-secondary text-sm">
+                Sign In
+            </button>
+            <button onclick="showAuth('signup')" class="py-2 px-6 rounded-full text-white font-semibold btn-primary text-sm shadow-md">
+                Get Started
+            </button>
+        </div>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center px-4 py-16">
+    <div id="landingPage" class="hero-section text-center text-white max-w-6xl mx-auto fade-in relative z-10">
+      <div class="mb-12 pt-8">
+        <h1 class="hero-title-main text-6xl md:text-8xl font-extrabold mb-6 drop-shadow-2xl">
+          Career Nest  
+        </h1>
+        
+        <p class="hero-subtitle text-xl md:text-2xl mb-8 opacity-90 font-medium leading-relaxed max-w-4xl mx-auto">
+          The ultimate professional platform  powered by real-time AI . Stop guessing, start building your future.
+        </p>
+      </div>
+      
+      <div class="btn-group flex justify-center mb-16">
+        <button onclick="showAuth('signup')" class="btn-primary text-white font-semibold py-4 px-12 rounded-xl text-lg relative overflow-hidden transform hover:scale-105">
+          <span class="relative z-10 flex items-center justify-center gap-3">
+            <i class="fas fa-rocket text-xl"></i>
+            Launch Your Success
+          </span>
+        </button>
+      </div>
+
+      <div class="feature-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left max-w-6xl mx-auto">
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-orange-600/20">
+          <div class="flex items-center mb-4">
+              <i class="feature-icon fas fa-bullseye text-4xl text-orange-300 mr-4 p-3 rounded-full" style="background-color: rgba(249, 115, 22, 0.3);"></i>
+              <h3 class="text-xl font-bold">ATS Resume Scorer</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Instantly check resume compatibility, optimize keywords, and  pass automated screeners  with precision scoring (0-100%).</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-blue-600/20">
+            <div class="flex items-center mb-4">
+                <i class="feature-icon fas fa-route text-4xl text-blue-300 mr-4 p-3 rounded-full" style="background-color: rgba(37, 99, 235, 0.3);"></i>
+                <h3 class="text-xl font-bold">AI Career Coach</h3>
+            </div>
+            <p class="text-sm opacity-80 leading-relaxed">Generate a  personalized, actionable 3-phase roadmap  to reach your target role based on your current profile data.</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-green-600/20">
+          <div class="flex items-center mb-4">
+              <i class="feature-icon fas fa-clipboard-check text-4xl text-green-300 mr-4 p-3 rounded-full" style="background-color: rgba(5, 150, 105, 0.3);"></i>
+              <h3 class="text-xl font-bold">JD Matcher</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Paste any job description and receive an instant match score, quantifying your fit and highlighting specific  skill gaps .</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-indigo-600/20">
+          <div class="flex items-center mb-4">
+            <i class="feature-icon fas fa-file-alt text-4xl text-indigo-300 mr-4 p-3 rounded-full" style="background-color: rgba(79, 70, 229, 0.3);"></i>
+            <h3 class="text-xl font-bold">Visual Resume Builder</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Drag-and-drop sections, select modern templates, and export professional PDFs in one click. Fully customizable themes.</p>
+        </div>
+
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-blue-500/20">
+          <div class="flex items-center mb-4">
+            <i class="feature-icon fas fa-tools text-4xl text-blue-300 mr-4 p-3 rounded-full" style="background-color: rgba(37, 99, 235, 0.3);"></i>
+            <h3 class="text-xl font-bold">Skill Proficiency Tracker</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Log your expertise levels (0-100%) and watch your skill portfolio grow with intuitive proficiency bar visualizations.</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-orange-500/20">
+          <div class="flex items-center mb-4">
+            <i class="feature-icon fas fa-folder-open text-4xl text-orange-300 mr-4 p-3 rounded-full" style="background-color: rgba(249, 115, 22, 0.3);"></i>
+            <h3 class="text-xl font-bold">Project Portfolio Sync</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Centralize your projects, experience, and certifications. Never search for that GitHub link again.</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-yellow-600/20">
+          <div class="flex items-center mb-4">
+            <i class="feature-icon fas fa-medal text-4xl text-orange-300 mr-4 p-3 rounded-full" style="background-color: rgba(249, 115, 22, 0.3);"></i>
+            <h3 class="text-xl font-bold">Gamified Achievements</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Earn XP and unlock  exclusive badges  for milestones, maintaining streaks, and completing your profile sections.</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-indigo-500/20">
+          <div class="flex items-center mb-4">
+            <i class="feature-icon fas fa-chart-line text-4xl text-indigo-300 mr-4 p-3 rounded-full" style="background-color: rgba(79, 70, 229, 0.3);"></i>
+            <h3 class="text-xl font-bold">Deep Skill Analytics</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">See your skill distribution by category, track progress over time, and measure growth against industry benchmarks.</p>
+        </div>
+        
+        <div class="glass-effect p-6 rounded-2xl feature-card bg-gray-600/20">
+          <div class="flex items-center mb-4">
+            <i class="feature-icon fas fa-headset text-4xl text-gray-300 mr-4 p-3 rounded-full" style="background-color: rgba(100, 116, 139, 0.3);"></i>
+            <h3 class="text-xl font-bold">Mock Interview Prep</h3>
+          </div>
+          <p class="text-sm opacity-80 leading-relaxed">Simulate behavioral and technical interviews tailored to your target role and profile strength.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+  
+  <footer class="footer-section mt-12 py-10 text-white relative z-10">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-b border-white/10 pb-8 mb-8">
+            <div>
+                <h4 class="text-xl font-bold brand-title mb-4">Career Nest</h4>
+                <p class="text-sm opacity-70 leading-relaxed">Empowering professionals to build, track, and showcase their journey with AI precision.</p>
+                <div class="flex gap-4 mt-4 text-white/70">
+                    <a href="#" class="footer-link hover:text-white"><i class="fab fa-linkedin text-lg"></i></a>
+                    <a href="#" class="footer-link hover:text-white"><i class="fab fa-github text-lg"></i></a>
+                    <a href="#" class="footer-link hover:text-white"><i class="fab fa-twitter text-lg"></i></a>
+                </div>
+            </div>
+            <div>
+                <h5 class="text-lg font-semibold mb-4">Platform</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="footer-link">Features Overview</a></li>
+                    <li><a href="#" class="footer-link">Pricing Plans</a></li>
+                    <li><a href="#" onclick="showAuth('login'); return false;" class="footer-link">Sign In</a></li>
+                    <li><a href="#" onclick="showAuth('signup'); return false;" class="footer-link">Get Started</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-lg font-semibold mb-4">AI Tools</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="footer-link">ATS Resume Scorer</a></li>
+                    <li><a href="#" class="footer-link">AI Career Coach</a></li>
+                    <li><a href="#" class="footer-link">JD Matcher</a></li>
+                    <li><a href="#" class="footer-link">Analytics & Reporting</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-lg font-semibold mb-4">Connect</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="footer-link">Help Center</a></li>
+                    <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                    <li><a href="#" class="footer-link">Terms of Service</a></li>
+                    <li><a href="#" class="footer-link">Support Chat</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-sm opacity-60">
+            &copy; 2025 Career Nest. All rights reserved. Built with passion for your professional success.
+        </div>
+    </div>
+  </footer>
+
+  <div id="authModal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden z-50">
+    <div class="glass-effect modal-content p-8 rounded-3xl w-full max-w-md">
+      
+      <div id="loginForm" class="hidden">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-user text-2xl text-white"></i>
+          </div>
+          <h2 class="text-3xl font-bold text-white brand-title">Welcome Back</h2>
+          <p class="text-white/80 mt-2 font-medium">Sign in to continue your journey</p>
+        </div>
+        
+        <form id="loginFormElement" class="space-y-6">
+          <div class="relative">
+            <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="email" id="loginEmail" placeholder="Email address" 
+                   class="input-field w-full pl-12 pr-4 py-4 rounded-xl outline-none font-medium" required>
+          </div>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="password" id="loginPassword" placeholder="Password" 
+                   class="input-field w-full pl-12 pr-12 py-4 rounded-xl outline-none font-medium" required>
+            <button type="button" onclick="togglePassword('loginPassword')" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <button type="submit" class="btn-primary w-full py-4 rounded-xl font-semibold text-white text-lg relative overflow-hidden">
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <i class="fas fa-sign-in-alt"></i>
+              Sign In
+            </span>
+          </button>
+        </form>
+        
+        <div class="text-center mt-8">
+          <p class="text-white/80">Don't have an account? 
+            <button onclick="switchAuth('signup')" class="text-success hover:text-green-300 font-semibold transition-colors">
+              Sign up
+            </button>
+          </p>
+        </div>
+      </div>
+
+      <div id="signupForm" class="hidden">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-user-plus text-2xl text-white"></i>
+          </div>
+          <h2 class="text-3xl font-bold text-white brand-title">Join Career Nest</h2>
+          <p class="text-white/80 mt-2 font-medium">Start building your professional profile</p>
+        </div>
+        
+        <form id="signupFormElement" class="space-y-6">
+          <div class="relative">
+            <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="signupName" placeholder="Full name" 
+                   class="input-field w-full pl-12 pr-4 py-4 rounded-xl outline-none font-medium" required>
+          </div>
+          <div class="relative">
+            <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="email" id="signupEmail" placeholder="Email address" 
+                   class="input-field w-full pl-12 pr-4 py-4 rounded-xl outline-none font-medium" required>
+          </div>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" 
+                   class="input-field w-full pl-12 pr-12 py-4 rounded-xl outline-none font-medium" required minlength="6">
+            <button type="button" onclick="togglePassword('signupPassword')" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="password" id="confirmPassword" placeholder="Confirm password" 
+                   class="input-field w-full pl-12 pr-12 py-4 rounded-xl outline-none font-medium" required>
+            <button type="button" onclick="togglePassword('confirmPassword')" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <button type="submit" class="btn-primary btn-signup w-full py-4 rounded-xl font-semibold text-white text-lg relative overflow-hidden">
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <i class="fas fa-user-plus"></i>
+              Create Account
+            </span>
+          </button>
+        </form>
+        
+        <div class="text-center mt-8">
+          <p class="text-white/80">Already have an account? 
+            <button onclick="switchAuth('login')" class="text-blue-300 hover:text-blue-200 font-semibold transition-colors">
+              Sign in
+            </button>
+          </p>
+        </div>
+      </div>
+
+      <button onclick="hideAuth()" class="absolute top-6 right-6 text-white/60 hover:text-white transition-colors">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="successMessage" class="notification fixed top-6 right-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl hidden z-50 transform transition-all duration-300">
+    <div class="flex items-center gap-3">
+      <i class="fas fa-check-circle text-xl"></i>
+      <span id="successText" class="font-semibold"></span>
+    </div>
+  </div>
+
+  <div id="errorMessage" class="notification fixed top-6 right-6 bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-4 rounded-xl shadow-2xl hidden z-50 transform transition-all duration-300">
+    <div class="flex items-center gap-3">
+      <i class="fas fa-exclamation-circle text-xl"></i>
+      <span id="errorText" class="font-semibold"></span>
+    </div>
+  </div>
+
+  <script>
+    class AuthManager {
+      constructor() {
+        this.currentUser = null;
+        this.users = this.loadUsers();
+        this.init();
+      }
+
+      init() {
+        const savedUser = localStorage.getItem('cn_current_user');
+        if (savedUser) {
+          try {
+            this.currentUser = JSON.parse(savedUser);
+            this.redirectToDashboard();
+          } catch (error) {
+            localStorage.removeItem('cn_current_user');
+          }
+        }
+      }
+
+      loadUsers() {
+        try {
+          return JSON.parse(localStorage.getItem('cn_users')) || {};
+        } catch {
+          return {};
+        }
+      }
+
+      saveUsers() {
+        localStorage.setItem('cn_users', JSON.stringify(this.users));
+      }
+
+      hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+          const char = password.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash;
+        }
+        return hash.toString();
+      }
+
+      validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      validatePassword(password) {
+        return password.length >= 6;
+      }
+
+      async signup(name, email, password, confirmPassword) {
+        try {
+          if (!name.trim()) {
+            throw new Error('Name is required');
+          }
+          if (!this.validateEmail(email)) {
+            throw new Error('Please enter a valid email address');
+          }
+          if (!this.validatePassword(password)) {
+            throw new Error('Password must be at least 6 characters long');
+          }
+          if (password !== confirmPassword) {
+            throw new Error('Passwords do not match');
+          }
+          if (this.users[email.toLowerCase().trim()]) {
+            throw new Error('An account with this email already exists');
+          }
+
+          const hashedPassword = this.hashPassword(password);
+          const user = {
+            id: Date.now().toString(),
+            name: name.trim(),
+            email: email.toLowerCase().trim(),
+            password: hashedPassword,
+            createdAt: new Date().toISOString(),
+            profile: {
+              name: name.trim(),
+              email: email.toLowerCase().trim(),
+              phone: '',
+              bio: '',
+              photo: ''
+            }
+          };
+
+          this.users[email.toLowerCase().trim()] = user;
+          this.saveUsers();
+          
+          return { success: true, message: 'Account created successfully!' };
+        } catch (error) {
+          return { success: false, message: error.message };
+        }
+      }
+
+      async login(email, password) {
+        try {
+          if (!this.validateEmail(email)) {
+            throw new Error('Please enter a valid email address');
+          }
+          if (!password) {
+            throw new Error('Password is required');
+          }
+
+          const user = this.users[email.toLowerCase().trim()];
+          if (!user) {
+            throw new Error('No account found with this email address');
+          }
+
+          const hashedPassword = this.hashPassword(password);
+          if (user.password !== hashedPassword) {
+            throw new Error('Incorrect password');
+          }
+
+          // ⭐ NEW LOGIC: Check and set first login status
+          const firstLoginKey = `cn_first_login_${user.id}`;
+          const isReturningUser = localStorage.getItem(`cn_last_login_${user.id}`);
+          
+          if (!isReturningUser) {
+              // This is either the very first login, or a fresh user profile that hasn't set the last login time.
+              localStorage.setItem(firstLoginKey, 'true');
+          }
+          // Mark that the user has logged in at least once
+          localStorage.setItem(`cn_last_login_${user.id}`, new Date().toISOString());
+          // ⭐ END NEW LOGIC
+          
+          this.currentUser = user;
+          localStorage.setItem('cn_current_user', JSON.stringify(user)); 
+          
+          return { success: true, message: 'Welcome back!' };
+        } catch (error) {
+          return { success: false, message: error.message };
+        }
+      }
+
+      logout() {
+        this.currentUser = null;
+        localStorage.removeItem('cn_current_user');
+        window.location.href = 'index.html';
+      }
+
+      redirectToDashboard() {
+        window.location.href = "dashboard.html";
+      }
+    }
+
+    function showAuth(type) {
+      const modal = document.getElementById('authModal');
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      
+      modal.classList.remove('hidden');
+      
+      if (type === 'login') {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+      } else {
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    function hideAuth() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    function switchAuth(type) {
+      showAuth(type);
+    }
+
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const button = input.closest('.relative').querySelector('button');
+      const icon = button.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // CRITICAL FIX: showMessage function update for consistency
+    function showMessage(message, isError = false) {
+      const notification = document.createElement('div');
+      const bgColor = isError ? 'bg-gradient-to-r from-red-500 to-pink-600' : 'bg-gradient-to-r from-green-500 to-emerald-600';
+      
+      notification.className = `fixed top-6 right-6 px-6 py-4 rounded-xl shadow-2xl text-white z-50 transform translate-x-full transition-all duration-300 notification ${bgColor}`;
+      
+      notification.innerHTML = `
+        <div class="flex items-center gap-3">
+          <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'} text-xl"></i>
+          <span class="font-semibold">${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+      }, 4000);
+    }
+
+
+    const authManager = new AuthManager();
+
+    document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const loginBtn = e.target.querySelector('button[type="submit"]');
+      loginBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><i class="fas fa-spinner fa-spin"></i> Signing In...</span>';
+      loginBtn.disabled = true;
+
+      const result = await authManager.login(email, password);
+      
+      if (result.success) {
+        showMessage(result.message);
+        setTimeout(() => {
+          hideAuth();
+          authManager.redirectToDashboard();
+        }, 1000);
+      } else {
+        showMessage(result.message, true);
+      }
+
+      loginBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><i class="fas fa-sign-in-alt"></i> Sign In</span>';
+      loginBtn.disabled = false;
+    });
+
+ document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      const signupBtn = e.target.querySelector('button[type="submit"]');
+      signupBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><i class="fas fa-spinner fa-spin"></i> Creating Account...</span>';
+      signupBtn.disabled = true;
+      
+      const result = await authManager.signup(name, email, password, confirmPassword);
+      
+      // ⭐ MODIFIED: If signup succeeds, log in immediately to set the first login flag
+      if (result.success) {
+        showMessage(result.message);
+        
+        const loginResult = await authManager.login(email, password);
+        
+        if (loginResult.success) {
+            setTimeout(() => {
+                hideAuth();
+                authManager.redirectToDashboard();
+            }, 1000);
+        } else {
+            // Fallback: Just switch to login form
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            setTimeout(() => {
+                switchAuth('login');
+                document.getElementById('loginEmail').value = email;
+            }, 1500);
+        }
+      } else {
+        showMessage(result.message, true);
+      }
+
+      signupBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><i class="fas fa-user-plus"></i> Create Account</span>';
+      signupBtn.disabled = false;
+    });
+    document.getElementById('authModal').addEventListener('click', (e) => {
+      if (e.target.id === 'authModal') {
+        hideAuth();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        hideAuth();
+      }
+    });
+    
+  </script>
+</body>
+</html>
