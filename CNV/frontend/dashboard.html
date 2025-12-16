@@ -1077,7 +1077,7 @@ async function generateInterviewPrep() {
   output.innerHTML = "⏳ Generating AI interview prep...";
 
   // ⭐️ CRITICAL FIX: Ensure the client calls the Node.js backend on port 3000
-  const res = await fetch("http://localhost:3000/api/interview-prep", {
+  const res = await fetch("https://careernest-backend-jbk3.onrender.com/api/interview-prep", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
@@ -1288,7 +1288,7 @@ async function extractResumeText(file) {
   throw new Error("Unsupported file type or extraction failure.");
 }
       async function analyzeResume(resumeText) {
-  const res = await fetch("http://localhost:3000/api/resume-score", {
+  const res = await fetch("https://careernest-backend-jbk3.onrender.com/api/resume-score", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ resumeText })
@@ -2306,7 +2306,7 @@ async handleCoachFormSubmit(e) { // ⭐ CHANGED TO ASYNC METHOD
     };
 
     try {
-        const res = await fetch("http://localhost:3000/api/career-coach", {
+        const res = await fetch("https://careernest-backend-jbk3.onrender.com/api/career-coach", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -3571,7 +3571,7 @@ document.getElementById("coachForm").addEventListener("submit", async (e) => {
   };
 
   try {
-    const res = await fetch("http://localhost:3000/api/career-coach", {
+    const res = await fetch("https://careernest-backend-jbk3.onrender.com/api/career-coach", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -3844,7 +3844,7 @@ document.getElementById("coachForm").addEventListener("submit", async (e) => {
 
             try {
                 // 2. Call the backend API (using the structure from the last step)
-                const res = await fetch("http://localhost:3000/api/jd-match", {
+                const res = await fetch("https://careernest-backend-jbk3.onrender.com/api/jd-match", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
