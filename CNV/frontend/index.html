@@ -256,11 +256,13 @@
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
 
-    @media (max-width: 768px) {
-      .hero-title-main {
-        font-size: 3.5rem;
-      }
-    }
+   @media (max-width: 640px) {
+    .hero-title-main { font-size: 3rem !important; line-height: 1.1; }
+    .hero-subtitle { font-size: 1rem !important; margin-bottom: 1.5rem; opacity: 0.85; }
+    .btn-primary { width: 90%; padding: 12px !important; font-size: 1rem !important; }
+    .nav-btn { padding: 4px 10px !important; font-size: 0.7rem !important; }
+    .feature-grid { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
+}
     
   </style>
 </head>
